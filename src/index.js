@@ -1,20 +1,25 @@
 var React = require('react'),
-    JEditComponent = require('./template.jsx');
+    JEditComponent = require('./template.jsx'),
+    colors = require('colors.css');
 
 
 
-function JSONEdit(opt) {
+function JsonVision(opt) {
 
     this.domElem = opt.parent || document.createElement('div');
     this.data = opt.data || {};
-    this.name = opt.name || 'JEdit';
+    this.styles = opt.styles || [];
+    this.name = opt.name || 'json-vision';
 
-    this.component = React.render(React.createElement(JEditComponent, {data: this.data, name: this.name}), this.domElem);
+    this.component = React.render(React.createElement(JEditComponent, {name: this.name}), this.domElem);
+    this.component.setState({
+        data: this.data,
+        styles: this.styles
+    });
 }
 
-window.JSONEdit = JSONEdit;
-
-module.exports = JSONEdit;
+module.exports = JsonVision;
+if (window) window.JsonVision = JsonVision;
 
 function insertCssLink(href) {
 
