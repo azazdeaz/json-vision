@@ -16,6 +16,7 @@ function JsonVision(opt) {
     this.component = React.render(React.createElement(JEditComponent, {
         name: this.name,
         report: change => this._report(change),
+        getByPath: path => this.getByPath(path),
     }), this.domElem);
 
     this.refresh();
@@ -62,10 +63,8 @@ p._report = function (change) {
             break;
 
         case 'update':
-            object[key] = change.value;
-            break;
-
         case 'add':
+        case 'set':
             object[key] = change.value;
             break;
 
@@ -73,6 +72,8 @@ p._report = function (change) {
             object[key].splice(change.index, change.removedCound, ...change.items);
             break;
     }
+
+    this.refresh();
 };
 
 

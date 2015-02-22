@@ -1,6 +1,9 @@
 var React = require('react');
 var colors = require('colors.css');
 var _ = require('lodash');
+var {DragDropMixin} = require('react-dnd');
+
+const DND_TYPE = 'json-vision-drag-type';
 
 var key = 0;
 var greys = {
@@ -65,16 +68,59 @@ var JEditComponent = React.createClass({
           path = {''}
           name = {this.props.name}
           report = {this.props.report}
-          getStyle = {this.getStyle.bind(this)} />
+          getByPath = {this.props.getByPath}
+          getStyle = {this.getStyle} />
       </div>
     );
   }
 });
 
 var JEditItem = React.createClass({
+  mixins: [DragDropMixin],
   getInitialState () {
 
     return {opened: true};
+  },
+  statics: {
+    configureDragDrop(register) {
+        register(DND_TYPE, {
+
+          dragSource: {
+            beginDrag(component) {
+              console.log('begin drag', component.fullPath)
+              return {
+                item: {
+                  path: component.fullPath,
+                  name: component.props.name,
+                },
+              }
+            },
+          },
+
+          dropTarget: {
+            acceptDrop(component, item) {
+              console.log('acceptDrop', component, item);
+
+              component.props.report({
+                type: 'set',
+                path: component.props.path + '/' + item.name,
+                value: component.props.getByPath(item.path).value
+              });
+
+              component.props.report({
+                type: 'delete',
+                path: item.path,
+              });
+            },
+            canDrop(component, item) {
+                return typeof(component.props.data) === 'object';
+            }
+            // enter(component, item) {console.log('enter', component, item);},
+            // leave(component, item) {console.log('leave', component, item);},
+            // over(component, item) {console.log('over', component, item);},
+          }
+        });
+    }
   },
   hasChildren () {
 
@@ -116,30 +162,41 @@ var JEditItem = React.createClass({
 
     var children = '', input = '', buttons = '', tooltip = '';
 
+    var dragState = this.getDragState(DND_TYPE),
+      dropState = this.getDropState(DND_TYPE);
+
     var styleBlock = {
       // background: '#303338',
       width: '100%',
       display: 'flex',
+      opacity: dragState.isDragging ? 0.4 : 1,
       height: 23,
+    };
+
+    var styleLabel = {
+      flex:1,
+      color: dropState.isHovering ? colors.blue : 'inherits',
+      backgroundColor: dropState.isHovering ? colors.aqua : 'inherits',
     };
 
     this.props.indent = this.props.indent || 0;
     var indent = <span style={{width:this.props.indent*8}}/>;
 
-    var label = <span style={{flex:1}}>{this.style.label || this.props.name}</span>;
+    var label = <span style={styleLabel}>{this.style.label || this.props.name}</span>;
 
     if (typeof(this.props.data) === 'object') {
 
       children = <div style={{display: this.state.opened ? 'block' : 'none'}}>
         {Object.keys(this.props.data).map(function(name) {
            return <JEditItem
-            key = {++key}
+            key = {this.fullPath + '/' + name}
             indent = {this.props.indent + 1}
             name = {name}
             path = {this.fullPath}
             data = {this.props.data[name]}
             getStyle = {this.props.getStyle}
-            report = {this.props.report} />;
+            report = {this.props.report}
+            getByPath = {this.props.getByPath} />;
         }, this)}
       </div>;
     }
@@ -166,7 +223,7 @@ var JEditItem = React.createClass({
     if (this.style.buttons) {
 
       buttons = <div>
-        {this.style.buttons.map(btn => <ButtonComponent {...btn} onClick={() => this.onBtnClick(btn)}/>)}
+        {this.style.buttons.map(btn => <ButtonComponent {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
       </div>;
     }
 
@@ -175,8 +232,8 @@ var JEditItem = React.createClass({
     }
 
     return (
-      <div>
-        <div style={styleBlock}>
+      <div {...this.dropTargetFor(DND_TYPE)}>
+        <div style={styleBlock} {...this.dragSourceFor(DND_TYPE)}>
           {tooltip}
           {indent}
           <i className = {`fa fa-angle-${this.state.opened && this.hasChildren() ? 'down' : 'right'} fl-lg`}
@@ -238,7 +295,7 @@ var SelectComponent = React.createClass({
       style = {styles.input}
       defaultValue = {this.props.value}
       onInput = {e => this.props.update(e.target.value)}>
-      {this.props.options.map(o => <option value={o}>{o}</option>)}
+      {this.props.options.map(o => <option key={++key}value={o}>{o}</option>)}
     </select>;
   }
 });
