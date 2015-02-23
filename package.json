@@ -20,6 +20,8 @@
     "react-dnd": "^0.8.1",
     "reactify": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "^2.3.0"
+    "watchify": "^2.3.0",
+    "react-autocomplete": "0.0.2",
+    "react-typeahead": "^1.0.1"
   }
 }

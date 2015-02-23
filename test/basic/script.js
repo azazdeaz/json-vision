@@ -9,6 +9,7 @@ var data = {
             'bazbar',
             {item3: 3},
         ],
+        typeahed: 'dsdsds',
         // value: new JsonVision.Value({
         //     data: {foo: {bar: 2}},
         //     style: {
@@ -36,6 +37,10 @@ var data = {
                 container.push('valami');
                 editor.refresh();
             }}]
+        }, {
+            selector: /typeahead$/,
+            type: 'typeahead',
+            options: 'asdf,ast,avsd,agrs,ahr,sdh,sregt,sbgdf,gstg,dr,sgdr,sgrd,sgrd,sdgr,rse,ra,ga,gr,gara,grGtr,a,t,atgsgas,agrsagr,gsdrgsdr,gsr,gr'.split(',')
         }
     ],
     editor = new JsonVision({

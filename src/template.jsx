@@ -2,6 +2,7 @@ var React = require('react');
 var colors = require('colors.css');
 var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
+var {Typeahead} = require('react-typeahead');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -87,18 +88,21 @@ var JEditItem = React.createClass({
 
           dragSource: {
             beginDrag(component) {
-              console.log('begin drag', component.fullPath)
+              // console.log('begin drag', component.fullPath)
               return {
                 item: {
                   path: component.fullPath,
                   name: component.props.name,
                 },
-              }
-            },
+              };
+            }
           },
 
           dropTarget: {
-            acceptDrop(component, item) {
+            acceptDrop(component, item, e, isHandled) {
+
+              if (isHandled){console.log('isHandled', component.props.path);return;}
+              else {console.log('isNotHandled', component.props.path);}
               console.log('acceptDrop', component, item);
 
               component.props.report({
@@ -113,7 +117,8 @@ var JEditItem = React.createClass({
               });
             },
             canDrop(component, item) {
-                return typeof(component.props.data) === 'object';
+
+              return typeof(component.props.data) === 'object';
             }
             // enter(component, item) {console.log('enter', component, item);},
             // leave(component, item) {console.log('leave', component, item);},
@@ -134,7 +139,7 @@ var JEditItem = React.createClass({
   update (value) {
 
     this.props.report({
-      type: 'update',
+      type: 'set',
       path: this.fullPath,
       value: value
     });
@@ -175,8 +180,8 @@ var JEditItem = React.createClass({
 
     var styleLabel = {
       flex:1,
-      color: dropState.isHovering ? colors.blue : 'inherits',
-      backgroundColor: dropState.isHovering ? colors.aqua : 'inherits',
+      color: dropState.isDragging ? colors.blue : 'inherit',
+      backgroundColor: dropState.isHovering ? colors.aqua : 'inherit',
     };
 
     this.props.indent = this.props.indent || 0;
@@ -204,6 +209,13 @@ var JEditItem = React.createClass({
       if (this.style.type === 'select' || _.isArray(this.style.options)) {
 
         input = <SelectComponent
+          update={v=>this.update(v)}
+          options={this.style.options}
+          value={this.props.data}/>;
+      }
+      else if (this.style.type === 'typeahead') {
+
+        input = <InputTypeahead
           update={v=>this.update(v)}
           options={this.style.options}
           value={this.props.data}/>;
@@ -300,10 +312,23 @@ var SelectComponent = React.createClass({
   }
 });
 
+var InputTypeahead = React.createClass({
+
+  render: function () {
+    return <Typeahed
+      style = {styles.input}
+      placehonder = {this.props.value}
+      options = {this.props.options}
+      onKeyDown = {e => console.log('keyDown', e)}
+      onOptionSelected = {e => console.log('onOptionSelected', e)}/>;
+  }
+});
+
 var Tooltip = React.createClass({
 
   render: function () {
     return <div style={{
+      pointerEvents: 'none',
       position: 'absolute',
       width: 0,
       left: -5,

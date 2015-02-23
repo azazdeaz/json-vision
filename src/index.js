@@ -53,6 +53,8 @@ p.getByPath = function (path) {
 
 p._report = function (change) {
 
+    console.log('report', JSON.stringify(change));
+
     var {key, object} = this.getByPath(change.path);
 
 
@@ -62,8 +64,6 @@ p._report = function (change) {
             delete object[key];
             break;
 
-        case 'update':
-        case 'add':
         case 'set':
             object[key] = change.value;
             break;
