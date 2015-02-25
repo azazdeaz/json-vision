@@ -332,6 +332,15 @@ var SelectComponent = React.createClass({
   }
 });
 
+var Dropdown = React.createClass({
+
+  render() {
+    return <div
+      style={s}
+    >{this.props.value}</div>;
+  }
+});
+
 var Tooltip = React.createClass({
 
   render: function () {

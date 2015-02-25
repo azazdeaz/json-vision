@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 var style = {
-    lineHeight: '37px',
+    lineHeight: '34px',
 };
 
 module.exports = style;
@@ -24,6 +24,12 @@ style.lineGroup = _.defaults({
   borderBottom: 'none',
 }, style.line);
 
+
+
+
+
+
+
 style.input = {
   color: '#96a6ad',
   background: 'none',
@@ -32,7 +38,7 @@ style.input = {
   padding: '0',
   paddingLeft: '2px',
   borderRadius: '2px',
-  height: 35,
+  height: 32,
   margin: '1px 3px',
   boxSizing: 'border-box',
   border: 'solid 1px rgba(0,0,0,0)',
@@ -58,3 +64,15 @@ style.inputDisabled = _.defaults({
 style.inputError = _.defaults({
     border: 'solid 1px #aa4353',
 }, style.input);
+
+
+
+style.dropdown = {
+    height: 32,
+    borderRadius: 2,
+    backgroundColor: 'rgba(59,66,74,.75)',
+    boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
+    border: 'solid 1px rgba(26,29,33,.75)',
+    backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
+    overflow: 'hidden',
+};
