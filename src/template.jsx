@@ -3,6 +3,7 @@ var colors = require('colors.css');
 var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
 var {Typeahead} = require('react-typeahead');
+var style = require('./style');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -22,20 +23,7 @@ var styles = {
     margin: '3px',
     // boxShadow: '0 0 1px #000',
     // overflow: 'hidden',
-  },
-  input: {
-    background: 'rgba(23,27,24,.23)',
-    fontSize: 'inherit',
-    fontFamily: 'inherit',
-    color: 'inherit',
-    border: 'none',
-    padding: '0',
-    paddingLeft: '2px',
-    borderRadius: '0px',
-    height: 21,
-    margin: '0 3px',
-    // boxShadow: '0 0 1px #000',
-  },
+  }
 };
 
 var JEditComponent = React.createClass({
@@ -165,18 +153,13 @@ var JEditItem = React.createClass({
     this.fullPath = this.props.path ? this.props.path+'/'+this.props.name : this.props.name;
     this.style = this.props.getStyle(this.fullPath);
 
-    var children = '', input = '', buttons = '', tooltip = '';
-
-    var dragState = this.getDragState(DND_TYPE),
+    var items = {},
+      dragState = this.getDragState(DND_TYPE),
       dropState = this.getDropState(DND_TYPE);
 
-    var styleBlock = {
-      // background: '#303338',
-      width: '100%',
-      display: 'flex',
+    var styleBlock = _.defaults({
       opacity: dragState.isDragging ? 0.4 : 1,
-      height: 23,
-    };
+    }, this.hasChildren() ? style.lineGroup : style.line);
 
     var styleLabel = {
       flex:1,
@@ -184,16 +167,32 @@ var JEditItem = React.createClass({
       backgroundColor: dropState.isHovering ? colors.aqua : 'inherit',
     };
 
+    //indent
     this.props.indent = this.props.indent || 0;
-    var indent = <span style={{width:this.props.indent*8}}/>;
+    items.indent = <span style={{width:this.props.indent*8}}/>;
 
-    var label = <span style={styleLabel}>{this.style.label || this.props.name}</span>;
 
+    //show/hide toggle btn
+    items.toggle = <i className = {`fa fa-${this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : 'minus'} fl-lg`}
+      style = {{
+        margin: '0 4px 0 6px',
+        lineHeight: style.lineHeight,
+        width: '12px',
+      }}
+      onClick = {this.hasChildren() ? this.onClickOpenToggle : null}
+    ></i>;
+
+    //label
+    items.label = <span style={styleLabel}>{this.style.label || this.props.name}</span>;
+
+    //input or children
     if (typeof(this.props.data) === 'object') {
 
-      children = <div style={{display: this.state.opened ? 'block' : 'none'}}>
-        {Object.keys(this.props.data).map(function(name) {
-           return <JEditItem
+      items.children = <div style={{display: this.state.opened ? 'block' : 'none'}}>
+
+        {Object.keys(this.props.data).map(function(name, idx, arr) {
+
+          return <JEditItem
             key = {this.fullPath + '/' + name}
             indent = {this.props.indent + 1}
             name = {name}
@@ -208,59 +207,46 @@ var JEditItem = React.createClass({
     else {
       if (this.style.type === 'select' || _.isArray(this.style.options)) {
 
-        input = <SelectComponent
-          update={v=>this.update(v)}
-          options={this.style.options}
-          value={this.props.data}/>;
-      }
-      else if (this.style.type === 'typeahead') {
-
-        input = <InputTypeahead
+        items.input = <SelectComponent
           update={v=>this.update(v)}
           options={this.style.options}
           value={this.props.data}/>;
       }
       else if (this.style.type === 'checkbox') {
-        input = <CheckboxComponent
+        items.input = <CheckboxComponent
           update={v=>this.update(v)}
           value={this.props.data} />;
       }
       else {
-        input = <InputComponent
+        items.input = <InputComponent
           update={v=>this.update(v)}
           value={this.props.data} />;
       }
     }
 
+    //buttons
     if (this.style.buttons) {
-
-      buttons = <div>
+      items.buttons = <div>
         {this.style.buttons.map(btn => <ButtonComponent {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
       </div>;
     }
 
+    //tooltips
     if (this.style.tooltip) {
-      tooltip = <Tooltip text={this.style.tooltip}/>;
+      items.tooltip = <Tooltip text={this.style.tooltip}/>;
     }
 
     return (
       <div {...this.dropTargetFor(DND_TYPE)}>
         <div style={styleBlock} {...this.dragSourceFor(DND_TYPE)}>
-          {tooltip}
-          {indent}
-          <i className = {`fa fa-angle-${this.state.opened && this.hasChildren() ? 'down' : 'right'} fl-lg`}
-            style = {{
-              margin: '2px 4px 0 6px',
-              visibility: this.hasChildren() ? 'visible' : 'hidden',
-              width: '12px',
-            }}
-            onClick = {this.onClickOpenToggle}
-            ></i>
-          {label}
-          {input}
-          {buttons}
+          {items.tooltip}
+          {items.indent}
+          {items.toggle}
+          {items.label}
+          {items.input}
+          {items.buttons}
         </div>
-        {children}
+        {items.children}
       </div>
     );
   }
@@ -270,7 +256,8 @@ var ButtonComponent = React.createClass({
   render: function () {
     return <i className = {`fa fa-${this.props.icon} fl-lg`}
       style = {{
-        margin: '2px 4px 0 0',
+        lineHeight: style.lineHeight,
+        margin: '0 4px 0 0',
         width: '12px',
       }}
       onClick = {this.props.onClick}
@@ -279,12 +266,45 @@ var ButtonComponent = React.createClass({
 });
 
 var InputComponent = React.createClass({
+
+  getInitialState() {
+    return {
+      disabled: false,
+      error: false,
+      focus: false,
+      hover: false,
+    };
+  },
+  onMouseEnter() {
+    this.setState({hover: true});
+  },
+  onMouseLeave() {
+    this.setState({hover: false});
+  },
+  onFocus() {
+    this.setState({focus: true});
+  },
+  onBlur() {
+    this.setState({focus: false});
+  },
   render: function () {
+
+    var s = style.input;
+    if (this.state.disabled) s = style.inputDisabled;
+    else if (this.state.error) s = style.inputError;
+    else if (this.state.focus) s = style.inputActive;
+    else if (this.state.hover) s = style.inputHover;
+
     return <input
       type="text"
       defaultValue = {this.props.value}
-      style = {styles.input}
+      style = {s}
       onChange = {e => this.props.update(e.target.name)}
+      onMouseEnter = {this.onMouseEnter}
+      onMouseLeave = {this.onMouseLeave}
+      onBlur = {this.onBlur}
+      onFocus = {this.onFocus}
+      disabled = {this.state.disabled}
     ></input>;
   }
 });
@@ -312,18 +332,6 @@ var SelectComponent = React.createClass({
   }
 });
 
-var InputTypeahead = React.createClass({
-
-  render: function () {
-    return <Typeahed
-      style = {styles.input}
-      placehonder = {this.props.value}
-      options = {this.props.options}
-      onKeyDown = {e => console.log('keyDown', e)}
-      onOptionSelected = {e => console.log('onOptionSelected', e)}/>;
-  }
-});
-
 var Tooltip = React.createClass({
 
   render: function () {
@@ -340,7 +348,7 @@ var Tooltip = React.createClass({
         background: 'rgba(255,255,255,.34)',
       }}> {this.props.text} </div>
     </div>;
-  }
+  },
 });
 
 module.exports = JEditComponent;
