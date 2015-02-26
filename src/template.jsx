@@ -318,15 +318,17 @@ var Dropdown = React.createClass({
   onMouseLeave() { this.setState({hover: false}); },
   onFocus() {
     this.setState({open: true});
-    // this.refs.head.getDOMNode().addEventListener('click', this.onCloseClick);
+    // setTimeout(() => {//!hack
+      this.refs.head.getDOMNode().addEventListener('mousedown', this.onCloseClick);
+    // });
   },
   onBlur() {
     this.setState({open: false});
-    // this.refs.head.getDOMNode().removeEventListener('click', this.onCloseClick);
+    this.refs.head.getDOMNode().removeEventListener('mousedown', this.onCloseClick);
   },
-  // onCloseClick(e) {
-  //   this.getDOMNode().blur();
-  // },
+  onCloseClick(e) {
+    this.getDOMNode().blur();
+  },
   render() {
 
     var s;

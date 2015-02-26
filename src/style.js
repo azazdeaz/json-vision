@@ -105,3 +105,39 @@ style.dropdownItem = {
 style.dropdownItemHover = _.defaults({
     backgroundColor: 'rgba(226,231,235,.05)',
 }, style.dropdownItem);
+
+
+//Slider
+style.sliderKnob = {
+    width: '16px',
+    height: '16px',
+    borderRadius: '8px',
+    backgroundColor: '#262a2e',
+    borderStyle: 'solid',
+    borderWidth: '2px',
+    borderColor: '#96a6ad',
+};
+
+style.sliderKnobHover = _.defaults({
+	borderColor: '#e2e7eb',
+}, style.sliderKnob);
+
+style.sliderKnobActive = _.defaults({
+	borderColor: '#6bb6c4',
+	backgroundColor: '#6bb6c4',
+}, style.sliderKnob);
+
+style.sliderBarBg = {
+    width: '268px',
+	height: '6px',
+	borderRadius: '2px',
+	backgroundColor: '#1a1d21',
+};
+
+style.sliderBarPropgress = {
+    width: '100%',
+    margin: 1,
+	height: '4px',
+	borderRadius: '1px',
+	backgroundColor: '#6bb6c4',
+};
