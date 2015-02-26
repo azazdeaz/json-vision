@@ -1,8 +1,7 @@
 var React = require('react'),
-    JEditComponent = require('./template.jsx'),
+    JVComponent = require('./template.jsx'),
     colors = require('colors.css'),
     _ = require('lodash');
-
 
 
 function JsonVision(opt) {
@@ -13,7 +12,7 @@ function JsonVision(opt) {
     this.name = opt.name || 'json-vision';
 
 
-    this.component = React.render(React.createElement(JEditComponent, {
+    this.component = React.render(React.createElement(JVComponent, {
         name: this.name,
         report: change => this._report(change),
         getByPath: path => this.getByPath(path),
@@ -34,9 +33,9 @@ var p = JsonVision.prototype;
 
 p.refresh = function () {
 
-    this.component.setState({
+    this.component.setProps({
         data: this.data,
-        styles: this.styles
+        styles: this.styles,
     });
 };
 

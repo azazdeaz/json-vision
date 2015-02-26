@@ -28,15 +28,15 @@ var styles = {
 
 var JEditComponent = React.createClass({
 
-  getInitialState: function () {
+  getDefaultProps() {
 
     return {data: {}, styles: []};
   },
-  getStyle: function (path) {
+  getStyle(path) {
 
     var ret = {};
 
-    this.state.styles.forEach(style => {
+    this.props.styles.forEach(style => {
 
       if (style.selector.test(path)) {
 
@@ -48,17 +48,16 @@ var JEditComponent = React.createClass({
 
     return ret;
   },
-  render: function () {
-
+  render() {
     return(
       <div style={styles.root}>
         <JEditItem
-          data = {this.state.data}
+          data = {this.props.data}
           path = {''}
           name = {this.props.name}
           report = {this.props.report}
           getByPath = {this.props.getByPath}
-          getStyle = {this.getStyle} />
+          getStyle = {this.getStyle}/>
       </div>
     );
   }
@@ -149,7 +148,6 @@ var JEditItem = React.createClass({
     }
   },
   render () {
-
     this.fullPath = this.props.path ? this.props.path+'/'+this.props.name : this.props.name;
     this.style = this.props.getStyle(this.fullPath);
 
@@ -196,7 +194,7 @@ var JEditItem = React.createClass({
             data = {this.props.data[name]}
             getStyle = {this.props.getStyle}
             report = {this.props.report}
-            getByPath = {this.props.getByPath} />;
+            getByPath = {this.props.getByPath}/>;
         }, this)}
       </div>;
     }
@@ -318,8 +316,17 @@ var Dropdown = React.createClass({
 
   onMouseEnter() { this.setState({hover: true}); },
   onMouseLeave() { this.setState({hover: false}); },
-  onFocus() { this.setState({open: true}); },
-  onBlur() { this.setState({open: false}); },
+  onFocus() {
+    this.setState({open: true});
+    // this.refs.head.getDOMNode().addEventListener('click', this.onCloseClick);
+  },
+  onBlur() {
+    this.setState({open: false});
+    // this.refs.head.getDOMNode().removeEventListener('click', this.onCloseClick);
+  },
+  // onCloseClick(e) {
+  //   this.getDOMNode().blur();
+  // },
   render() {
 
     var s;
@@ -332,6 +339,7 @@ var Dropdown = React.createClass({
     else s = style.dropdown;
 
     return <div
+      ref="head"
       style = {s}
       tabIndex = "0"
       onMouseEnter = {this.onMouseEnter}
@@ -349,7 +357,10 @@ var Dropdown = React.createClass({
       {this.props.options.map(value => {
         return <DropdownItem
           value={value}
-          onClick={()=>{console.log('click', value);this.props.update(value);}}/>;
+          onClick={()=>{
+            this.props.update(value);
+            this.getDOMNode().blur();
+            }}/>;
       })}
     </div>;
   }
@@ -373,7 +384,7 @@ var DropdownItem = React.createClass({
       style = {s}
       onMouseEnter = {this.onMouseEnter}
       onMouseLeave = {this.onMouseLeave}
-      onClick={()=>{console.log('>click', this.props.value);}}
+      onClick={this.props.onClick}
     >
       {this.props.value}
     </div>;
