@@ -2,16 +2,11 @@ var React = require('react');
 var colors = require('colors.css');
 var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
-var {Typeahead} = require('react-typeahead');
 var style = require('./style');
 
 const DND_TYPE = 'json-vision-drag-type';
 
 var key = 0;
-var greys = {
-  text1: '#96A6AD',
-  text2: '#D8DDE1',
-};
 
 var styles = {
   root: {
@@ -26,44 +21,7 @@ var styles = {
   }
 };
 
-var JEditComponent = React.createClass({
-
-  getDefaultProps() {
-
-    return {data: {}, styles: []};
-  },
-  getStyle(path) {
-
-    var ret = {};
-
-    this.props.styles.forEach(style => {
-
-      if (style.selector.test(path)) {
-
-        _.merge(ret, style);
-      }
-    });
-
-    delete ret.selector;
-
-    return ret;
-  },
-  render() {
-    return(
-      <div style={styles.root}>
-        <JEditItem
-          data = {this.props.data}
-          path = {''}
-          name = {this.props.name}
-          report = {this.props.report}
-          getByPath = {this.props.getByPath}
-          getStyle = {this.getStyle}/>
-      </div>
-    );
-  }
-});
-
-var JEditItem = React.createClass({
+var JsonVisionItem = React.createClass({
   mixins: [DragDropMixin],
   getInitialState () {
 
@@ -186,7 +144,7 @@ var JEditItem = React.createClass({
 
         {Object.keys(this.props.data).map(function(name, idx, arr) {
 
-          return <JEditItem
+          return <JsonVisionItem
             key = {this.fullPath + '/' + name}
             indent = {this.props.indent + 1}
             name = {name}
@@ -427,4 +385,4 @@ var Tooltip = React.createClass({
   },
 });
 
-module.exports = JEditComponent;
+module.exports = JsonVisionItem;

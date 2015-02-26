@@ -1,5 +1,5 @@
 var React = require('react'),
-    JVComponent = require('./template.jsx'),
+    JVComponent = require('./JsonVisionComponent.jsx'),
     colors = require('colors.css'),
     _ = require('lodash');
 
