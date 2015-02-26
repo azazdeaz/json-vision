@@ -169,18 +169,14 @@ var JEditItem = React.createClass({
 
     //indent
     this.props.indent = this.props.indent || 0;
-    items.indent = <span style={{width:this.props.indent*8}}/>;
+    items.indent = <span style={{width:this.props.indent*20}}/>;
 
 
     //show/hide toggle btn
-    items.toggle = <i className = {`fa fa-${this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : 'minus'} fl-lg`}
-      style = {{
-        margin: '0 4px 0 6px',
-        lineHeight: style.lineHeight,
-        width: '12px',
-      }}
-      onClick = {this.hasChildren() ? this.onClickOpenToggle : null}
-    ></i>;
+    items.toggle = <Icon
+      icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : 'minus'}
+      onClick={this.hasChildren() ? this.onClickOpenToggle : null}/>;
+
 
     //label
     items.label = <span style={styleLabel}>{this.style.label || this.props.name}</span>;
@@ -205,9 +201,9 @@ var JEditItem = React.createClass({
       </div>;
     }
     else {
-      if (this.style.type === 'select' || _.isArray(this.style.options)) {
+      if (this.style.type === 'dropdown' || _.isArray(this.style.options)) {
 
-        items.input = <SelectComponent
+        items.input = <Dropdown
           update={v=>this.update(v)}
           options={this.style.options}
           value={this.props.data}/>;
@@ -227,7 +223,7 @@ var JEditItem = React.createClass({
     //buttons
     if (this.style.buttons) {
       items.buttons = <div>
-        {this.style.buttons.map(btn => <ButtonComponent {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
+        {this.style.buttons.map(btn => <Icon {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
       </div>;
     }
 
@@ -252,19 +248,6 @@ var JEditItem = React.createClass({
   }
 });
 
-var ButtonComponent = React.createClass({
-  render: function () {
-    return <i className = {`fa fa-${this.props.icon} fl-lg`}
-      style = {{
-        lineHeight: style.lineHeight,
-        margin: '0 4px 0 0',
-        width: '12px',
-      }}
-      onClick = {this.props.onClick}
-    ></i>;
-  }
-});
-
 var InputComponent = React.createClass({
 
   getInitialState() {
@@ -275,18 +258,10 @@ var InputComponent = React.createClass({
       hover: false,
     };
   },
-  onMouseEnter() {
-    this.setState({hover: true});
-  },
-  onMouseLeave() {
-    this.setState({hover: false});
-  },
-  onFocus() {
-    this.setState({focus: true});
-  },
-  onBlur() {
-    this.setState({focus: false});
-  },
+  onMouseEnter() { this.setState({hover: true}); },
+  onMouseLeave() { this.setState({hover: false}); },
+  onFocus() { this.setState({focus: true}); },
+  onBlur() { this.setState({focus: false}); },
   render: function () {
 
     var s = style.input;
@@ -320,25 +295,104 @@ var CheckboxComponent = React.createClass({
   }
 });
 
-var SelectComponent = React.createClass({
-
-  render: function () {
-    return <select
-      style = {styles.input}
-      defaultValue = {this.props.value}
-      onInput = {e => this.props.update(e.target.value)}>
-      {this.props.options.map(o => <option key={++key}value={o}>{o}</option>)}
-    </select>;
-  }
-});
+// var SelectComponent = React.createClass({
+//
+//   render: function () {
+//     return <select
+//       style = {styles.input}
+//       defaultValue = {this.props.value}
+//       onInput = {e => this.props.update(e.target.value)}>
+//       {this.props.options.map(o => <option key={++key}value={o}>{o}</option>)}
+//     </select>;
+//   }
+// });
 
 var Dropdown = React.createClass({
 
+  getInitialState() {
+    return {
+      open: false,
+      hover: false,
+    };
+  },
+
+  onMouseEnter() { this.setState({hover: true}); },
+  onMouseLeave() { this.setState({hover: false}); },
+  onFocus() { this.setState({open: true}); },
+  onBlur() { this.setState({open: false}); },
   render() {
+
+    var s;
+    if (this.state.open) {
+
+      let height = style.itemHeight * (this.props.options.length + 1);
+      s = _.defaults({height}, style.dropdownOpen);
+    }
+    else if (this.state.hover) s = style.dropdownHover;
+    else s = style.dropdown;
+
     return <div
-      style={s}
-    >{this.props.value}</div>;
+      style = {s}
+      tabIndex = "0"
+      onMouseEnter = {this.onMouseEnter}
+      onMouseLeave = {this.onMouseLeave}
+      onBlur = {this.onBlur}
+      onFocus = {this.onFocus}
+    >
+      <div style={{padding: '0 8px'}}>
+        {this.props.value}
+        <Icon
+          lineHeight={style.itemHeightPX}
+          icon={this.state.open ? 'chevron-up' : 'chevron-down'}/>
+      </div>
+
+      {this.props.options.map(value => {
+        return <DropdownItem
+          value={value}
+          onClick={()=>{console.log('click', value);this.props.update(value);}}/>;
+      })}
+    </div>;
   }
+});
+
+var DropdownItem = React.createClass({
+
+  getInitialState() {
+    return { hover: false };
+  },
+
+  onMouseEnter() { this.setState({hover: true}); },
+  onMouseLeave() { this.setState({hover: false}); },
+  render() {
+
+    var s;
+    if (this.state.hover) s = style.dropdownItemHover;
+    else s = style.dropdownItem;
+
+    return <div
+      style = {s}
+      onMouseEnter = {this.onMouseEnter}
+      onMouseLeave = {this.onMouseLeave}
+      onClick={()=>{console.log('>click', this.props.value);}}
+    >
+      {this.props.value}
+    </div>;
+  }
+});
+
+
+var Icon = React.createClass({
+
+  render: function () {
+    return <i className = {`fa fa-${this.props.icon} fl-lg`}
+      style = {{
+        margin: '0 4px 0 6px',
+        lineHeight: this.props.lineHeight || style.lineHeightPX,
+        width: '12px',
+      }}
+      onClick = {this.props.onClick}
+    ></i>;
+  },
 });
 
 var Tooltip = React.createClass({

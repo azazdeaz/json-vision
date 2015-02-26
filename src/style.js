@@ -1,15 +1,18 @@
 var _ = require('lodash');
 
 var style = {
-    lineHeight: '34px',
+    lineHeight: 34,
+    lineHeightPX: '34px',
+    itemHeight: 32,
+    itemHeightPX: '32px',
 };
 
 module.exports = style;
 
 
 style.line = {
-  height: style.lineHeight,
-  lineHeight: style.lineHeight,
+  height: style.lineHeightPX,
+  lineHeight: style.lineHeightPX,
   display: 'flex',
   color: '#96a6ad',
   fontSize: '13px',
@@ -38,7 +41,7 @@ style.input = {
   padding: '0',
   paddingLeft: '2px',
   borderRadius: '2px',
-  height: 32,
+  height: style.itemHeight,
   margin: '1px 3px',
   boxSizing: 'border-box',
   border: 'solid 1px rgba(0,0,0,0)',
@@ -68,11 +71,37 @@ style.inputError = _.defaults({
 
 
 style.dropdown = {
-    height: 32,
+    height: style.itemHeight,
+    lineHeight: style.itemHeightPX,
     borderRadius: 2,
     backgroundColor: 'rgba(59,66,74,.75)',
     boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
     border: 'solid 1px rgba(26,29,33,.75)',
     backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
     overflow: 'hidden',
+    boxSizing: 'border-box',
+    margin: '1px 0',
+    outline: 'none',
 };
+
+style.dropdownHover = _.defaults({
+    color: '#e2e7eb',
+    backgroundColor: '#3b424a',
+}, style.dropdown);
+
+style.dropdownOpen = _.defaults({
+    height: 'auto',
+    position: 'relative',
+    color: '#6bb6c4',
+    backgroundColor: '#3b424a',
+    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
+}, style.dropdown);
+
+style.dropdownItem = {
+    height: style.itemHeight,
+    padding: '0 8px',
+};
+
+style.dropdownItemHover = _.defaults({
+    backgroundColor: 'rgba(226,231,235,.05)',
+}, style.dropdownItem);
