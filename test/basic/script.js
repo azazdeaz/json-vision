@@ -16,9 +16,30 @@ var data = {
         //         textColor: 'blue'
         //     }
         // })
+        doSomething: function () {
+
+        }
     },
-    styles = [
-        {
+    settings = {
+        baseColor: 'green',
+        select: [
+            {
+                path: /baz\/foo/,
+                settings: {
+                    baseColor: 'red',
+                    options: ['tex', 'mex', 'bar', 'max'],
+                }
+            },{
+                value: function (v) {return typeof(v) === 'number';},
+                settings: {
+                    buttons: [{icon: 'close', onClick: 'delete'}],
+                }
+            }
+        ]
+            select: {
+                path: /baz\/foo/,
+
+            }
             selector: /baz\/foo/,
             baseColor: '#FF4136',
             options: ['tex', 'mex', 'bar', 'max'],
@@ -41,10 +62,36 @@ var data = {
             selector: /typeahead$/,
             type: 'typeahead',
             options: 'asdf,ast,avsd,agrs,ahr,sdh,sregt,sbgdf,gstg,dr,sgdr,sgrd,sgrd,sdgr,rse,ra,ga,gr,gara,grGtr,a,t,atgsgas,agrsagr,gsdrgsdr,gsr,gr'.split(',')
+        },
+        {
+            select: {
+                value: function (v) {return v instanceof RegExp;},
+                path: '**',
+                settings: {
+                    color: 'red'
+                }
+            },
         }
-    ],
+    },
     editor = new JsonVision({
         data: data,
-        styles: styles,
+        settings: settings,
         parent: document.querySelector('#cont'),
     });
+
+editor.settings
+    .baseColor('red')
+    .select('o.**')
+        .baseColor('red')
+        .back()
+    .select({value: v => typeof(v) === 'number'})
+        .type('slider')
+        .max(100)
+        .min(0)
+        .step(1)
+    .select('xxx.**')
+        .whitelist('yyy')
+
+editor.settigns = {
+    
+}

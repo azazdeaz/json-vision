@@ -3,6 +3,7 @@ var colors = require('colors.css');
 var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
 var style = require('./style');
+var Button = require('./Button.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -168,6 +169,11 @@ var JsonVisionItem = React.createClass({
         items.input = <CheckboxComponent
           update={v=>this.update(v)}
           value={this.props.data} />;
+      }
+      else if (typeof(this.props.data) === 'function') {
+        items.input = <Button
+          text={form.text || this.props.data.name}
+          colored={form.colored}/>;
       }
       else {
         items.input = <InputComponent

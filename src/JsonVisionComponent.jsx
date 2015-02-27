@@ -2,6 +2,9 @@ var React = require('react');
 var _ = require('lodash');
 var style = require('./style');
 var JsonVisionItem = require('./JsonVisionItem.jsx');
+var minimatch = require('minimatch');
+
+window.minimatch = minimatch//test!
 
 var styles = {
   root: {
@@ -22,11 +25,11 @@ var JsonVisionComponent = React.createClass({
 
     return {data: {}, styles: []};
   },
-  getStyle(path) {
+  getSettings(path, value) {
 
     var ret = {};
 
-    this.props.styles.forEach(style => {
+    this.props.settings.forEach(style => {
 
       if (style.selector.test(path)) {
 

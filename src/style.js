@@ -5,6 +5,23 @@ var style = {
     lineHeightPX: '34px',
     itemHeight: 32,
     itemHeightPX: '32px',
+
+    gardient: {
+        normal: 'linear-gradient(135deg, #6bb6c4 0%,#6b9ad3 100%)',
+        backward: 'linear-gradient(-45deg, #6bb6c4 0%,#6b9ad3 100%)',
+    },
+
+    palette: {
+        purple: '#8091c6',
+        blue: '#6bb6c4',
+        green: '#43aa81',
+        red: '#b64d65',
+        grey1: '#e2e7eb',
+        grey2: '#96a6ad',
+        grey3: '#3b424a',
+        grey4: '#1a1d21',
+    }
+
 };
 
 module.exports = style;
@@ -26,6 +43,75 @@ style.lineGroup = _.defaults({
   backgroundColor: '#3b424a',
   borderBottom: 'none',
 }, style.line);
+
+
+//Button
+
+style.button = {
+    normal: {
+        color: '#96a6ad',
+        backgroundColor: '#363c43',
+        backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
+        borderRadius: 2,
+        border: 'solid 1px rgba(26,29,33,.75)',
+        boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
+        fontFamily: 'Open Sans',
+        fontSize: '13px',
+    },
+};
+
+style.button.hover = _.defaults({
+    color: '#e2e7eb',
+    backgroundColor: '#3b424a',
+}, style.button.normal);
+
+style.button.active = _.defaults({
+    color: '#6bb6c4',
+    backgroundColor: '#363c43',
+    boxShadow: 'inset 0 -1px rgba(255,255,255,.02)',
+    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
+}, style.button.normal);
+
+style.button.disabled = _.defaults({
+    color: 'rgba(150,166,173,.2)',
+    backgroundColor: '#2c3136',
+    border: 'solid 1px rgba(26,29,33,.32)',
+}, style.button.normal);
+
+(() => {
+
+    var color = '191c1f',
+        colorDisabled = 'rgba(23,28,31,.7)',
+        bg = '#262a2e',
+        gardient = 'linear-gradient(135deg, #6bb6c4 0%,#6b9ad3 100%)',
+        gardientBW = 'linear-gradient(-45deg, #6bb6c4 0%,#6b9ad3 100%)';
+
+    style.buttonColored = {
+        normal: _.defaults({
+            color,
+            backgroundColor: bg,
+            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.75) 0%,rgba(107,154,211,.75) 100%)',
+        }, style.button.normal),
+
+        hover: _.defaults({
+            color,
+            backgroundColor: bg,
+            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,1) 0%,rgba(107,154,211,1) 100%)',
+        }, style.button.hover),
+
+        active: _.defaults({
+            color,
+            backgroundColor: bg,
+            backgroundImage: 'linear-gradient(-45deg, rgba(107,182,196,.75) 0%,rgba(107,154,211,.75) 100%)',
+        }, style.button.active),
+
+        disabled: _.defaults({
+            color: colorDisabled,
+            backgroundColor: bg,
+            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.32) 0%,rgba(107,154,211,.32) 100%)',
+        }, style.button.disabled),
+    };
+})();
 
 
 
