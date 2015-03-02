@@ -2,7 +2,7 @@ var React = require('react');
 var _ = require('lodash');
 var style = require('./style');
 var JsonVisionItem = require('./JsonVisionItem.jsx');
-var minimatch = require('minimatch');
+var jsonpath = require('jsonpath');
 
 window.minimatch = minimatch//test!
 
@@ -21,25 +21,65 @@ var styles = {
 
 var JsonVisionComponent = React.createClass({
 
+  componentWillMount() {
+
+    this.settingsMap = new Map();
+  },
   getDefaultProps() {
 
     return {data: {}, styles: []};
   },
-  getSettings(path, value) {
+  getSettings(object) {
 
-    var ret = {};
+    return this.settingsMap.get(object);
+  },
+  processSettings() {
 
-    this.props.settings.forEach(style => {
+    var map = this.settingsMap,
 
-      if (style.selector.test(path)) {
+    function set (o, s) => {
 
-        _.merge(ret, style);
+      map.set(o, _.merge(map.get(o) || {}, s));
+    }
+
+    function readList(settingsList, root) {
+
+      settingsList.forEach(settings => read(settings, root))
+    }
+
+    function read(settings, root) {
+
+      var selection = [];
+
+      if (settings.selected) {
+
+        selection.push(setings.selected);
       }
-    });
 
-    delete ret.selector;
+      if (settings.selecteds) {
 
-    return ret;
+        [].push.apply(selection, settings.selecteds);
+      }
+
+      if (settings.selector) {
+
+        let selecteds = jsonpath.query();
+        [].push.apply(selection, selecteds);
+      }
+
+      selection.forEach(selected => {
+
+        set(selected, settings);
+
+        if (_.isArray(settings.settings)) {
+
+          readList(settings.settings, selected);
+        }
+      });
+    }
+
+    map.clear();
+    readList(this.props.settings, this.props.data);
   },
   render() {
     return(
