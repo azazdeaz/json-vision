@@ -22,7 +22,12 @@ var Button = React.createClass({
     else if (this.state.hover) s = s.hover;
     else s = s.normal;
 
-    return <div style={s} onClick={this.props.onClick}>
+    return <div style={s}
+      onMouseEnter={() => this.setState({hover: true})}
+      onMouseLeave={() => this.setState({hover: false})}
+      onMouseDown={() => this.setState({down: true})}
+      onMouseUp={() => this.setState({down: false})}
+      onClick={this.props.onClick}>
       {this.props.text}
     </div>;
   }

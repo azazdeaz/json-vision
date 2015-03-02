@@ -17,7 +17,7 @@ var data = {
         //     }
         // })
         doSomething: function () {
-
+            console.log('doing something');
         }
     },
     settings = [

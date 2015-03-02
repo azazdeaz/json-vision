@@ -57,6 +57,7 @@ style.button = {
         boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
         fontFamily: 'Open Sans',
         fontSize: '13px',
+        padding: '0 8px',
     },
 };
 

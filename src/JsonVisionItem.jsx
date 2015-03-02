@@ -173,6 +173,7 @@ var JsonVisionItem = React.createClass({
       else if (typeof(this.props.data) === 'function') {
         items.input = <Button
           text={this.settings.text || this.props.data.name || 'Button'}
+          onClick={this.props.data}
           colored={this.settings.colored}/>;
       }
       else {
