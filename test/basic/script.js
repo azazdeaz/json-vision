@@ -17,11 +17,18 @@ var data = {
         //     }
         // })
         doSomething: function () {
+            settings[0].text = settings[0].text === 'bim' ? 'bamm!' : 'bim';
+            settings[0].colored = !settings[0].colored;
+            editor.refresh();
             console.log('bummmm!!!');
         }
     },
     settings = [
         {
+            selector: '.doSomething',
+            icon: 'bomb',
+            text: 'bim',
+        }, {
             selector: '.baz.foo',
             baseColor: 'red',
             options: ['tex', 'mex', 'bar', 'max'],
@@ -61,11 +68,7 @@ var data = {
             selector: '.typeahead',
             type: 'typeahead',
             options: 'asdf,ast,avsd,agrs,ahr,sdh,sregt,sbgdf,gstg,dr,sgdr,sgrd,sgrd,sdgr,rse,ra,ga,gr,gara,grGtr,a,t,atgsgas,agrsagr,gsdrgsdr,gsr,gr'.split(',')
-        }, {
-            selector: '.doSomething',
-            icon: 'bomb',
-            text: 'bim',
-        }
+        },
     ],
     editor = new JsonVision({
         data: data,

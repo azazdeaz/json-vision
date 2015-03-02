@@ -49,6 +49,8 @@ style.lineGroup = _.defaults({
 
 style.button = {
     normal: {
+        height: style.itemHeight,
+        boxSizing: 'border-box',
         color: '#96a6ad',
         backgroundColor: '#363c43',
         backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
@@ -57,6 +59,7 @@ style.button = {
         boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
         fontFamily: 'Open Sans',
         fontSize: '13px',
+        margin: '1px 0px',
         padding: '0 8px',
     },
 };

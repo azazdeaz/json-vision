@@ -8,7 +8,7 @@ var Icon = React.createClass({
     return <i className = {`fa fa-${this.props.icon} fl-lg`}
       style = {_.assign({
         margin: '0 4px 0 6px',
-        lineHeight: this.props.lineHeight || style.lineHeightPX,
+        lineHeight: this.props.lineHeight || style.itemHeightPX,
         width: '12px',
       }, this.props.style)}
       onClick = {this.props.onClick}
