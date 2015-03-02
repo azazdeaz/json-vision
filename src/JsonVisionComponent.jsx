@@ -2,9 +2,7 @@ var React = require('react');
 var _ = require('lodash');
 var style = require('./style');
 var JsonVisionItem = require('./JsonVisionItem.jsx');
-var jsonpath = require('jsonpath');
-
-window.minimatch = minimatch//test!
+var JSPath = require('jspath');
 
 var styles = {
   root: {
@@ -31,20 +29,20 @@ var JsonVisionComponent = React.createClass({
   },
   getSettings(object) {
 
-    return this.settingsMap.get(object);
+    return this.settingsMap.get(object) || {};
   },
   processSettings() {
 
-    var map = this.settingsMap,
+    var map = this.settingsMap;
 
-    function set (o, s) => {
+    function set (o, s) {
 
       map.set(o, _.merge(map.get(o) || {}, s));
     }
 
     function readList(settingsList, root) {
 
-      settingsList.forEach(settings => read(settings, root))
+      settingsList.forEach(settings => read(settings, root));
     }
 
     function read(settings, root) {
@@ -63,8 +61,12 @@ var JsonVisionComponent = React.createClass({
 
       if (settings.selector) {
 
-        let selecteds = jsonpath.query();
-        [].push.apply(selection, selecteds);
+        if (typeof(settings.selector) === 'string') {
+
+          let selecteds = JSPath.apply(settings.selector, root);
+          [].push.apply(selection, selecteds);
+        }
+
       }
 
       selection.forEach(selected => {
@@ -90,7 +92,7 @@ var JsonVisionComponent = React.createClass({
           name = {this.props.name}
           report = {this.props.report}
           getByPath = {this.props.getByPath}
-          getStyle = {this.getStyle}/>
+          getSettings = {this.getSettings}/>
       </div>
     );
   }

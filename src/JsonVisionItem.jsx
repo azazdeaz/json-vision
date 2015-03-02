@@ -108,7 +108,7 @@ var JsonVisionItem = React.createClass({
   },
   render () {
     this.fullPath = this.props.path ? this.props.path+'/'+this.props.name : this.props.name;
-    this.style = this.props.getStyle(this.fullPath);
+    this.settings = this.props.getSettings(this.props.data);
 
     var items = {},
       dragState = this.getDragState(DND_TYPE),
@@ -136,7 +136,7 @@ var JsonVisionItem = React.createClass({
 
 
     //label
-    items.label = <span style={styleLabel}>{this.style.label || this.props.name}</span>;
+    items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
     //input or children
     if (typeof(this.props.data) === 'object') {
@@ -151,29 +151,29 @@ var JsonVisionItem = React.createClass({
             name = {name}
             path = {this.fullPath}
             data = {this.props.data[name]}
-            getStyle = {this.props.getStyle}
+            getSettings = {this.props.getSettings}
             report = {this.props.report}
             getByPath = {this.props.getByPath}/>;
         }, this)}
       </div>;
     }
     else {
-      if (this.style.type === 'dropdown' || _.isArray(this.style.options)) {
+      if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
 
         items.input = <Dropdown
           update={v=>this.update(v)}
-          options={this.style.options}
+          options={this.settings.options}
           value={this.props.data}/>;
       }
-      else if (this.style.type === 'checkbox') {
+      else if (this.settings.type === 'checkbox') {
         items.input = <CheckboxComponent
           update={v=>this.update(v)}
           value={this.props.data} />;
       }
       else if (typeof(this.props.data) === 'function') {
         items.input = <Button
-          text={form.text || this.props.data.name}
-          colored={form.colored}/>;
+          text={this.settings.text || this.props.data.name || 'Button'}
+          colored={this.settings.colored}/>;
       }
       else {
         items.input = <InputComponent
@@ -183,15 +183,15 @@ var JsonVisionItem = React.createClass({
     }
 
     //buttons
-    if (this.style.buttons) {
+    if (this.settings.buttons) {
       items.buttons = <div>
-        {this.style.buttons.map(btn => <Icon {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
+        {this.settings.buttons.map(btn => <Icon {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
       </div>;
     }
 
     //tooltips
-    if (this.style.tooltip) {
-      items.tooltip = <Tooltip text={this.style.tooltip}/>;
+    if (this.settings.tooltip) {
+      items.tooltip = <Tooltip text={this.settings.tooltip}/>;
     }
 
     return (

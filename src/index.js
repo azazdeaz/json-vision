@@ -8,7 +8,7 @@ function JsonVision(opt) {
 
     this.domElem = opt.parent || document.createElement('div');
     this.data = opt.data || {};
-    this.styles = opt.styles || [];
+    this.settings = opt.settings || [];
     this.name = opt.name || 'json-vision';
 
 
@@ -35,7 +35,7 @@ p.refresh = function () {
 
     this.component.setProps({
         data: this.data,
-        styles: this.styles,
+        settings: this.settings,
     });
 };
 
