@@ -1,6 +1,7 @@
 var React = require('react');
 var _ = require('lodash');
 var style = require('./style');
+var Icon = require('./Icon.jsx');
 
 var Button = React.createClass({
 
@@ -28,6 +29,7 @@ var Button = React.createClass({
       onMouseDown={() => this.setState({down: true})}
       onMouseUp={() => this.setState({down: false})}
       onClick={this.props.onClick}>
+      {this.props.icon && <Icon icon={this.props.icon} style={{marginLeft:0}}/>}
       {this.props.text}
     </div>;
   }

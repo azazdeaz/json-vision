@@ -25,7 +25,7 @@ var JsonVisionComponent = React.createClass({
   },
   getDefaultProps() {
 
-    return {data: {}, styles: []};
+    return {data: {}, settings: []};
   },
   getSettings(object) {
 
@@ -84,6 +84,9 @@ var JsonVisionComponent = React.createClass({
     readList(this.props.settings, this.props.data);
   },
   render() {
+
+    this.processSettings();
+
     return(
       <div style={styles.root}>
         <JsonVisionItem

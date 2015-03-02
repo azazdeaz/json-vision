@@ -4,6 +4,7 @@ var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
 var style = require('./style');
 var Button = require('./Button.jsx');
+var Icon = require('./Icon.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -172,6 +173,7 @@ var JsonVisionItem = React.createClass({
       }
       else if (typeof(this.props.data) === 'function') {
         items.input = <Button
+          icon={this.settings.icon}
           text={this.settings.text || this.props.data.name || 'Button'}
           onClick={this.props.data}
           colored={this.settings.colored}/>;
@@ -186,7 +188,7 @@ var JsonVisionItem = React.createClass({
     //buttons
     if (this.settings.buttons) {
       items.buttons = <div>
-        {this.settings.buttons.map(btn => <Icon {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
+        {this.settings.buttons.map(btn => <Button {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
       </div>;
     }
 
@@ -358,20 +360,6 @@ var DropdownItem = React.createClass({
   }
 });
 
-
-var Icon = React.createClass({
-
-  render: function () {
-    return <i className = {`fa fa-${this.props.icon} fl-lg`}
-      style = {{
-        margin: '0 4px 0 6px',
-        lineHeight: this.props.lineHeight || style.lineHeightPX,
-        width: '12px',
-      }}
-      onClick = {this.props.onClick}
-    ></i>;
-  },
-});
 
 var Tooltip = React.createClass({
 
