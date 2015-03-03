@@ -18,7 +18,8 @@ var data = {
         // })
         doSomething: function () {
             console.log('bummmm!!!');
-        }
+        },
+        slider: 6,
     },
     settings = [
         {
@@ -65,6 +66,12 @@ var data = {
             selector: '.doSomething',
             icon: 'bomb',
             text: 'bim',
+        }, {
+            selected: data.slider,
+            type: 'slider',
+            min: -100,
+            max: 100,
+            step: 0.1,
         }
     ],
     editor = new JsonVision({

@@ -5,6 +5,7 @@ var {DragDropMixin} = require('react-dnd');
 var style = require('./style');
 var Button = require('./Button.jsx');
 var Icon = require('./Icon.jsx');
+var Slider = require('./Slider.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -169,6 +170,11 @@ var JsonVisionItem = React.createClass({
       }
       else if (this.settings.type === 'checkbox') {
         items.input = <CheckboxComponent
+          update={v=>this.update(v)}
+          value={this.props.data} />;
+      }
+      else if (this.settings.type === 'slider') {
+        items.input = <Slider
           update={v=>this.update(v)}
           value={this.props.data} />;
       }
