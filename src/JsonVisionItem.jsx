@@ -5,6 +5,8 @@ var {DragDropMixin} = require('react-dnd');
 var style = require('./style');
 var Button = require('./Button.jsx');
 var Icon = require('./Icon.jsx');
+var StringInput = require('./StringInput.jsx');
+var NumberInput = require('./NumberInput.jsx');
 var Slider = require('./Slider.jsx');
 var TooltipMixin = require('./TooltipMixin.jsx');
 
@@ -165,6 +167,15 @@ var JsonVisionItem = React.createClass({
       </div>;
     }
     else {
+
+      let numberInp = () => items.input = <NumberInput
+        update={v=>this.update(v)}
+        value={this.props.data} />;
+
+      let stringInp = () => items.input = <StringInput
+        update={v=>this.update(v)}
+        value={this.props.data} />;
+
       if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
 
         items.input = <Dropdown
@@ -182,6 +193,12 @@ var JsonVisionItem = React.createClass({
           update={v=>this.update(v)}
           value={this.props.data} />;
       }
+      else if (this.settings.type === 'number') {
+        numberInp();
+      }
+      else if (this.settings.type === 'string') {
+        stringInp();
+      }
       else if (typeof(this.props.data) === 'function') {
         items.input = <Button
           icon={this.settings.icon}
@@ -189,10 +206,11 @@ var JsonVisionItem = React.createClass({
           onClick={this.props.data}
           colored={this.settings.colored}/>;
       }
+      else if (typeof(this.props.data) === 'number') {
+        numberInp();
+      }
       else {
-        items.input = <InputComponent
-          update={v=>this.update(v)}
-          value={this.props.data} />;
+        stringInp();
       }
     }
 
@@ -203,15 +221,9 @@ var JsonVisionItem = React.createClass({
       </div>;
     }
 
-    //tooltips
-    if (this.settings.tooltip) {
-      items.tooltip = <Tooltip text={this.settings.tooltip}/>;
-    }
-
     return (
       <div {...this.dropTargetFor(DND_TYPE)}>
         <div style={styleBlock} {...this.dragSourceFor(DND_TYPE)}>
-          {items.tooltip}
           {items.indent}
           {items.toggle}
           {items.label}
@@ -221,42 +233,6 @@ var JsonVisionItem = React.createClass({
         {items.children}
       </div>
     );
-  }
-});
-
-var InputComponent = React.createClass({
-
-  getInitialState() {
-    return {
-      disabled: false,
-      error: false,
-      focus: false,
-      hover: false,
-    };
-  },
-  onMouseEnter() { this.setState({hover: true}); },
-  onMouseLeave() { this.setState({hover: false}); },
-  onFocus() { this.setState({focus: true}); },
-  onBlur() { this.setState({focus: false}); },
-  render: function () {
-
-    var s = style.input;
-    if (this.state.disabled) s = style.inputDisabled;
-    else if (this.state.error) s = style.inputError;
-    else if (this.state.focus) s = style.inputActive;
-    else if (this.state.hover) s = style.inputHover;
-
-    return <input
-      type="text"
-      defaultValue = {this.props.value}
-      style = {s}
-      onChange = {e => this.props.update(e.target.name)}
-      onMouseEnter = {this.onMouseEnter}
-      onMouseLeave = {this.onMouseLeave}
-      onBlur = {this.onBlur}
-      onFocus = {this.onFocus}
-      disabled = {this.state.disabled}
-    ></input>;
   }
 });
 
@@ -372,24 +348,5 @@ var DropdownItem = React.createClass({
   }
 });
 
-
-var Tooltip = React.createClass({
-
-  render: function () {
-    return <div style={{
-      pointerEvents: 'none',
-      position: 'absolute',
-      width: 0,
-      left: -5,
-    }}>
-      <div style={{
-        position: 'absolute',
-        width: 231,
-        right: 0,
-        background: 'rgba(255,255,255,.34)',
-      }}> {this.props.text} </div>
-    </div>;
-  },
-});
 
 module.exports = JsonVisionItem;
