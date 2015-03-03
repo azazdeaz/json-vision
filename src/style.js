@@ -50,16 +50,17 @@ style.lineGroup = _.defaults({
 style.button = {
     normal: {
         height: style.itemHeight,
+        lineHeight: style.itemHeightPX,
         boxSizing: 'border-box',
         color: '#96a6ad',
+        borderRadius: 2,
         backgroundColor: '#363c43',
         backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
-        borderRadius: 2,
         border: 'solid 1px rgba(26,29,33,.75)',
         boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
         fontFamily: 'Open Sans',
         fontSize: '13px',
-        margin: '1px 0px',
+        margin: '1px 3px',
         padding: '0 8px',
     },
 };
@@ -82,9 +83,10 @@ style.button.disabled = _.defaults({
     border: 'solid 1px rgba(26,29,33,.32)',
 }, style.button.normal);
 
+//colored button
 (() => {
 
-    var color = '191c1f',
+    var color = '#191c1f',
         colorDisabled = 'rgba(23,28,31,.7)',
         bg = '#262a2e',
         gardient = 'linear-gradient(135deg, #6bb6c4 0%,#6b9ad3 100%)',
@@ -117,12 +119,43 @@ style.button.disabled = _.defaults({
     };
 })();
 
+//empty button
+style.buttonEmpty = {
+    normal: _.assign({}, style.button.normal, {
+        backgroundImage: 'none',
+        backgroundColor: 'none',
+        border: 'none',
+        boxShadow: 'none',
+    }),
+
+    hover: _.assign({}, style.button.hover, {
+        backgroundImage: 'none',
+        backgroundColor: 'none',
+        border: 'none',
+        boxShadow: 'none',
+    }),
+
+    active: _.assign({}, style.button.active, {
+        backgroundImage: 'none',
+        backgroundColor: 'none',
+        border: 'none',
+        boxShadow: 'none',
+    }),
+
+    disabled: _.assign({}, style.button.disabled, {
+        backgroundImage: 'none',
+        backgroundColor: 'none',
+        border: 'none',
+        boxShadow: 'none',
+    }),
+};
 
 
 
 
 
 
+//Input
 style.input = {
   color: '#96a6ad',
   background: 'none',
@@ -159,7 +192,7 @@ style.inputError = _.defaults({
 }, style.input);
 
 
-
+//Dropdown
 style.dropdown = {
     height: style.itemHeight,
     lineHeight: style.itemHeightPX,

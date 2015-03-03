@@ -51,7 +51,7 @@ var JsonVisionComponent = React.createClass({
 
       if (settings.selected) {
 
-        selection.push(setings.selected);
+        selection.push(settings.selected);
       }
 
       if (settings.selecteds) {

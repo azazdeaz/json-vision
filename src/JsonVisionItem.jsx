@@ -133,7 +133,8 @@ var JsonVisionItem = React.createClass({
     //show/hide toggle btn
     items.toggle = <Icon
       icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : 'minus'}
-      onClick={this.hasChildren() ? this.onClickOpenToggle : null}/>;
+        onClick={this.hasChildren() ? this.onClickOpenToggle : null}
+        style={{margin:'0 4px'}}/>;
 
 
     //label
@@ -319,6 +320,7 @@ var Dropdown = React.createClass({
       <div style={{padding: '0 8px'}}>
         {this.props.value}
         <Icon
+          style={{marginLeft: 4}}
           lineHeight={style.itemHeightPX}
           icon={this.state.open ? 'chevron-up' : 'chevron-down'}/>
       </div>

@@ -7,7 +7,6 @@ var Icon = React.createClass({
   render: function () {
     return <i className = {`fa fa-${this.props.icon} fl-lg`}
       style = {_.assign({
-        margin: '0 4px 0 6px',
         lineHeight: this.props.lineHeight || style.itemHeightPX,
         width: '12px',
       }, this.props.style)}

@@ -16,12 +16,23 @@ var Button = React.createClass({
 
   render() {
 
-    var s = this.props.colored ? style.buttonColored : style.button;
+    var s;
+    switch(this.props.type) {
+      case 'colored': s = style.buttonColored; break;
+      case 'empty': s = style.buttonEmpty; break;
+      default: s = style.button;
+    }
 
     if (this.state.disabled) s = s.disabled;
     else if (this.state.down || this.state.toggled) s = s.active;
     else if (this.state.hover) s = s.hover;
     else s = s.normal;
+
+    var icon;
+    if (this.props.icon) {
+      icon = <Icon icon={this.props.icon}
+        style={{marginRight:this.props.text ? 4 : 0}}/>;
+    }
 
     return <div style={s}
       onMouseEnter={() => this.setState({hover: true})}
@@ -29,7 +40,7 @@ var Button = React.createClass({
       onMouseDown={() => this.setState({down: true})}
       onMouseUp={() => this.setState({down: false})}
       onClick={this.props.onClick}>
-      {this.props.icon && <Icon icon={this.props.icon} style={{marginLeft:0}}/>}
+      {icon}
       {this.props.text}
     </div>;
   }
