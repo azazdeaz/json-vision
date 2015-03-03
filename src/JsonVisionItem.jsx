@@ -6,6 +6,7 @@ var style = require('./style');
 var Button = require('./Button.jsx');
 var Icon = require('./Icon.jsx');
 var Slider = require('./Slider.jsx');
+var TooltipMixin = require('./TooltipMixin.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -25,7 +26,7 @@ var styles = {
 };
 
 var JsonVisionItem = React.createClass({
-  mixins: [DragDropMixin],
+  mixins: [DragDropMixin, TooltipMixin],
   getInitialState () {
 
     return {opened: true};
@@ -107,6 +108,9 @@ var JsonVisionItem = React.createClass({
     else {
       btn.onClick(this.fullPath);
     }
+  },
+  tooltipContent() {
+    return this.settings.tooltip;
   },
   render () {
     this.fullPath = this.props.path ? this.props.path+'/'+this.props.name : this.props.name;

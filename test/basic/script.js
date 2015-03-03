@@ -24,7 +24,7 @@ var data = {
     settings = [
         {
             selector: '.baz.foo',
-            baseColor: 'red',
+            baseColor   : 'red',
             options: ['tex', 'mex', 'bar', 'max'],
         },
         {
@@ -72,6 +72,7 @@ var data = {
             min: -100,
             max: 100,
             step: 0.1,
+            tooltip: 'slider tooltip',
         }
     ],
     editor = new JsonVision({
