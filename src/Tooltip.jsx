@@ -7,26 +7,37 @@ var _ = require('lodash');
 var Tooltip = React.createClass({
 
   getInitialState() {
-    return {show: true};
+    return {show: false, style: {}};
   },
   show() {
-    this.setState({show: true});
+
+    var domNode = this.getDOMNode(),
+      parent = domNode.parentNode,
+      br = parent.getBoundingClientRect();
+
+    this.setState({
+      show: true,
+      style: {
+        left: br.left - domNode.offsetWidth - 8,
+        top: br.top,
+      }
+    });
   },
   hide() {
     this.setState({show: false});
   },
   componentDidMount() {
+
     var parent = this.getDOMNode().parentNode;
-    console.log(parent)
     parent.addEventListener('mouseover', this.show);
     parent.addEventListener('mouseleave', this.hide);
   },
   render () {
 
-    if (!this.state.show) return null;
+    if (!this.state.show) return <div style={{display:'none'}}/>;
 
     return <div
-        style={_.defaults({}, this.props.style, style.tooltip)}>
+        style={_.defaults({}, this.state.style, style.tooltip)}>
         {this.props.content}
       </div>;
   }

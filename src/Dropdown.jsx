@@ -60,7 +60,7 @@ var Dropdown = React.createClass({
         return <DropdownItem
           value={value}
           onClick={()=>{
-            this.props.update(value);
+            this.props.onChange(value);
             this.getDOMNode().blur();
             }}/>;
       })}

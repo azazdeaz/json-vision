@@ -8,7 +8,17 @@ var Slider = React.createClass({
   componentDidMount() {
     new CustomDrag({
       deTarget: this.refs.handle.getDOMNode(),
-      onDrag: e => console.log(e),
+      onDown: () => ({
+        value: this.props.value,
+        width: this.getDOMNode().offsetWidth,
+      }),
+      onDrag: md => {
+
+        var range = this.props.max - this.props.min,
+          value = md.value + (md.dx / md.width) * range;
+
+        this.props.onChange(value);
+      },
     });
   },
   render() {

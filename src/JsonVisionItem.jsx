@@ -228,7 +228,7 @@ var JsonVisionItem = React.createClass({
     }
 
     //tooltips
-  if (true/* && this.settings.tooltip*/) {
+    if (true||this.settings.tooltip) {
       items.tooltip = <Tooltip content='tooltip tooltip tooltip'/>;
     }
 
