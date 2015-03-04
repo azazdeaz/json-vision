@@ -1,29 +1,48 @@
 var React = require('react');
 var Input = require('./Input.jsx');
+var CustomDrag = require('./CustomDrag');
+var _ = require('lodash');
 
 var NumberInput = React.createClass({
 
   componentDidMount() {
+
     if (this.props.draggable) {
       new CustomDrag({
-        deTarget: this.refs.handle.getDOMNode(),
-        onDown(e) {
+        deTarget: this.getDOMNode(),
+        onDown: (e) => {
           return {
             value: this.props.value,
             moved: false,
           };
         },
-        onDrag(md) {
+        onDrag: (md) => {
+
           md.moved = true;
-          this.props.update(md.value + e.dx);
+
+          var value = md.value + md.dx * this.props.dragSpeed;
+          this.props.update(this.formatValue(value));
         },
-        onUp(md) {
-          //TODO if (!md.moved) this.getDOM
+        onUp: (md) => {
+          if (!md.moved) this.getDOMNode().focus();
         }
       });
     }
   },
-  getDefaultState() {
+  formatValue(value) {
+
+    var min = this.props.min,
+      max = this.props.max,
+      precision = this.props.precision;
+
+    if (_.isFinite(min)) value = Math.max(min, value);
+    if (_.isFinite(max)) value = Math.min(max, value);
+
+    value = parseFloat(value.toFixed(precision));
+
+    return value;
+  },
+  getDefaultProps() {
     return {
       draggable: true,
       precision: 0,
