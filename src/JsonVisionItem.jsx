@@ -9,7 +9,7 @@ var StringInput = require('./StringInput.jsx');
 var NumberInput = require('./NumberInput.jsx');
 var Slider = require('./Slider.jsx');
 var Dropdown = require('./Dropdown.jsx');
-var TooltipMixin = require('./TooltipMixin.jsx');
+var Tooltip = require('./Tooltip.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -19,8 +19,8 @@ var styles = {
   root: {
     background: 'rgba(255,255,255,.34)',
     color: '#191D21',
-    fontFamily: 'Open Sans',
-    fontWeight: '300',
+    fontFamily: style.fontFamily,
+    fontWeight: style.fontWeight,
     borderRadius: '1px',
     margin: '3px',
     // boxShadow: '0 0 1px #000',
@@ -29,7 +29,7 @@ var styles = {
 };
 
 var JsonVisionItem = React.createClass({
-  mixins: [DragDropMixin, TooltipMixin],
+  mixins: [/*DragDropMixin*/],
   getInitialState () {
 
     return {opened: true};
@@ -41,48 +41,48 @@ var JsonVisionItem = React.createClass({
   },
   statics: {
     configureDragDrop(register) {
-        register(DND_TYPE, {
+      register(DND_TYPE, {
 
-          dragSource: {
-            beginDrag(component) {
-              // console.log('begin drag', component.fullPath)
-              return {
-                item: {
-                  component: component,
-                },
-              };
-            }
-          },
-
-          dropTarget: {
-            acceptDrop(component, item, e, isHandled) {
-
-              if (isHandled){console.log('isHandled', component.props.path);return;}
-              else {console.log('isNotHandled', component.props.path);}
-              console.log('acceptDrop', component, item);
-
-              component.props.report({
-                type: 'set',
-                object: component.props.parentObject,
-                key: component.props.name,
-                value: component.props.value
-              });
-
-              component.props.report({
-                type: 'delete',
-                object: component.props.parentObject,
-                key: component.props.name,
-              });
-            },
-            canDrop(component, item) {
-
-              return component.hasChildren();
-            }
-            // enter(component, item) {console.log('enter', component, item);},
-            // leave(component, item) {console.log('leave', component, item);},
-            // over(component, item) {console.log('over', component, item);},
+        dragSource: {
+          beginDrag(component) {
+            // console.log('begin drag', component.fullPath)
+            return {
+              item: {
+                component: component,
+              },
+            };
           }
-        });
+        },
+
+        dropTarget: {
+          acceptDrop(component, item, e, isHandled) {
+
+            if (isHandled){console.log('isHandled', component.props.path);return;}
+            else {console.log('isNotHandled', component.props.path);}
+            console.log('acceptDrop', component, item);
+
+            component.props.report({
+              type: 'set',
+              object: component.props.parentObject,
+              key: component.props.name,
+              value: component.props.value
+            });
+
+            component.props.report({
+              type: 'delete',
+              object: component.props.parentObject,
+              key: component.props.name,
+            });
+          },
+          canDrop(component, item) {
+
+            return component.hasChildren();
+          }
+          // enter(component, item) {console.log('enter', component, item);},
+          // leave(component, item) {console.log('leave', component, item);},
+          // over(component, item) {console.log('over', component, item);},
+        }
+      });
     }
   },
   hasChildren () {
@@ -120,14 +120,14 @@ var JsonVisionItem = React.createClass({
     }
   },
   tooltipContent() {
-    return this.settings.tooltip;
+    return this.settings.tooltip || 'This is a tooltip';
   },
   render () {
     this.settings = this.props.getSettings(this.props.value);
 
     var items = {},
-      dragState = this.getDragState(DND_TYPE),
-      dropState = this.getDropState(DND_TYPE);
+      dragState = {},//this.getDragState(DND_TYPE),
+      dropState = {};//this.getDropState(DND_TYPE);
 
     var styleBlock = _.defaults({
       opacity: dragState.isDragging ? 0.4 : 1,
@@ -227,14 +227,20 @@ var JsonVisionItem = React.createClass({
       </div>;
     }
 
+    //tooltips
+  if (true/* && this.settings.tooltip*/) {
+      items.tooltip = <Tooltip content='tooltip tooltip tooltip'/>;
+    }
+
     return (
-      <div {...this.dropTargetFor(DND_TYPE)}>
-        <div style={styleBlock} {...this.dragSourceFor(DND_TYPE)}>
+      <div>
+        <div ref='head' style={styleBlock}>
           {items.indent}
           {items.toggle}
           {items.label}
           {items.input}
           {items.buttons}
+          {items.tooltip}
         </div>
         {items.children}
       </div>

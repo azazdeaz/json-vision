@@ -12,6 +12,9 @@ var style = {
         backward: 'linear-gradient(-45deg, #6bb6c4 0%,#6b9ad3 100%)',
     },
 
+    fontFamily: 'Open Sans',
+    fontWeight: '300',
+
     palette: {
         purple: '#8091c6',
         blue: '#6bb6c4',
@@ -194,10 +197,16 @@ style.inputError = _.defaults({
 
 //Tooltip
 style.tooltip = {
+  position: 'fixed',
+  fontFamily: style.fontFamily,
+  fontWeight: style.fontWeight,
+  color: '#6bb6c4',
+  borderRadius: 2,
+  padding: '5px',
+  backgroundColor: 'rgba(255,255,255,.34)',
   boxSizing: 'border-box',
   boxShadow: '0 0 3px rgba(86,83,136,.6), inset 0 0 4px rgba(86,83,136,.6)',
   border: 'solid 1px rgba(93,169,167,1)',
-  position: 'absolute',
 };
 
 

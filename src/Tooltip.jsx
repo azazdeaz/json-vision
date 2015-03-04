@@ -1,14 +1,32 @@
 var style = require('./style');
 var assign = require('lodash');
 var React = require('react');
-var tooltip;
+var _ = require('lodash');
+
 
 var Tooltip = React.createClass({
+
+  getInitialState() {
+    return {show: true};
+  },
+  show() {
+    this.setState({show: true});
+  },
+  hide() {
+    this.setState({show: false});
+  },
+  componentDidMount() {
+    var parent = this.getDOMNode().parentNode;
+    console.log(parent)
+    parent.addEventListener('mouseover', this.show);
+    parent.addEventListener('mouseleave', this.hide);
+  },
   render () {
 
-    if (!this.props.content) return '<div/>';
+    if (!this.state.show) return null;
 
-    return <div style={style.tooltip}>
+    return <div
+        style={_.defaults({}, this.props.style, style.tooltip)}>
         {this.props.content}
       </div>;
   }
@@ -16,12 +34,6 @@ var Tooltip = React.createClass({
 
 var TooltipMixin = {
 
-  componentWillMount: function() {
-
-    if (!tooltip) {
-      tooltip = React.render(<Tooltip/>, document.body);
-    }
-  },
   componentDidMount: function() {
 
     var el = this.getDOMNode();
@@ -37,28 +49,31 @@ var TooltipMixin = {
 
   mouseenter: function() {
 
+    if (!this._tooltip) {
+      this._tooltip = React.render(<Tooltip/>, this.getDOMNode());
+    }
+
     if (typeof(this.tooltipContent) === 'function') {
 
       var br = this.getDOMNode().getBoundingClientRect();
 
-        tooltip.setProps({
-          style: {
-            left: br.left,
-            top: br.top,
-          },
-          content: this.tooltipContent(),
-        });
+      this._tooltip.setProps({
+        style: {
+          left: br.left,
+          top: br.top,
+        },
+        content: this.tooltipContent(),
+      });
     } else {
       console.warn("Component has TooltipMixin but does not provide tooltipContent()");
     }
   },
   mouseleave: function() {
-      // Hide the tooltip only if we are still the owner.
-      if (gTooltipOwner === this) {
-          gTooltip.detach().hide();
-          gTooltipOwner = null;
-      }
+
+    this._tooltip.setProps({
+      content: false,
+    });
   }
 };
 
-// module.exports = TooltipMixin;
+module.exports = Tooltip;
