@@ -26,9 +26,9 @@ var Input = React.createClass({
 
     return <input
       style = {s}
-      defaultValue = {this.props.value}
+      value = {this.props.value}
       type={this.props.type}
-      onChange = {e => this.props.update(e.target.name)}
+      onChange = {e => this.props.onChange(e.target.value)}
       onMouseEnter = {this.onMouseEnter}
       onMouseLeave = {this.onMouseLeave}
       onBlur = {this.onBlur}

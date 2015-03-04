@@ -1,4 +1,4 @@
-var data = {
+var value = {
         foo: 1,
         baz: {
             foo: 'bar'
@@ -11,7 +11,7 @@ var data = {
         ],
         typeahed: 'dsdsds',
         // value: new JsonVision.Value({
-        //     data: {foo: {bar: 2}},
+        //     value: {foo: {bar: 2}},
         //     style: {
         //         textColor: 'blue'
         //     }
@@ -23,12 +23,12 @@ var data = {
     },
     settings = [
         {
-            selector: '.baz.foo',
+            selected: value.baz.foo,
             baseColor   : 'red',
             options: ['tex', 'mex', 'bar', 'max'],
         },
         {
-            selected: data.container,
+            selected: value.container,
             buttons: [{
                 text: 'reset',
                 icon: 'eraser',
@@ -59,7 +59,7 @@ var data = {
                 editor.refresh();
             }}]
         }, {
-            selector: '.typeahead',
+            selected: value.typeahead,
             type: 'typeahead',
             options: 'asdf,ast,avsd,agrs,ahr,sdh,sregt,sbgdf,gstg,dr,sgdr,sgrd,sgrd,sdgr,rse,ra,ga,gr,gara,grGtr,a,t,atgsgas,agrsagr,gsdrgsdr,gsr,gr'.split(',')
         }, {
@@ -67,7 +67,7 @@ var data = {
             icon: 'bomb',
             text: 'bim',
         }, {
-            selected: data.slider,
+            selected: value.slider,
             type: 'slider',
             min: -100,
             max: 100,
@@ -76,7 +76,7 @@ var data = {
         }
     ],
     editor = new JsonVision({
-        data: data,
+        value: value,
         settings: settings,
         parent: document.querySelector('#cont'),
     });

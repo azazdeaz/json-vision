@@ -8,6 +8,7 @@ var Icon = require('./Icon.jsx');
 var StringInput = require('./StringInput.jsx');
 var NumberInput = require('./NumberInput.jsx');
 var Slider = require('./Slider.jsx');
+var Dropdown = require('./Dropdown.jsx');
 var TooltipMixin = require('./TooltipMixin.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
@@ -33,6 +34,11 @@ var JsonVisionItem = React.createClass({
 
     return {opened: true};
   },
+  getDefaultProps() {
+    return {
+      value: null,
+    };
+  },
   statics: {
     configureDragDrop(register) {
         register(DND_TYPE, {
@@ -42,8 +48,7 @@ var JsonVisionItem = React.createClass({
               // console.log('begin drag', component.fullPath)
               return {
                 item: {
-                  path: component.fullPath,
-                  name: component.props.name,
+                  component: component,
                 },
               };
             }
@@ -58,18 +63,20 @@ var JsonVisionItem = React.createClass({
 
               component.props.report({
                 type: 'set',
-                path: component.props.path + '/' + item.name,
-                value: component.props.getByPath(item.path).value
+                object: component.props.parentObject,
+                key: component.props.name,
+                value: component.props.value
               });
 
               component.props.report({
                 type: 'delete',
-                path: item.path,
+                object: component.props.parentObject,
+                key: component.props.name,
               });
             },
             canDrop(component, item) {
 
-              return typeof(component.props.data) === 'object';
+              return component.hasChildren();
             }
             // enter(component, item) {console.log('enter', component, item);},
             // leave(component, item) {console.log('leave', component, item);},
@@ -80,8 +87,8 @@ var JsonVisionItem = React.createClass({
   },
   hasChildren () {
 
-    var data = this.props && this.props.data;
-    return typeof(data) === 'object' && Object.keys(data).length > 0;
+    var value = this.props.value;
+    return _.isObject(value) && Object.keys(value).length > 0;
   },
   onClickOpenToggle () {
 
@@ -91,7 +98,8 @@ var JsonVisionItem = React.createClass({
 
     this.props.report({
       type: 'set',
-      path: this.fullPath,
+      object: this.props.parentObject,
+      key: this.props.name,
       value: value
     });
   },
@@ -115,8 +123,7 @@ var JsonVisionItem = React.createClass({
     return this.settings.tooltip;
   },
   render () {
-    this.fullPath = this.props.path ? this.props.path+'/'+this.props.name : this.props.name;
-    this.settings = this.props.getSettings(this.props.data);
+    this.settings = this.props.getSettings(this.props.value);
 
     var items = {},
       dragState = this.getDragState(DND_TYPE),
@@ -148,50 +155,49 @@ var JsonVisionItem = React.createClass({
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
     //input or children
-    if (typeof(this.props.data) === 'object') {
+    if (_.isObject(this.props.value)) {
 
       items.children = <div style={{display: this.state.opened ? 'block' : 'none'}}>
 
-        {Object.keys(this.props.data).map(function(name, idx, arr) {
+        {Object.keys(this.props.value).map(function(key, idx) {
 
           return <JsonVisionItem
-            key = {this.fullPath + '/' + name}
+            key = {key}
+            name = {key}
             indent = {this.props.indent + 1}
-            name = {name}
-            path = {this.fullPath}
-            data = {this.props.data[name]}
+            parentObject = {this.props.value}
+            value = {this.props.value[key]}
             getSettings = {this.props.getSettings}
-            report = {this.props.report}
-            getByPath = {this.props.getByPath}/>;
+            report = {this.props.report}/>;
         }, this)}
       </div>;
     }
     else {
 
       let numberInp = () => items.input = <NumberInput
-        update={v=>this.update(v)}
-        value={this.props.data} />;
+        onChange={v=>this.update(v)}
+        value={this.props.value} />;
 
       let stringInp = () => items.input = <StringInput
-        update={v=>this.update(v)}
-        value={this.props.data} />;
+        onChange={v=>this.update(v)}
+        value={this.props.value} />;
 
       if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
 
         items.input = <Dropdown
-          update={v=>this.update(v)}
+          onChange={v=>this.update(v)}
           options={this.settings.options}
-          value={this.props.data}/>;
+          value={this.props.value}/>;
       }
       else if (this.settings.type === 'checkbox') {
         items.input = <CheckboxComponent
-          update={v=>this.update(v)}
-          value={this.props.data} />;
+          onChange={v=>this.update(v)}
+          value={this.props.value} />;
       }
       else if (this.settings.type === 'slider') {
         items.input = <Slider
-          update={v=>this.update(v)}
-          value={this.props.data} />;
+          onChange={v=>this.update(v)}
+          value={this.props.value} />;
       }
       else if (this.settings.type === 'number') {
         numberInp();
@@ -199,14 +205,14 @@ var JsonVisionItem = React.createClass({
       else if (this.settings.type === 'string') {
         stringInp();
       }
-      else if (typeof(this.props.data) === 'function') {
+      else if (typeof(this.props.value) === 'function') {
         items.input = <Button
           icon={this.settings.icon}
-          text={this.settings.text || this.props.data.name || 'Button'}
-          onClick={this.props.data}
+          text={this.settings.text || this.props.value.name || 'Button'}
+          onClick={this.props.value}
           colored={this.settings.colored}/>;
       }
-      else if (typeof(this.props.data) === 'number') {
+      else if (typeof(this.props.value) === 'number') {
         numberInp();
       }
       else {
@@ -244,107 +250,6 @@ var CheckboxComponent = React.createClass({
       style = {_.defaults({margin: '5px'}, styles.input)}
       onChange = {e => this.props.update(e.target.name)}
     ></input>;
-  }
-});
-
-// var SelectComponent = React.createClass({
-//
-//   render: function () {
-//     return <select
-//       style = {styles.input}
-//       defaultValue = {this.props.value}
-//       onInput = {e => this.props.update(e.target.value)}>
-//       {this.props.options.map(o => <option key={++key}value={o}>{o}</option>)}
-//     </select>;
-//   }
-// });
-
-var Dropdown = React.createClass({
-
-  getInitialState() {
-    return {
-      open: false,
-      hover: false,
-    };
-  },
-
-  onMouseEnter() { this.setState({hover: true}); },
-  onMouseLeave() { this.setState({hover: false}); },
-  onFocus() {
-    this.setState({open: true});
-    // setTimeout(() => {//!hack
-      this.refs.head.getDOMNode().addEventListener('mousedown', this.onCloseClick);
-    // });
-  },
-  onBlur() {
-    this.setState({open: false});
-    this.refs.head.getDOMNode().removeEventListener('mousedown', this.onCloseClick);
-  },
-  onCloseClick(e) {
-    this.getDOMNode().blur();
-  },
-  render() {
-
-    var s;
-    if (this.state.open) {
-
-      let height = style.itemHeight * (this.props.options.length + 1);
-      s = _.defaults({height}, style.dropdownOpen);
-    }
-    else if (this.state.hover) s = style.dropdownHover;
-    else s = style.dropdown;
-
-    return <div
-      ref="head"
-      style = {s}
-      tabIndex = "0"
-      onMouseEnter = {this.onMouseEnter}
-      onMouseLeave = {this.onMouseLeave}
-      onBlur = {this.onBlur}
-      onFocus = {this.onFocus}
-    >
-      <div style={{padding: '0 8px'}}>
-        {this.props.value}
-        <Icon
-          style={{marginLeft: 4}}
-          lineHeight={style.itemHeightPX}
-          icon={this.state.open ? 'chevron-up' : 'chevron-down'}/>
-      </div>
-
-      {this.props.options.map(value => {
-        return <DropdownItem
-          value={value}
-          onClick={()=>{
-            this.props.update(value);
-            this.getDOMNode().blur();
-            }}/>;
-      })}
-    </div>;
-  }
-});
-
-var DropdownItem = React.createClass({
-
-  getInitialState() {
-    return { hover: false };
-  },
-
-  onMouseEnter() { this.setState({hover: true}); },
-  onMouseLeave() { this.setState({hover: false}); },
-  render() {
-
-    var s;
-    if (this.state.hover) s = style.dropdownItemHover;
-    else s = style.dropdownItem;
-
-    return <div
-      style = {s}
-      onMouseEnter = {this.onMouseEnter}
-      onMouseLeave = {this.onMouseLeave}
-      onClick={this.props.onClick}
-    >
-      {this.props.value}
-    </div>;
   }
 });
 

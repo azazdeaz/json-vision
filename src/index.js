@@ -7,15 +7,13 @@ var React = require('react'),
 function JsonVision(opt) {
 
     this.domElem = opt.parent || document.createElement('div');
-    this.data = opt.data || {};
+    this.value = opt.value || {};
+    this.title = opt.title || 'json-vision';
     this.settings = opt.settings || [];
-    this.name = opt.name || 'json-vision';
-
 
     this.component = React.render(React.createElement(JVComponent, {
-        name: this.name,
+        title: this.title,
         report: change => this._report(change),
-        getByPath: path => this.getByPath(path),
     }), this.domElem);
 
     this.refresh();
@@ -34,41 +32,25 @@ var p = JsonVision.prototype;
 p.refresh = function () {
 
     this.component.setProps({
-        data: this.data,
+        value: this.value,
         settings: this.settings,
     });
 };
 
-p.getByPath = function (path) {
-
-    path = path.split('/');
-    path.shift();
-
-    var key = path.pop(),
-        object = path.reduce((obj, key) => obj[key], this.data);
-
-    return {value: object[key], key, object};
-};
-
 p._report = function (change) {
-
-    console.log('report', JSON.stringify(change));
-
-    var {key, object} = this.getByPath(change.path);
-
-
+    console.log('report change', change);
     switch (change.type) {
 
         case 'delete':
-            delete object[key];
+            delete change.object[change.key];
             break;
 
         case 'set':
-            object[key] = change.value;
+            change.object[change.key] = change.value;
             break;
 
         case 'splice':
-            object[key].splice(change.index, change.removedCound, ...change.items);
+            change.object[change.key].splice(change.index, change.removedCound, ...change.items);
             break;
     }
 

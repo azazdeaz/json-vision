@@ -21,7 +21,7 @@ var NumberInput = React.createClass({
           md.moved = true;
 
           var value = md.value + md.dx * this.props.dragSpeed;
-          this.props.update(this.formatValue(value));
+          this.props.onChange(this.formatValue(value));
         },
         onUp: (md) => {
           if (!md.moved) this.getDOMNode().focus();
@@ -55,6 +55,7 @@ var NumberInput = React.createClass({
   render() {
     return <Input
       {...this.props}
+      onChange = {v => this.props.onChange(this.formatValue(v))}
       type='number'
     ></Input>;
   }
