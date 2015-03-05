@@ -1,6 +1,7 @@
 var React = require('react');
 var Input = require('./Input.jsx');
 var Icon = require('./Icon.jsx');
+var ListItem = require('./ListItem.jsx');
 var style = require('./style');
 var _ = require('lodash');
 
@@ -57,38 +58,13 @@ var Dropdown = React.createClass({
       </div>
 
       {this.props.options.map(value => {
-        return <DropdownItem
+        return <ListItem
           value={value}
           onClick={()=>{
             this.props.onChange(value);
             this.getDOMNode().blur();
             }}/>;
       })}
-    </div>;
-  }
-});
-
-var DropdownItem = React.createClass({
-
-  getInitialState() {
-    return { hover: false };
-  },
-
-  onMouseEnter() { this.setState({hover: true}); },
-  onMouseLeave() { this.setState({hover: false}); },
-  render() {
-
-    var s;
-    if (this.state.hover) s = style.dropdownItemHover;
-    else s = style.dropdownItem;
-
-    return <div
-      style = {s}
-      onMouseEnter = {this.onMouseEnter}
-      onMouseLeave = {this.onMouseLeave}
-      onClick={this.props.onClick}
-    >
-      {this.props.value}
     </div>;
   }
 });

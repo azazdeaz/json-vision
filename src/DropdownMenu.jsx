@@ -1,20 +1,14 @@
 var style = require('./style');
 var assign = require('lodash');
 var React = require('react');
+var List = require('./List.jsx');
 var _ = require('lodash');
 
 
-var Tooltip = React.createClass({
+var DropdownMenu = React.createClass({
 
-  getDefaultProps() {
-    return {width: 231};
-  },
   getInitialState() {
     return {show: false, style: {}};
-  },
-  showDelayed() {
-    clearTimeout(this._showSetT);
-    this._showSetT = setTimeout(() => this.show(), 1234);
   },
   show() {
 
@@ -23,10 +17,10 @@ var Tooltip = React.createClass({
       br = parent.getBoundingClientRect();
 
     this.setState({
-      show: true,
+      show: !this.state.show,
       style: {
-        left: br.left - this.props.width - 5,
-        top: br.top,
+        left: br.left,
+        top: br.top + br.height,
       }
     });
   },
@@ -34,21 +28,25 @@ var Tooltip = React.createClass({
     clearTimeout(this._showSetT);
     this.setState({show: false});
   },
+  onSelect(e) {
+    if (this.props.onSelect) this.props.onSelect(e);
+    this.hide();
+  },
   componentDidMount() {
 
     var parent = this.getDOMNode().parentNode;
-    parent.addEventListener('mouseover', this.showDelayed);
-    parent.addEventListener('mouseleave', this.hide);
+    parent.addEventListener('click', this.show);
   },
   render () {
 
     if (!this.state.show) return <div style={{display:'none'}}/>;
 
-    return <div
-        style={_.defaults({width: this.props.width}, this.state.style, style.tooltip)}>
-        {this.props.content}
+    var style = _.defaults({position: 'fixed'}, this.state.style);
+
+    return <div style={style}>
+        <List {...this.props} onSelect={this.onSelect}/>
       </div>;
   }
 });
 
-module.exports = Tooltip;
+module.exports = DropdownMenu;

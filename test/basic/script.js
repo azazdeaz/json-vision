@@ -29,12 +29,21 @@ var value = {
         },
         {
             selected: value.container,
-            buttons: [{
+            buttons: [
+              {
                 text: 'reset',
                 icon: 'eraser',
                 onClick: function() {
-
+                  
                 },
+              }, {
+                icon: 'list',
+                dropdownMenu: {items: [
+                  {text: 'item1', value: 'text1'},
+                  {text: 'item2', value: 'text2'},
+                  {text: 'item3', value: 'text3', onClick: function(){console.log('ggg');}},
+                ]
+              }
             }],
         },
         {
@@ -50,14 +59,6 @@ var value = {
             selector: '.checkbox',
             type: 'checkbox',
             tooltip: 'this is a tooltip',
-        }, {
-            selector: '.container',
-            reorderableChildren: true,
-            buttons: [{icon: 'plus', type: 'empty', onClick: function (path) {
-                var container = editor.getByPath(path).value;
-                container.push('valami');
-                editor.refresh();
-            }}]
         }, {
             selected: value.typeahead,
             type: 'typeahead',

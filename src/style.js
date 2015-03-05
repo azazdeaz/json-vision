@@ -239,14 +239,26 @@ style.dropdownOpen = _.defaults({
     backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
 }, style.dropdown);
 
-style.dropdownItem = {
+//List
+style.list = _.defaults({
+    baorderColor: '#1a1d21',
+}, style.dropdownOpen);
+
+//ListItem
+style.listItem = {
     height: style.itemHeight,
     padding: '0 8px',
 };
 
-style.dropdownItemHover = _.defaults({
+style.listItemHover = _.defaults({
     backgroundColor: 'rgba(226,231,235,.05)',
-}, style.dropdownItem);
+}, style.listItem);
+
+
+
+
+
+
 
 
 //Slider

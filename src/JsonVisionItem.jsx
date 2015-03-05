@@ -9,7 +9,7 @@ var StringInput = require('./StringInput.jsx');
 var NumberInput = require('./NumberInput.jsx');
 var Slider = require('./Slider.jsx');
 var Dropdown = require('./Dropdown.jsx');
-var Tooltip = require('./Tooltip.jsx');
+var Base = require('./Base.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -222,26 +222,22 @@ var JsonVisionItem = React.createClass({
 
     //buttons
     if (this.settings.buttons) {
-      items.buttons = <div>
-        {this.settings.buttons.map(btn => <Button {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>)}
-      </div>;
-    }
-
-    //tooltips
-    if (true||this.settings.tooltip) {
-      items.tooltip = <Tooltip content='tooltip tooltip tooltip'/>;
+      items.buttons = <span>
+        {this.settings.buttons.map(btn => <span style={{float:'left'}}>
+            <Button {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>
+          </span>)}
+      </span>;
     }
 
     return (
       <div>
-        <div ref='head' style={styleBlock}>
+        <Base tooltip={this.settings.tooltip} contextMenu={this.settings.dropdownMenu} style={styleBlock}>
           {items.indent}
           {items.toggle}
           {items.label}
           {items.input}
           {items.buttons}
-          {items.tooltip}
-        </div>
+        </Base>
         {items.children}
       </div>
     );

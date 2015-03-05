@@ -2,6 +2,7 @@ var React = require('react');
 var _ = require('lodash');
 var style = require('./style');
 var Icon = require('./Icon.jsx');
+var Base = require('./Base.jsx');
 
 var Button = React.createClass({
 
@@ -34,7 +35,10 @@ var Button = React.createClass({
         style={{marginRight:this.props.text ? 4 : 0}}/>;
     }
 
-    return <div style={s}
+    return <Base
+      style={s}
+      tooltip={this.props.tooltip}
+      dropdownMenu={this.props.dropdownMenu}
       onMouseEnter={() => this.setState({hover: true})}
       onMouseLeave={() => this.setState({hover: false})}
       onMouseDown={() => this.setState({down: true})}
@@ -42,7 +46,7 @@ var Button = React.createClass({
       onClick={this.props.onClick}>
       {icon}
       {this.props.text}
-    </div>;
+    </Base>;
   }
 });
 
