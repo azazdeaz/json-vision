@@ -1,6 +1,5 @@
 var React = require('react');
 var _ = require('lodash');
-var style = require('./style');
 var JsonVisionItem = require('./JsonVisionItem.jsx');
 var JSPath = require('jspath');
 
@@ -24,7 +23,7 @@ var JsonVisionComponent = React.createClass({
     return {object: {}, settings: []};
   },
   getSettings(path) {
-console.log('getSettings', path)
+
     var settings = {};
 
     function add (s) {

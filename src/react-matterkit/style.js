@@ -24,9 +24,19 @@ var style = {
         grey2: '#96a6ad',
         grey3: '#3b424a',
         grey4: '#1a1d21',
-    }
-
+    },
+    grey: {
+      normal: '#282c30',
+      hover: '#2a3035',
+      active: '#2c3034',
+    },
 };
+
+style.textColor = {
+  normal: style.palette.grey2,
+  hover: style.palette.grey1,
+  active: style.palette.blue,
+}
 
 module.exports = style;
 
@@ -157,8 +167,6 @@ style.buttonEmpty = {
 
 
 
-
-
 //Input
 style.input = {
   color: '#96a6ad',
@@ -264,22 +272,22 @@ style.listItemHover = _.defaults({
 //Slider
 
 style.slider = {
-    flex: 1,
-    position: 'relative',
+  flex: 1,
+  position: 'relative',
 	height: style.itemHeight,
 };
 
 style.sliderHandle = {
-    width: 16,
-    height: 16,
-    top: 8,
-    borderRadius: 8,
-    position: 'absolute',
-    boxSizing: 'border-box',
-    backgroundColor: '#262a2e',
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    borderColor: '#96a6ad',
+  width: 16,
+  height: 16,
+  top: 8,
+  borderRadius: 8,
+  position: 'absolute',
+  boxSizing: 'border-box',
+  backgroundColor: '#262a2e',
+  borderStyle: 'solid',
+  borderWidth: '2px',
+  borderColor: '#96a6ad',
 };
 
 style.sliderHandleHover = _.defaults({
@@ -299,9 +307,38 @@ style.sliderBarBg = {
 };
 
 style.sliderBarProgress = {
-    // width: '100%',
-    margin: 1,
+  // width: '100%',
+  margin: 1,
 	height: 4,
 	borderRadius: '1px',
 	backgroundColor: '#6bb6c4',
 };
+
+
+
+//Panel
+style.panel = {
+  backgroundColor: style.grey.active,
+  border: 'solid 1px ' + style.palette.grey4,
+  borderRadius: 2,
+};
+
+//Tab
+style.tab = {
+  normal: {
+    color: style.textColor.normal,
+    backgroundColor: style.grey.normal,
+    border: 'solid 1px ' + style.palette.grey4,
+  },
+};
+
+style.tab.hover = _.assign({}, style.tab.normal, {
+  color: style.textColor.hover,
+  backgroundColor: style.grey.hover,
+});
+
+style.tab.active = _.assign({}, style.tab.normal, {
+  color: style.textColor.active,
+  backgroundColor: style.grey.active,
+  borderBottom: 'none'
+});

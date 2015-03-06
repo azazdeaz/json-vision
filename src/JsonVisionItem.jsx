@@ -1,15 +1,15 @@
 var React = require('react');
-var colors = require('colors.css');
 var _ = require('lodash');
 var {DragDropMixin} = require('react-dnd');
-var style = require('./style');
-var Button = require('./Button.jsx');
-var Icon = require('./Icon.jsx');
-var StringInput = require('./StringInput.jsx');
-var NumberInput = require('./NumberInput.jsx');
-var Slider = require('./Slider.jsx');
-var Dropdown = require('./Dropdown.jsx');
-var Base = require('./Base.jsx');
+
+var style = require('./react-matterkit/style');
+var Button = require('./react-matterkit/Button.jsx');
+var Icon = require('./react-matterkit/Icon.jsx');
+var StringInput = require('./react-matterkit/StringInput.jsx');
+var NumberInput = require('./react-matterkit/NumberInput.jsx');
+var Slider = require('./react-matterkit/Slider.jsx');
+var Dropdown = require('./react-matterkit/Dropdown.jsx');
+var Base = require('./react-matterkit/Base.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -136,8 +136,8 @@ var JsonVisionItem = React.createClass({
 
     var styleLabel = {
       flex:1,
-      color: dropState.isDragging ? colors.blue : 'inherit',
-      backgroundColor: dropState.isHovering ? colors.aqua : 'inherit',
+      color: dropState.isDragging ? style.palette.purple : 'inherit',
+      backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     };
 
     //indent
@@ -252,7 +252,7 @@ var CheckboxComponent = React.createClass({
       type="checkbox"
       defaultChecked = {this.props.value}
       style = {_.defaults({margin: '5px'}, styles.input)}
-      onChange = {e => this.props.update(e.target.name)}
+      onChange = {e => this.props.update(e.target.checked)}
     ></input>;
   }
 });
