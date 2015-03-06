@@ -9,6 +9,7 @@ var StringInput = require('./react-matterkit/StringInput.jsx');
 var NumberInput = require('./react-matterkit/NumberInput.jsx');
 var Slider = require('./react-matterkit/Slider.jsx');
 var Dropdown = require('./react-matterkit/Dropdown.jsx');
+var Checkbox = require('./react-matterkit/Checkbox.jsx');
 var Base = require('./react-matterkit/Base.jsx');
 
 const DND_TYPE = 'json-vision-drag-type';
@@ -192,7 +193,7 @@ var JsonVisionItem = React.createClass({
           value={this.props.value}/>;
       }
       else if (this.settings.type === 'checkbox') {
-        items.input = <CheckboxComponent
+        items.input = <Checkbox
           onChange={v=>this.update(v)}
           value={this.props.value} />;
       }
@@ -246,16 +247,6 @@ var JsonVisionItem = React.createClass({
   }
 });
 
-var CheckboxComponent = React.createClass({
-  render: function () {
-    return <input
-      type="checkbox"
-      defaultChecked = {this.props.value}
-      style = {_.defaults({margin: '5px'}, styles.input)}
-      onChange = {e => this.props.onChange(e.target.checked)}
-    ></input>;
-  }
-});
 
 
 module.exports = JsonVisionItem;
