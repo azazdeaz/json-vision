@@ -19,73 +19,36 @@ var styles = {
 
 var JsonVisionComponent = React.createClass({
 
-  componentWillMount() {
-
-    this.settingsMap = new Map();
-  },
   getDefaultProps() {
 
     return {object: {}, settings: []};
   },
-  getSettings(object) {
+  getSettings(path) {
+console.log('getSettings', path)
+    var settings = {};
 
-    return this.settingsMap.get(object) || {};
-  },
-  processSettings() {
-
-    var map = this.settingsMap;
-
-    function set (o, s) {
-
-      map.set(o, _.merge(map.get(o) || {}, s));
+    function add (s) {
+      _.assign(settings, s);
     }
 
-    function readList(settingsList, root) {
+    this.props.settings.forEach(s => {
 
-      settingsList.forEach(settings => read(settings, root));
-    }
+      if (s.select) {
 
-    function read(settings, root) {
+        if (typeof(s.select) === 'string' && s.select === path) {
 
-      var selection = [];
-
-      if (settings.selected) {
-
-        selection.push(settings.selected);
-      }
-
-      if (settings.selecteds) {
-
-        [].push.apply(selection, settings.selecteds);
-      }
-
-      if (settings.selector) {
-
-        if (typeof(settings.selector) === 'string') {
-
-          let selecteds = JSPath.apply(settings.selector, root);
-          [].push.apply(selection, selecteds);
+            add(s);
         }
+        else if (s.select instanceof RegExp && s.select.test(path)) {
 
-      }
-
-      selection.forEach(selected => {
-
-        set(selected, settings);
-
-        if (_.isArray(settings.settings)) {
-
-          readList(settings.settings, selected);
+          add(s);
         }
-      });
-    }
+      }
+    });
 
-    map.clear();
-    readList(this.props.settings, this.props.object);
+    return settings;
   },
   render() {
-
-    this.processSettings();
 
     return(
       <div style={styles.root}>

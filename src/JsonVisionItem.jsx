@@ -36,6 +36,7 @@ var JsonVisionItem = React.createClass({
   },
   getDefaultProps() {
     return {
+      path: '',
       value: null,
     };
   },
@@ -123,7 +124,7 @@ var JsonVisionItem = React.createClass({
     return this.settings.tooltip || 'This is a tooltip';
   },
   render () {
-    this.settings = this.props.getSettings(this.props.value);
+    this.settings = this.props.getSettings(this.props.path);
 
     var items = {},
       dragState = {},//this.getDragState(DND_TYPE),
@@ -164,6 +165,7 @@ var JsonVisionItem = React.createClass({
           return <JsonVisionItem
             key = {key}
             name = {key}
+            path = {this.props.path + '.' + key}
             indent = {this.props.indent + 1}
             parentObject = {this.props.value}
             value = {this.props.value[key]}
