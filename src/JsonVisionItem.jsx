@@ -142,12 +142,12 @@ var JsonVisionItem = React.createClass({
 
     //indent
     this.props.indent = this.props.indent || 0;
-    items.indent = <span style={{width:this.props.indent*20}}/>;
+    items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
 
 
     //show/hide toggle btn
     items.toggle = <Icon
-      icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : 'minus'}
+      icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
         onClick={this.hasChildren() ? this.onClickOpenToggle : null}
         style={{margin:'0 4px'}}/>;
 

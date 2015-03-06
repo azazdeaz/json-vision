@@ -55,7 +55,7 @@ style.line = {
 style.lineGroup = _.defaults({
   color: '#e2e7eb',
   backgroundColor: '#3b424a',
-  borderBottom: 'none',
+  // borderBottom: 'none',
 }, style.line);
 
 

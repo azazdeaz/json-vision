@@ -48,7 +48,7 @@ var value = {
         },
         {
             select: /container.*/,
-            buttons: [{icon: 'close', onClick: 'delete'}],
+            buttons: [{icon: 'close', onClick: 'delete', type: 'empty'}],
         }, {
             select: '.checkbox',
             type: 'checkbox',
