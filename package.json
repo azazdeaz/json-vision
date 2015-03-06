@@ -24,6 +24,7 @@
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.3.0",
     "jspath": "^0.3.1",
-    "urify": "^1.0.6"
+    "urify": "^1.0.6",
+    "babel": "^4.6.6"
   }
 }

@@ -4,7 +4,16 @@ var style = require('./style');
 var CustomDrag = require('./CustomDrag');
 
 var Slider = React.createClass({
-
+  getDefaultProps() {
+    return {
+      min: -100,
+      max: 100,
+      value: 0,
+    };
+  },
+  getInitialState() {
+    return {dragging: false};
+  },
   componentDidMount() {
     new CustomDrag({
       deTarget: this.refs.handle.getDOMNode(),
@@ -14,19 +23,30 @@ var Slider = React.createClass({
       }),
       onDrag: md => {
 
+        this.setState({dragging: true});
+
         var range = this.props.max - this.props.min,
           value = md.value + (md.dx / md.width) * range;
 
         this.props.onChange(value);
       },
+      onUp: () => {
+        this.setState({dragging: false});
+      }
     });
   },
   render() {
+
+    var width = this.isMounted() ? this.getDOMNode().offsetWidth : 0,
+      range = this.props.max - this.props.min,
+      progress = (this.props.value - this.props.min) / range,
+      percent = Math.max(0, Math.min(1, progress))*100 + '%';
+
     return <div style={style.slider}
       onMouseDown={e => e.preventDefault()}>
-      <Handle ref='handle'/>
+      <Handle ref='handle' left={percent} dragging={this.state.dragging}/>
       <div style={style.sliderBarBg}>
-        <div ref='progress' style={style.sliderBarProgress}/>
+        <div ref='progress' style={_.defaults({width: percent}, style.sliderBarProgress)}/>
       </div>
     </div>;
   },
@@ -40,26 +60,27 @@ var Handle = React.createClass({
       down: false,
     };
   },
-
+  onMouseUp() {
+    this.setState({down: false});
+  },
+  componentDidMount() {
+    window.addEventListener('mouseup', this.onMouseUp);
+  },
+  componentDidUnmount() {
+    window.removeEventListener('mouseup', this.onMouseUp);
+  },
   render() {
 
     var s;
 
-    if (this.state.down) s = style.sliderHandleActive;
+  if (this.state.down || this.props.dragging) s = style.sliderHandleActive;
     else if (this.state.hover) s = style.sliderHandleHover;
     else s = style.sliderHandle;
 
-    var icon;
-    if (this.props.icon) {
-      icon = <Icon icon={this.props.icon}
-        style={{marginRight:this.props.text ? 4 : 0}}/>;
-    }
-
-    return <div style={s}
+    return <div style={_.defaults({left: this.props.left}, s)}
       onMouseEnter={() => this.setState({hover: true})}
       onMouseLeave={() => this.setState({hover: false})}
-      onMouseDown={() => this.setState({down: true})}
-      onMouseUp={() => this.setState({down: false})}>
+      onMouseDown={() => this.setState({down: true})}>
     </div>;
   }
 });

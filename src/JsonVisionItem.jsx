@@ -252,7 +252,7 @@ var CheckboxComponent = React.createClass({
       type="checkbox"
       defaultChecked = {this.props.value}
       style = {_.defaults({margin: '5px'}, styles.input)}
-      onChange = {e => this.props.update(e.target.checked)}
+      onChange = {e => this.props.onChange(e.target.checked)}
     ></input>;
   }
 });

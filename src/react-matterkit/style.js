@@ -278,11 +278,12 @@ style.slider = {
 };
 
 style.sliderHandle = {
+  position: 'absolute',
   width: 16,
   height: 16,
-  top: 8,
+  top: '50%',
+  transform: 'translate(-8px, -8px)',
   borderRadius: 8,
-  position: 'absolute',
   boxSizing: 'border-box',
   backgroundColor: '#262a2e',
   borderStyle: 'solid',
@@ -300,7 +301,8 @@ style.sliderHandleActive = _.defaults({
 }, style.sliderHandle);
 
 style.sliderBarBg = {
-	margin: '15px 5px',
+	margin: '13px 5px',
+  overflow: 'auto',
 	height: 6,
 	borderRadius: '2px',
 	backgroundColor: '#1a1d21',
@@ -340,5 +342,5 @@ style.tab.hover = _.assign({}, style.tab.normal, {
 style.tab.active = _.assign({}, style.tab.normal, {
   color: style.textColor.active,
   backgroundColor: style.grey.active,
-  borderBottom: 'none'
+  borderBottom: 'none',
 });

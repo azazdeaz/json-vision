@@ -71,7 +71,7 @@ var value = {
         }
     ],
     editor = new JsonVision({
-        value: value,
-        settings: settings,
+        value,
+        settings,
         parent: document.querySelector('#cont'),
     });
