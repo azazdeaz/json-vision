@@ -47,6 +47,7 @@ var Tooltip = React.createClass({
     return <div
         style={_.defaults({width: this.props.width}, this.state.style, style.tooltip)}>
         {this.props.content}
+        <div style={style.tooltipTriangle}/>
       </div>;
   }
 });

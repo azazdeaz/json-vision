@@ -218,6 +218,17 @@ style.tooltip = {
   border: 'solid 1px rgba(93,169,167,1)',
 };
 
+style.tooltipTriangle = {
+  position: 'absolute',
+  left: '100%',
+  top: 1,
+  width: 0,
+  height: 0,
+  borderStyle: 'solid',
+  borderWidth: '5px 0 5px 5px',
+  borderColor: 'transparent transparent transparent ' + style.palette.blue,
+};
+
 
 //Dropdown
 style.dropdown = {
