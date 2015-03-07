@@ -4,7 +4,8 @@
   "description": "",
   "main": "build/main.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "demo": "browserify demo/src/index.js -t babelify reactify --outfile demo/bundle.js"
   },
   "author": "",
   "license": "ISC",

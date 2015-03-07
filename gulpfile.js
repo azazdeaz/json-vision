@@ -3,7 +3,7 @@ var gutil = require('gulp-util');
 var connect = require('gulp-connect');
 var browserify = require('browserify');
 var watchify = require('watchify');
-var to5ify = require("6to5ify");
+var babelify = require("babelify");
 var reactify = require("reactify");
 var urify = require("urify");
 var source = require('vinyl-source-stream');
@@ -14,7 +14,7 @@ gulp.task('js', function () {
   var bundler = watchify(browserify('./src/index.js', watchify.args))
     .transform(["reactify", {"es6": true}])
     .transform(urify)
-    .transform(to5ify);
+    .transform(babelify);
 
   bundler.on('update', rebundle);
 

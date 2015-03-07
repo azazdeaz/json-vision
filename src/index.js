@@ -1,7 +1,7 @@
-var React = require('react'),
-    JVComponent = require('./JsonVisionComponent.jsx'),
-    colors = require('colors.css'),
-    _ = require('lodash');
+var React = require('react');
+var JVComponent = require('./JsonVisionComponent.jsx');
+var demo = require('./demo/demo');
+var _ = require('lodash');
 
 
 function JsonVision(opt) {
@@ -25,6 +25,11 @@ function JsonVision(opt) {
         this.domElem.style.right = '15px';
         document.body.appendChild(this.domElem);
     }
+}
+
+JsonVision.runDemo = function () {
+
+  demo(JsonVision);
 }
 
 var p = JsonVision.prototype;
