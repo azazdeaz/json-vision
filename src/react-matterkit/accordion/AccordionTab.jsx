@@ -20,12 +20,7 @@ var AccordionTab = React.createClass({
 
     var sHead = {height: style.lineHeight};
 
-    var content = this.state.opened ? <div style={sHead}>
-      <Label>{this.props.label}</Label>
-      <Icon
-        icon={this.props.opened ?  'chevron-down' : 'chevron-up'}
-        style={{color: style.palette.grey4}}/>
-    </div> : '';
+    var content = this.state.opened ? <div>{this.props.children}</div> : '';
 
     return <div
       style={sBase}
@@ -35,7 +30,12 @@ var AccordionTab = React.createClass({
       onMouseUp={() => this.setState({down: false})}
       onClick={this.onClick}>
 
-      <div>{this.props.children}</div>
+      <div style={sHead}>
+       <Label>{this.props.label}</Label>
+       <Icon
+         icon={this.props.opened ?  'chevron-down' : 'chevron-up'}
+         style={{color: style.palette.grey4}}/>
+      </div>
       {content}
     </div>;
   },

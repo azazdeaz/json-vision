@@ -38,11 +38,19 @@ var style = {
     },
 };
 
-style.textColor = {
+style.fontColor = {
   normal: style.palette.grey2,
   hover: style.palette.grey1,
   active: style.palette.blue,
 };
+
+style.font = {
+  fontFamily: style.fontFamily,
+  fontWeight: style.fontWeight,
+  color: style.fontColor.normal,
+};
+
+
 
 module.exports = style;
 
@@ -67,41 +75,47 @@ style.lineGroup = _.defaults({
 
 //Button
 
-style.button = {
-    normal: {
-        height: style.itemHeight,
-        lineHeight: style.itemHeightPX,
-        boxSizing: 'border-box',
-        color: '#96a6ad',
-        borderRadius: 2,
+style.button = _.assign({}, style.font, {
+
+  height: style.itemHeight,
+  lineHeight: style.itemHeightPX,
+  boxSizing: 'border-box',
+  color: '#96a6ad',
+  borderRadius: 2,
+  backgroundColor: '#363c43',
+  backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
+  border: 'solid 1px rgba(26,29,33,.75)',
+  boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
+  fontFamily: 'Open Sans',
+  fontSize: '13px',
+  margin: '1px 3px',
+  padding: '0 8px',
+
+  states: [
+    {
+      hover: {
+        color: '#e2e7eb',
+        backgroundColor: '#3b424a',
+      },
+    }, {
+      active: {
+        color: '#6bb6c4',
         backgroundColor: '#363c43',
-        backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,.05))',
-        border: 'solid 1px rgba(26,29,33,.75)',
-        boxShadow: 'inset 0 1px rgba(255,255,255,.02)',
-        fontFamily: 'Open Sans',
-        fontSize: '13px',
-        margin: '1px 3px',
-        padding: '0 8px',
-    },
-};
-
-style.button.hover = _.defaults({
-    color: '#e2e7eb',
-    backgroundColor: '#3b424a',
-}, style.button.normal);
-
-style.button.active = _.defaults({
-    color: '#6bb6c4',
-    backgroundColor: '#363c43',
-    boxShadow: 'inset 0 -1px rgba(255,255,255,.02)',
-    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
-}, style.button.normal);
-
-style.button.disabled = _.defaults({
-    color: 'rgba(150,166,173,.2)',
-    backgroundColor: '#2c3136',
-    border: 'solid 1px rgba(26,29,33,.32)',
-}, style.button.normal);
+        boxShadow: 'inset 0 -1px rgba(255,255,255,.02)',
+        backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
+      },
+    }
+  ],
+  modifiers: [
+    {
+      disabled: {
+        color: 'rgba(150,166,173,.2)',
+        backgroundColor: '#2c3136',
+        border: 'solid 1px rgba(26,29,33,.32)',
+      }
+    }
+  ]
+});
 
 //colored button
 (() => {
@@ -365,19 +379,19 @@ style.panel = {
 //Tab
 style.tab = {
   normal: {
-    color: style.textColor.normal,
+    color: style.fontColor.normal,
     backgroundColor: style.grey.normal,
     border: 'solid 1px ' + style.palette.grey4,
   },
 };
 
 style.tab.hover = _.assign({}, style.tab.normal, {
-  color: style.textColor.hover,
+  color: style.fontColor.hover,
   backgroundColor: style.grey.hover,
 });
 
 style.tab.active = _.assign({}, style.tab.normal, {
-  color: style.textColor.active,
+  color: style.fontColor.active,
   backgroundColor: style.grey.active,
   borderBottom: 'none',
 });

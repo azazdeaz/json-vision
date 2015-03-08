@@ -11,7 +11,7 @@ var Accordion = React.createClass({
   render() {
 
     React.Children.forEach(this.props.children, child => console.log(child));
-    return <div>
+    return <div style={style.button.normal}>
       {this.props.children}
     </div>;
   },

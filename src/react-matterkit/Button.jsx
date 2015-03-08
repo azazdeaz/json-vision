@@ -1,4 +1,5 @@
 var React = require('react');
+var { StyleResolverMixin, BrowserStateMixin } = require('radium');
 var _ = require('lodash');
 var style = require('./style');
 var Icon = require('./Icon.jsx');
@@ -6,10 +7,10 @@ var Base = require('./Base.jsx');
 
 var Button = React.createClass({
 
+  mixins: [ StyleResolverMixin, BrowserStateMixin ],
+
   getInitialState() {
     return {
-      hover: false,
-      down: false,
       toggled: false,
       disabled: false,
     };
@@ -36,13 +37,11 @@ var Button = React.createClass({
     }
 
     return <Base
-      style={s}
+      {...this.getBrowserStateEvents()}
+      style={this.buildStyles(style.button)}
+
       tooltip={this.props.tooltip}
       dropdownMenu={this.props.dropdownMenu}
-      onMouseEnter={() => this.setState({hover: true})}
-      onMouseLeave={() => this.setState({hover: false})}
-      onMouseDown={() => this.setState({down: true})}
-      onMouseUp={() => this.setState({down: false})}
       onClick={this.props.onClick}>
       {icon}
       {this.props.text}

@@ -59,6 +59,7 @@ var Dropdown = React.createClass({
 
       {this.props.options.map(value => {
         return <ListItem
+          key={value}
           value={value}
           onClick={()=>{
             this.props.onChange(value);
