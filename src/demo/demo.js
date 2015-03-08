@@ -5,9 +5,10 @@ var demos = [
 ]
 // var windooman = require('../windooman');
 
-module.exports = function () {
+module.exports = function (JsonVision) {
 
   window.DEMO = {
+    JsonVision,
     data: demos[0],
   };
 

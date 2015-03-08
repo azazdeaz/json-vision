@@ -18,7 +18,7 @@ function JsonVision(opt) {
 
     this.refresh();
 
-    if (!_.has(opt, 'autoPlace') || opt.autoPlace !== false) {
+    if (!opt.parent && (!_.has(opt, 'autoPlace') || opt.autoPlace !== false)) {
 
         this.domElem.style.position = 'fixed';
         this.domElem.style.top = '0px';
@@ -30,7 +30,7 @@ function JsonVision(opt) {
 JsonVision.runDemo = function () {
 
   demo(JsonVision);
-}
+};
 
 var p = JsonVision.prototype;
 

@@ -1,5 +1,7 @@
 var React = require('react');
 var style = require('../react-matterkit/style');
+var Accordion = require('../react-matterkit/accordion/Accordion.jsx');
+var AccordionTab = require('../react-matterkit/accordion/AccordionTab.jsx');
 
 var Page = React.createClass({
   render() {
@@ -64,16 +66,28 @@ var Left = React.createClass({
       position: 'absolute',
       height: '100%',
       width: '50%',
-      backgroundColor: style.palette.blue,
+      backgroundColor: style.palette.grey3,
     };
 
     return <div style={s}>
+      <Accordion>
+        <AccordionTab label='first tab'>first tab content</AccordionTab>
+        <AccordionTab label='second tab'>second tab content</AccordionTab>
+        <AccordionTab label='third tab'>third tab content</AccordionTab>
+      </Accordion>
     </div>;
   }
 });
 
 var Right = React.createClass({
 
+  componentDidMount() {
+    this.editor = new DEMO.JsonVision({
+      value: DEMO.data.value,
+      settings: DEMO.data.settings,
+      parent: this.refs.cont.getDOMNode(),
+    });
+  },
   render () {
 
     var s = {
@@ -81,14 +95,10 @@ var Right = React.createClass({
       height: '100%',
       width: '50%',
       right: 0,
-      backgroundColor: style.palette.red,
+      backgroundColor: style.palette.grey4,
     };
 
-    return <div style={s}>
-      <window.DEMO.JsonVision
-        object={this.props.object}
-        settings={this.props.settings}/>
-    </div>;
+    return <div style={s} ref='cont' key='cont'/>;
   }
 });
 

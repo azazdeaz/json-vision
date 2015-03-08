@@ -1,5 +1,5 @@
-module.export = {
-  objec: {
+module.exports = {
+  value: {
       foo: 1,
       baz: {
           foo: 'bar'
