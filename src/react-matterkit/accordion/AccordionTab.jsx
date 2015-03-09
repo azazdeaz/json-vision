@@ -4,6 +4,8 @@ var { StyleResolverMixin, BrowserStateMixin } = require('radium');
 var style = require('../style');
 var Icon = require('../Icon.jsx');
 var Label = require('../Label.jsx');
+var Toolbar = require('../Toolbar.jsx');
+var ToolbarGroup = require('../ToolbarGroup.jsx');
 
 var AccordionTab = React.createClass({
 
@@ -35,12 +37,14 @@ var AccordionTab = React.createClass({
       onMouseUp={() => this.setState({down: false})}
       onClick={this.onClick}>
 
-      <div style={sHead}>
-       <Label>{this.props.label}</Label>
-       <Icon
-         icon={this.state.opened ?  'chevron-down' : 'chevron-up'}
-         style={{color: style.palette.grey4}}/>
-      </div>
+      <Toolbar>
+        <ToolbarGroup flex='1'>
+          <Label>{this.props.label}</Label>
+        </ToolbarGroup>
+          <Icon
+            icon={this.state.opened ?  'chevron-down' : 'chevron-up'}
+            style={{color: style.palette.grey4, width: 21}}/>
+      </Toolbar>
       {content}
     </div>;
   },

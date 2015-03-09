@@ -430,3 +430,15 @@ style.accordionTab = _.assign({}, style.font, {
     {states: [{hover:{}}]},
   ]
 });
+
+//Toolbar
+style.toolbar = _.assign({}, {
+  height: style.lineHeight,
+  width: '100%',
+  display: 'flex'
+});
+
+style.toolbarGroup = _.assign({}, {
+  height: style.lineHeight,
+  display: 'flex',
+});
