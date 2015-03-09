@@ -63,14 +63,14 @@ var JsonVisionItem = React.createClass({
             else {console.log('isNotHandled', component.props.path);}
             console.log('acceptDrop', component, item);
 
-            component.props.report({
+            component.props.createAction({
               type: 'set',
               object: component.props.parentObject,
               key: component.props.name,
               value: component.props.value
             });
 
-            component.props.report({
+            component.props.createAction({
               type: 'delete',
               object: component.props.parentObject,
               key: component.props.name,
@@ -98,7 +98,7 @@ var JsonVisionItem = React.createClass({
   },
   update (value) {
 
-    this.props.report({
+    this.props.createAction({
       type: 'set',
       object: this.props.parentObject,
       key: this.props.name,
@@ -111,7 +111,7 @@ var JsonVisionItem = React.createClass({
 
       if (btn.onClick === 'delete') {
 
-        this.props.report({
+        this.props.createAction({
           path: this.fullPath,
           type: 'delete',
         });
@@ -171,7 +171,7 @@ var JsonVisionItem = React.createClass({
             parentObject = {this.props.value}
             value = {this.props.value[key]}
             getSettings = {this.props.getSettings}
-            report = {this.props.report}/>;
+            createAction = {this.props.createAction}/>;
         }, this)}
       </div>;
     }

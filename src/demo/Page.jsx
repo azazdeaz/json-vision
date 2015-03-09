@@ -81,13 +81,6 @@ var Left = React.createClass({
 
 var Right = React.createClass({
 
-  componentDidMount() {
-    this.editor = new DEMO.JsonVision({
-      value: DEMO.data.value,
-      settings: DEMO.data.settings,
-      parent: this.refs.cont.getDOMNode(),
-    });
-  },
   render () {
 
     var s = {
@@ -98,7 +91,11 @@ var Right = React.createClass({
       backgroundColor: style.palette.grey4,
     };
 
-    return <div style={s} ref='cont' key='cont'/>;
+    return <div style={s}>
+      <DEMO.JsonVision
+        value={DEMO.data.value}
+        settings={DEMO.data.settings}/>
+    </div>;
   }
 });
 
