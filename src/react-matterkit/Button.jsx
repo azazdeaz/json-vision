@@ -38,7 +38,7 @@ var Button = React.createClass({
 
     return <div
       {...this.getBrowserStateEvents()}
-      style={this.buildStyles(style.button)}
+      style={this.buildStyles(style.button, {disabled: this.props.disabled})}
 
       tooltip={this.props.tooltip}
       dropdownMenu={this.props.dropdownMenu}

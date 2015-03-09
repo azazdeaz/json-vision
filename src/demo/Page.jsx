@@ -71,9 +71,8 @@ var Left = React.createClass({
 
     return <div style={s}>
       <Accordion>
-        <AccordionTab label='first tab'>first tab content</AccordionTab>
-        <AccordionTab label='second tab'>second tab content</AccordionTab>
-        <AccordionTab label='third tab'>third tab content</AccordionTab>
+        <AccordionTab label='value'>first tab content</AccordionTab>
+        <AccordionTab label='settings'>second tab content</AccordionTab>
       </Accordion>
     </div>;
   }

@@ -395,3 +395,38 @@ style.tab.active = _.assign({}, style.tab.normal, {
   backgroundColor: style.grey.active,
   borderBottom: 'none',
 });
+
+//Accordion
+style.accordion = _.assign({}, style.font, {
+  width: '100%',
+  maxHeight: '100%',
+  backgroundColor: style.palette.grey4,
+  border: 'solid 1px rgba(26,29,33,.75)',
+  borderRadius: 2,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+style.accordionTab = _.assign({}, style.font, {
+  fontWeight: 600,
+  color: style.fontColor.normal,
+  backgroundColor: style.grey.normal,
+  states: [
+    {hover: {
+      color: style.fontColor.hover,
+      backgroundColor: style.grey.hover,
+    }},
+    {active: {
+      color: style.fontColor.active,
+      backgroundColor: style.grey.active,
+    }}
+  ],
+  modifiers: [
+    {opened: {
+      color: style.fontColor.active,
+      backgroundColor: style.grey.active,
+    }},
+    {states: [{hover:{}}]},
+  ]
+});

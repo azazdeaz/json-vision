@@ -76,9 +76,6 @@ var JsonVision = React.createClass({
 
     return settings;
   },
-  _createAction(change) {
-
-  },
   render() {
 
     return(
