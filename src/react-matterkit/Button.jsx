@@ -36,7 +36,7 @@ var Button = React.createClass({
         style={{marginRight:this.props.text ? 4 : 0}}/>;
     }
 
-    return <Base
+    return <div
       {...this.getBrowserStateEvents()}
       style={this.buildStyles(style.button)}
 
@@ -45,7 +45,7 @@ var Button = React.createClass({
       onClick={this.props.onClick}>
       {icon}
       {this.props.text}
-    </Base>;
+    </div>;
   }
 });
 

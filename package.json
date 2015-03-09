@@ -27,6 +27,7 @@
     "reactify": "^1.0.0",
     "urify": "^1.0.6",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "^2.3.0"
+    "watchify": "^2.3.0",
+    "babelify": "^5.0.4"
   }
 }
