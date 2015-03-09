@@ -40,6 +40,10 @@ function createAction(change) {
   }
 
   this.forceUpdate();
+
+  if (this.props.onChange) {
+    this.props.onChange(this.props.value);
+  }
 }
 
 var JsonVision = React.createClass({

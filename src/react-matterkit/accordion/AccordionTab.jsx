@@ -34,10 +34,9 @@ var AccordionTab = React.createClass({
       onMouseEnter={() => this.setState({hover: true})}
       onMouseLeave={() => this.setState({hover: false})}
       onMouseDown={() => this.setState({down: true})}
-      onMouseUp={() => this.setState({down: false})}
-      onClick={this.onClick}>
+      onMouseUp={() => this.setState({down: false})}>
 
-      <Toolbar>
+      <Toolbar onClick={this.onClick}>
         <ToolbarGroup flex='1'>
           <Label>{this.props.label}</Label>
         </ToolbarGroup>

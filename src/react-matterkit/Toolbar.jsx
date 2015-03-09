@@ -4,7 +4,9 @@ var style = require('./style');
 
 var Toolbar = React.createClass({
   render() {
-    return <div style={style.toolbar}>
+    return <div
+      style={style.toolbar}
+      onClick={this.props.onClick}>
       {this.props.children}
     </div>;
   }

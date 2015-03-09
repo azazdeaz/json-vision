@@ -28,6 +28,8 @@
     "urify": "^1.0.6",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.3.0",
-    "babelify": "^5.0.4"
+    "babelify": "^5.0.4",
+    "codemirror": "^4.13.0",
+    "react-ace": "^1.1.2"
   }
 }

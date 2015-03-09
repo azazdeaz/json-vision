@@ -2,6 +2,7 @@ var React = require('react');
 var style = require('../react-matterkit/style');
 var Accordion = require('../react-matterkit/accordion/Accordion.jsx');
 var AccordionTab = require('../react-matterkit/accordion/AccordionTab.jsx');
+var AceEditor = require('react-ace');
 
 var Page = React.createClass({
   render() {
@@ -16,7 +17,7 @@ var Page = React.createClass({
     return <div style={s}>
       <Head ref='head'/>
       <Body
-        object={this.props.object}
+        value={this.props.value}
         settings={this.props.settings}/>
     </div>;
   }
@@ -50,9 +51,11 @@ var Body = React.createClass({
     };
 
     return <div style={s}>
-      <Left/>
+      <Left
+        value={this.props.value}
+        settings={this.props.settings}/>
       <Right
-        object={this.props.object}
+        value={this.props.value}
         settings={this.props.settings}/>
     </div>;
   }
@@ -60,6 +63,12 @@ var Body = React.createClass({
 
 var Left = React.createClass({
 
+  onChangeValue(src) {
+    try {
+      let json = JSON.parse(src);
+      DEMO.refreshValue(json);
+    } catch (e) {}
+  },
   render () {
 
     var s = {
@@ -69,9 +78,19 @@ var Left = React.createClass({
       backgroundColor: style.palette.grey3,
     };
 
+    var srcValue = JSON.stringify(this.props.value, null, 2);
+
     return <div style={s}>
       <Accordion>
-        <AccordionTab label='value'>first tab content</AccordionTab>
+        <AccordionTab label='value'>
+        <AceEditor
+          mode='json'
+          theme='monokai'
+          value={srcValue}
+          onChange={this.onChangeValue}
+          name='UNIQUE_ID_OF_DIV'
+        />
+        </AccordionTab>
         <AccordionTab label='settings'>second tab content</AccordionTab>
       </Accordion>
     </div>;
@@ -92,6 +111,7 @@ var Right = React.createClass({
 
     return <div style={s}>
       <DEMO.JsonVision
+        onChange={value => DEMO.refreshValue(value)}
         value={DEMO.data.value}
         settings={DEMO.data.settings}/>
     </div>;

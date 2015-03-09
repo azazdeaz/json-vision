@@ -2,7 +2,8 @@ var React = require('react');
 var Page = require('./Page.jsx');
 var demos = [
     require('./demos/first'),
-]
+];
+var AceEditor = require('react-ace');
 // var windooman = require('../windooman');
 
 module.exports = function (JsonVision) {
@@ -10,14 +11,33 @@ module.exports = function (JsonVision) {
   window.DEMO = {
     JsonVision,
     data: demos[0],
+    refreshValue(value) {
+      DEMO.data.value = value;
+      page.setProps({value});
+    },
   };
 
-  React.render(React.createElement(Page, {}), document.body);
+  var page = React.render(React.createElement(Page, {
+    value: DEMO.data.value,
+    settings: DEMO.data.settings,
+  }), document.body);
 
   // workspace = new Windooman();
   // document.body.appendChild(am.workspace.domElem);
   // workspace.loadWorkspace('base', skeleton);
   // workspace.load('base');
+
+  // var source = 'var answer = 42;';
+  //
+  // var editor = React.render(React.createElement(AceEditor, {
+  //   value: source,
+  //   onChange: createAction,
+  // }), document.body);
+  //
+  // function createAction(_source) {
+  //   source = _source;
+  //   if (editor) editor.setProps({value: source});
+  // }
 };
 
 

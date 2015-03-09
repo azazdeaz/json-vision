@@ -10,7 +10,6 @@ var Accordion = React.createClass({
   },
   render() {
 
-    React.Children.forEach(this.props.children, child => console.log(child));
     return <div style={style.accordion}>
       {this.props.children}
     </div>;
