@@ -33,6 +33,7 @@ module.exports = {
           buttons: [
             {
               text: 'reset',
+              kind: 'colored',
               icon: 'eraser',
               onClick: function() {
 
@@ -48,8 +49,8 @@ module.exports = {
           }],
       },
       {
-          select: /container.*/,
-          buttons: [{icon: 'close', onClick: 'delete', type: 'empty'}],
+          select: /container\..+/,
+          buttons: [{icon: 'close', onClick: 'delete', kind: 'empty'}],
       }, {
           select: '.checkbox',
           type: 'checkbox',

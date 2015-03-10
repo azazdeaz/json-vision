@@ -4,18 +4,17 @@ var Icon = require('./Icon.jsx');
 var ListItem = require('./ListItem.jsx');
 var style = require('./style');
 var _ = require('lodash');
+var { StyleResolverMixin, BrowserStateMixin } = require('radium');
 
 var Dropdown = React.createClass({
+
+  mixins: [ StyleResolverMixin, BrowserStateMixin ],
 
   getInitialState() {
     return {
       open: false,
-      hover: false,
     };
   },
-
-  onMouseEnter() { this.setState({hover: true}); },
-  onMouseLeave() { this.setState({hover: false}); },
   onFocus() {
     this.setState({open: true});
     // setTimeout(() => {//!hack
@@ -31,21 +30,16 @@ var Dropdown = React.createClass({
   },
   render() {
 
-    var s;
+    var s = this.buildStyles(style.dropdown);
     if (this.state.open) {
-
-      let height = style.itemHeight * (this.props.options.length + 1);
-      s = _.defaults({height}, style.dropdownOpen);
+      s.height = style.itemHeight * (this.props.options.length + 1);
     }
-    else if (this.state.hover) s = style.dropdownHover;
-    else s = style.dropdown;
 
     return <div
+      {...this.getBrowserStateEvents()}
+      style={s}
       ref="head"
-      style = {s}
       tabIndex = "0"
-      onMouseEnter = {this.onMouseEnter}
-      onMouseLeave = {this.onMouseLeave}
       onBlur = {this.onBlur}
       onFocus = {this.onFocus}
     >

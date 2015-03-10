@@ -90,6 +90,7 @@ style.button = _.assign({}, style.font, {
   fontSize: '13px',
   margin: '1px 3px',
   padding: '0 8px',
+  userSelect: 'none',
 
   states: [
     {
@@ -104,85 +105,45 @@ style.button = _.assign({}, style.font, {
         boxShadow: 'inset 0 -1px rgba(255,255,255,.02)',
         backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
       },
-    }
-  ],
-  modifiers: [
-    {
+    }, {
       disabled: {
         color: 'rgba(150,166,173,.2)',
         backgroundColor: '#2c3136',
         border: 'solid 1px rgba(26,29,33,.32)',
       }
+    },
+  ],
+  modifiers: [
+    {
+      kind: {
+        colored: {
+          color: '#191c1f',
+          backgroundColor: '#262a2e',
+          backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.75) 0%,rgba(107,154,211,.75) 100%)',
+
+          states: [
+            {
+              hover: {
+                backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,1) 0%,rgba(107,154,211,1) 100%)',
+              },
+            }, {
+              disabled: {
+                color: 'rgba(23,28,31,.7)',
+                backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.32) 0%,rgba(107,154,211,.32) 100%)',
+              }
+            }
+          ]
+        },
+        empty: {
+          backgroundImage: 'none',
+          backgroundColor: 'none',
+          border: 'none',
+          boxShadow: 'none',
+        }
+      },
     }
   ]
 });
-
-//colored button
-(() => {
-
-    var color = '#191c1f',
-        colorDisabled = 'rgba(23,28,31,.7)',
-        bg = '#262a2e',
-        gardient = 'linear-gradient(135deg, #6bb6c4 0%,#6b9ad3 100%)',
-        gardientBW = 'linear-gradient(-45deg, #6bb6c4 0%,#6b9ad3 100%)';
-
-    style.buttonColored = {
-        normal: _.defaults({
-            color,
-            backgroundColor: bg,
-            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.75) 0%,rgba(107,154,211,.75) 100%)',
-        }, style.button.normal),
-
-        hover: _.defaults({
-            color,
-            backgroundColor: bg,
-            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,1) 0%,rgba(107,154,211,1) 100%)',
-        }, style.button.hover),
-
-        active: _.defaults({
-            color,
-            backgroundColor: bg,
-            backgroundImage: 'linear-gradient(-45deg, rgba(107,182,196,.75) 0%,rgba(107,154,211,.75) 100%)',
-        }, style.button.active),
-
-        disabled: _.defaults({
-            color: colorDisabled,
-            backgroundColor: bg,
-            backgroundImage: 'linear-gradient(135deg, rgba(107,182,196,.32) 0%,rgba(107,154,211,.32) 100%)',
-        }, style.button.disabled),
-    };
-})();
-
-//empty button
-style.buttonEmpty = {
-    normal: _.assign({}, style.button.normal, {
-        backgroundImage: 'none',
-        backgroundColor: 'none',
-        border: 'none',
-        boxShadow: 'none',
-    }),
-
-    hover: _.assign({}, style.button.hover, {
-        backgroundImage: 'none',
-        backgroundColor: 'none',
-        border: 'none',
-        boxShadow: 'none',
-    }),
-
-    active: _.assign({}, style.button.active, {
-        backgroundImage: 'none',
-        backgroundColor: 'none',
-        border: 'none',
-        boxShadow: 'none',
-    }),
-
-    disabled: _.assign({}, style.button.disabled, {
-        backgroundImage: 'none',
-        backgroundColor: 'none',
-        border: 'none',
-        boxShadow: 'none',
-    }),
-};
 
 
 
@@ -201,27 +162,26 @@ style.input = {
   boxSizing: 'border-box',
   border: 'solid 1px rgba(0,0,0,0)',
   outline: 'none',
+
+  states: [
+    {hover:{
+      color: '#e2e7eb',
+      border: 'solid 1px rgba(68,79,88,.5)',
+    }},
+    {focus:{
+      color: '#6bb6c4',
+      boxShadow: '0 0 3px rgba(86,83,136,.6), inset 0 0 4px rgba(86,83,136,.6)',
+      border: 'solid 1px rgba(93,169,167,1)',
+    }},
+    {disabled:{
+      color: '#96a6ad',
+      backgroundColor: 'rgba(26,29,33,.6)',
+    }},
+    {error:{
+      border: 'solid 1px #aa4353',
+    }}
+  ]
 };
-
-style.inputHover = _.defaults({
-  color: '#e2e7eb',
-  border: 'solid 1px rgba(68,79,88,.5)',
-}, style.input);
-
-style.inputActive = _.defaults({
-  color: '#6bb6c4',
-  boxShadow: '0 0 3px rgba(86,83,136,.6), inset 0 0 4px rgba(86,83,136,.6)',
-  border: 'solid 1px rgba(93,169,167,1)',
-}, style.input);
-
-style.inputDisabled = _.defaults({
-  color: '#96a6ad',
-  backgroundColor: 'rgba(26,29,33,.6)',
-}, style.input);
-
-style.inputError = _.defaults({
-    border: 'solid 1px #aa4353',
-}, style.input);
 
 //Checkbox
 (() => {
@@ -283,20 +243,23 @@ style.dropdown = {
     boxSizing: 'border-box',
     margin: '1px 0',
     outline: 'none',
+
+    states: [
+      {hover: {
+        color: '#e2e7eb',
+        backgroundColor: '#3b424a',
+      }},
+      {open: {
+        zIndex: 1,
+        height: 'auto',
+        position: 'relative',
+        color: '#6bb6c4',
+        backgroundColor: '#3b424a',
+        backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
+      }}
+    ],
 };
 
-style.dropdownHover = _.defaults({
-    color: '#e2e7eb',
-    backgroundColor: '#3b424a',
-}, style.dropdown);
-
-style.dropdownOpen = _.defaults({
-    height: 'auto',
-    position: 'relative',
-    color: '#6bb6c4',
-    backgroundColor: '#3b424a',
-    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,.1))',
-}, style.dropdown);
 
 //List
 style.list = _.defaults({
