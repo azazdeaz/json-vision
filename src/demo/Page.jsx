@@ -1,7 +1,5 @@
 var React = require('react');
-var style = require('../react-matterkit/style');
-var Accordion = require('../react-matterkit/accordion/Accordion.jsx');
-var AccordionTab = require('../react-matterkit/accordion/AccordionTab.jsx');
+var {style, Accordion, AccordionTab} = require('react-matterkit');
 var AceEditor = require('react-ace');
 
 var Page = React.createClass({

@@ -1,16 +1,8 @@
 var React = require('react');
 var _ = require('lodash');
-var {DragDropMixin} = require('react-dnd');
+// var {DragDropMixin} = require('react-dnd');
 
-var style = require('./react-matterkit/style');
-var Button = require('./react-matterkit/Button.jsx');
-var Icon = require('./react-matterkit/Icon.jsx');
-var StringInput = require('./react-matterkit/StringInput.jsx');
-var NumberInput = require('./react-matterkit/NumberInput.jsx');
-var Slider = require('./react-matterkit/Slider.jsx');
-var Dropdown = require('./react-matterkit/Dropdown.jsx');
-var Checkbox = require('./react-matterkit/Checkbox.jsx');
-var Base = require('./react-matterkit/Base.jsx');
+var {style, Button, Icon, StringInput, NumberInput, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
 
 const DND_TYPE = 'json-vision-drag-type';
 

@@ -1,5 +1,5 @@
 var React = require('react');
-var Page = require('./Page.jsx');
+var Page = React.createFactory(require('./Page.jsx'));
 var demos = [
     require('./demos/first'),
 ];
@@ -17,7 +17,7 @@ module.exports = function (JsonVision) {
     },
   };
 
-  var page = React.render(React.createElement(Page, {
+  var page = React.render(Page({
     value: DEMO.data.value,
     settings: DEMO.data.settings,
   }), document.body);
