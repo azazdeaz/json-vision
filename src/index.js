@@ -1,6 +1,6 @@
 var React = require('react');
-var JsonVision = require('./JsonVision.jsx');
-var demo = require('./demo/demo');
+var JsonVision = require('./JsonVision');
+// var demo = require('./demo/demo');
 var _ = require('lodash');
 
 JsonVision.create = function  (props) {
@@ -21,10 +21,10 @@ JsonVision.create = function  (props) {
   }
 };
 
-JsonVision.runDemo = function () {
-
-  demo(JsonVision);
-};
+// JsonVision.runDemo = function () {
+//
+//   demo(JsonVision);
+// };
 
 
 

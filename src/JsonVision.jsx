@@ -1,6 +1,6 @@
 var React = require('react');
 var _ = require('lodash');
-var JsonVisionItem = require('./JsonVisionItem.jsx');
+var JsonVisionItem = require('./JsonVisionItem');
 var JSPath = require('jspath');
 
 var styles = {
