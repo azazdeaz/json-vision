@@ -10,7 +10,7 @@ var styles = {
     fontFamily: 'Open Sans',
     fontWeight: '300',
     borderRadius: '1px',
-    margin: '3px',
+    // margin: '3px',
     // boxShadow: '0 0 1px #000',
     // overflow: 'hidden',
   }
