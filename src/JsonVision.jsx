@@ -1,5 +1,5 @@
 var React = require('react');
-var _ = require('lodash');
+var assign = require('lodash/object/assign');
 var JsonVisionItem = require('./JsonVisionItem');
 var JSPath = require('jspath');
 
@@ -14,6 +14,10 @@ var styles = {
     // boxShadow: '0 0 1px #000',
     // overflow: 'hidden',
   }
+};
+
+var selectorTools = {
+
 };
 
 function createAction(change) {
@@ -55,31 +59,68 @@ var JsonVision = React.createClass({
       value: {},
       settings: []};
   },
-  getSettings(path) {
 
-    var settings = {};
+  getChildContext() {
 
-    function add (s) {
-      _.assign(settings, s);
+    return {
+
+      getSettings(path) {
+
+        var settings = {};
+
+        function add (s) {
+          assign(settings, s);
+        }
+
+        function checkSettingsNode(settingsNode, path, ...preselectors) {
+
+          var match;
+
+          if (typeof(settingsNode.selector) === 'function') {
+
+            let scope = Object.create(selectTools, {path});
+            match = settingsNode.selector.call(scope);
+          }
+
+          if (match) {
+            if (preselectors.length === 0) {
+              add(settingsNode);
+            }
+            else {
+
+              let posPath = path.length - 2;
+              let posPreselectors = preselectors.length - 1;
+
+              for (;posPath >= 0 && posPreselectors >= 0; posPath -= 2) {
+
+                let subPath = path.slice(posPath);
+                let scope = Object.create(selectTools, {path: subPath});
+                let _match = preselectors[posPreselectors].selector.call(scope);
+
+                if (_match) {
+                  --posPreselectors;
+                }
+              }
+
+              if (posPreselectors === -1) {
+                add(settingsNode);
+              }
+            }
+          }
+
+
+        }
+
+        this.props.settings.forEach(s => {
+
+          checkSettingsNode(s, )
+        });
+
+        return settings;
+      },
     }
-
-    this.props.settings.forEach(s => {
-
-      if (s.select) {
-
-        if (typeof(s.select) === 'string' && s.select === path) {
-
-            add(s);
-        }
-        else if (s.select instanceof RegExp && s.select.test(path)) {
-
-          add(s);
-        }
-      }
-    });
-
-    return settings;
   },
+
   render() {
 
     return(
