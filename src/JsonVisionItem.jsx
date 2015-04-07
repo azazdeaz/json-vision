@@ -1,5 +1,8 @@
 var React = require('react');
 var _ = require('lodash');
+var isObject = require('lodash/lang/isObject');
+var has = require('lodash/object/has');
+var FuncUtil = require('./FuncUtil');
 // var {DragDropMixin} = require('react-dnd');
 
 var {style, Button, Icon, StringInput, NumberInput, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
@@ -23,14 +26,18 @@ var styles = {
 
 var JsonVisionItem = React.createClass({
   mixins: [/*DragDropMixin*/],
+  contextTypes: {
+    getSettings: React.PropTypes.func.isRequired,
+  },
   getInitialState () {
 
     return {opened: true};
   },
   getDefaultProps() {
     return {
-      path: '',
+      path: [],
       value: null,
+      indent: 0,
     };
   },
   statics: {
@@ -79,12 +86,12 @@ var JsonVisionItem = React.createClass({
       });
     }
   },
-  hasChildren () {
+  hasChildren() {
 
     var value = this.props.value;
     return _.isObject(value) && Object.keys(value).length > 0;
   },
-  onClickOpenToggle () {
+  onClickOpenToggle() {
 
     this.setState({opened: !this.state.opened});
   },
@@ -110,14 +117,95 @@ var JsonVisionItem = React.createClass({
       }
     }
     else {
-      btn.onClick(this.fullPath);
+      btn.onClick.call(new FuncUtil(this.props.path ));
     }
   },
   tooltipContent() {
     return this.settings.tooltip || 'This is a tooltip';
   },
+
+  renderChildren() {
+
+    var children = has(this.settings, 'children') ?
+      this.settings.children :
+      (isObject(this.props.value) && this.props.value);
+
+    if (this.state.opened && children) {
+
+      return Object.keys(children).map(key => {
+
+        var value = children[key];
+
+        return <JsonVisionItem
+          key = {key}
+          name = {key}
+          value = {value}
+          parentObject = {children}
+          path = {this.props.path.concat([key, value])}
+          indent = {this.props.indent + 1}
+          createAction = {this.props.createAction}/>;
+      }, this);
+    }
+  },
+
+  renderInput() {
+
+    if (isObject(this.props.value)) {
+      return null;
+    }
+
+    var input;
+
+    var numberInp = () => input = <NumberInput
+      onChange={v=>this.update(v)}
+      value={this.props.value} />;
+
+    var stringInp = () => input = <StringInput
+      onChange={v=>this.update(v)}
+      value={this.props.value} />;
+
+    if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
+
+      input = <Dropdown
+        onChange={v=>this.update(v)}
+        options={this.settings.options}
+        value={this.props.value}/>;
+    }
+    else if (this.settings.type === 'checkbox') {
+      input = <Checkbox
+        onChange={v=>this.update(v)}
+        value={this.props.value} />;
+    }
+    else if (this.settings.type === 'slider') {
+      input = <Slider
+        onChange={v=>this.update(v)}
+        value={this.props.value} />;
+    }
+    else if (this.settings.type === 'number') {
+      numberInp();
+    }
+    else if (this.settings.type === 'string') {
+      stringInp();
+    }
+    else if (typeof(this.props.value) === 'function') {
+      input = <Button
+        icon={this.settings.icon}
+        text={this.settings.text || this.props.value.name || 'Button'}
+        onClick={this.props.value}
+        colored={this.settings.colored}/>;
+    }
+    else if (typeof(this.props.value) === 'number') {
+      numberInp();
+    }
+    else {
+      stringInp();
+    }
+
+    return input;
+  },
+
   render () {
-    this.settings = this.props.getSettings(this.props.path);
+    this.settings = this.context.getSettings(this.props.path);
 
     var items = {},
       dragState = {},//this.getDragState(DND_TYPE),
@@ -134,7 +222,6 @@ var JsonVisionItem = React.createClass({
     };
 
     //indent
-    this.props.indent = this.props.indent || 0;
     items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
 
 
@@ -148,72 +235,9 @@ var JsonVisionItem = React.createClass({
     //label
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
-    //input or children
-    if (_.isObject(this.props.value)) {
 
-      items.children = <div style={{display: this.state.opened ? 'block' : 'none'}}>
-
-        {Object.keys(this.props.value).map(function(key, idx) {
-
-          return <JsonVisionItem
-            key = {key}
-            name = {key}
-            path = {this.props.path + '.' + key}
-            indent = {this.props.indent + 1}
-            parentObject = {this.props.value}
-            value = {this.props.value[key]}
-            getSettings = {this.props.getSettings}
-            createAction = {this.props.createAction}/>;
-        }, this)}
-      </div>;
-    }
-    else {
-
-      let numberInp = () => items.input = <NumberInput
-        onChange={v=>this.update(v)}
-        value={this.props.value} />;
-
-      let stringInp = () => items.input = <StringInput
-        onChange={v=>this.update(v)}
-        value={this.props.value} />;
-
-      if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
-
-        items.input = <Dropdown
-          onChange={v=>this.update(v)}
-          options={this.settings.options}
-          value={this.props.value}/>;
-      }
-      else if (this.settings.type === 'checkbox') {
-        items.input = <Checkbox
-          onChange={v=>this.update(v)}
-          value={this.props.value} />;
-      }
-      else if (this.settings.type === 'slider') {
-        items.input = <Slider
-          onChange={v=>this.update(v)}
-          value={this.props.value} />;
-      }
-      else if (this.settings.type === 'number') {
-        numberInp();
-      }
-      else if (this.settings.type === 'string') {
-        stringInp();
-      }
-      else if (typeof(this.props.value) === 'function') {
-        items.input = <Button
-          icon={this.settings.icon}
-          text={this.settings.text || this.props.value.name || 'Button'}
-          onClick={this.props.value}
-          colored={this.settings.colored}/>;
-      }
-      else if (typeof(this.props.value) === 'number') {
-        numberInp();
-      }
-      else {
-        stringInp();
-      }
-    }
+    items.children = this.renderChildren();
+    items.input = this.renderInput();
 
     //buttons
     if (this.settings.buttons) {

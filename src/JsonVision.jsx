@@ -1,6 +1,7 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
 var JsonVisionItem = require('./JsonVisionItem');
+var FuncUtil = require('./FuncUtil')
 var JSPath = require('jspath');
 
 var styles = {
@@ -14,10 +15,6 @@ var styles = {
     // boxShadow: '0 0 1px #000',
     // overflow: 'hidden',
   }
-};
-
-var selectorTools = {
-
 };
 
 function createAction(change) {
@@ -52,73 +49,131 @@ function createAction(change) {
 
 var JsonVision = React.createClass({
 
+  childContextTypes: {
+    getSettings: React.PropTypes.func.isRequired,
+  },
+
   getDefaultProps() {
 
     return {
       title: 'json vision',
       value: {},
-      settings: []};
+      settings: [],
+    };
+  },
+
+  getInitialState() {
+
+    return {
+      getSettings: (path) => {
+
+        var settings = {};
+
+        checkSettingsList(this.props.settings, []);
+
+        compute('children');
+
+        return settings;
+
+        function compute(key) {
+
+          if (typeof(settings[key]) === 'function') {
+
+            let scope = new FuncUtil(path);
+            settings[key] = settings[key].call(scope);
+          }
+        }
+
+        function checkSettingsNode(settingsNode, path, preselectors) {
+
+          var match, selector, selectorType;
+
+          if (!settingsNode.selector) {
+
+            return true;
+          }
+
+          if (typeof(settingsNode.selector) === 'function') {
+
+            selectorType = 'function';
+            selector = settingsNode.selector;
+          }
+          else if (typeof(settingsNode.selector) === 'object') {
+
+            selectorType = Object.keys(settingsNode.selector)[0];
+            selector = settingsNode.selector[selectorType];
+          }
+          else {
+            throw Error();
+          }
+
+
+
+          if (selectorType === 'function') {
+
+            let scope = new FuncUtil(path);
+            match = selector.call(scope);
+          }
+          else if (selectorType === 'instanceOf') {
+
+            let value = path[path.length-1];
+            match = value instanceof selector;
+            // console.log(match, selector.prototype === match.prototype, path.length, path.reduce((v,k,i)=>v+(i%2===0?k+'/':''), ''), value);
+          }
+          else if (selectorType === 'instance') {
+
+            let value = path[1];
+            match = value === selector;
+          }
+          else if (selectorType === 'path') {
+          }
+          else {
+            throw Error();
+          }
+
+          if (match) {
+
+            if (preselectors.length === 0) {
+              return true;
+            }
+            else {
+
+              let newSettingsNode = preselectors[0];
+              let newPath = path.slice(0, path.length - 2);
+              let newPreselectors = preselectors.slice(1);
+
+              return checkSettingsNode(
+                newSettingsNode, newPath, newPreselectors);
+            }
+          }
+        }
+
+        function checkSettingsList(settingsList, preselectors) {
+
+          settingsList.forEach(settingsNode => {
+
+            if (checkSettingsNode(settingsNode, path, preselectors)) {
+
+              console.log('match', settings, settingsNode)
+              assign(settings, settingsNode);
+            }
+
+            if (settingsNode.settings) {
+
+              let newPreselectors = [settingsNode].concat(preselectors);
+              checkSettingsList(settingsNode.settings, newPreselectors);
+            }
+          });
+        }
+      },
+    };
   },
 
   getChildContext() {
 
     return {
-
-      getSettings(path) {
-
-        var settings = {};
-
-        function add (s) {
-          assign(settings, s);
-        }
-
-        function checkSettingsNode(settingsNode, path, ...preselectors) {
-
-          var match;
-
-          if (typeof(settingsNode.selector) === 'function') {
-
-            let scope = Object.create(selectTools, {path});
-            match = settingsNode.selector.call(scope);
-          }
-
-          if (match) {
-            if (preselectors.length === 0) {
-              add(settingsNode);
-            }
-            else {
-
-              let posPath = path.length - 2;
-              let posPreselectors = preselectors.length - 1;
-
-              for (;posPath >= 0 && posPreselectors >= 0; posPath -= 2) {
-
-                let subPath = path.slice(posPath);
-                let scope = Object.create(selectTools, {path: subPath});
-                let _match = preselectors[posPreselectors].selector.call(scope);
-
-                if (_match) {
-                  --posPreselectors;
-                }
-              }
-
-              if (posPreselectors === -1) {
-                add(settingsNode);
-              }
-            }
-          }
-
-
-        }
-
-        this.props.settings.forEach(s => {
-
-          checkSettingsNode(s, )
-        });
-
-        return settings;
-      },
-    }
+      getSettings: this.state.getSettings,
+    };
   },
 
   render() {
