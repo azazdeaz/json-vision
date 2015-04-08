@@ -1,11 +1,13 @@
 var React = require('react');
 var _ = require('lodash');
 var isObject = require('lodash/lang/isObject');
+var includes = require('lodash/collection/includes');
 var has = require('lodash/object/has');
+var keysIn = require('lodash/object/keysIn');
 var FuncUtil = require('./FuncUtil');
 // var {DragDropMixin} = require('react-dnd');
 
-var {style, Button, Icon, StringInput, NumberInput, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
+var {style, Button, Icon, Input, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -132,7 +134,14 @@ var JsonVisionItem = React.createClass({
 
     if (this.state.opened && children) {
 
-      return Object.keys(children).map(key => {
+      var keys = true ?
+        keysIn(children) : Object.keys(children);
+
+      return keys.map((key, idx) => {
+
+        var {whitelist, blacklist} = this.settings;
+        if (whitelist && !includes(whitelist, key)) return;
+        if (blacklist && includes(whitelist, key)) return;
 
         var value = children[key];
 
@@ -156,11 +165,8 @@ var JsonVisionItem = React.createClass({
 
     var input;
 
-    var numberInp = () => input = <NumberInput
-      onChange={v=>this.update(v)}
-      value={this.props.value} />;
-
-    var stringInp = () => input = <StringInput
+    var createInput = (type) => input = <Input
+      type={type}
       onChange={v=>this.update(v)}
       value={this.props.value} />;
 
@@ -182,10 +188,10 @@ var JsonVisionItem = React.createClass({
         value={this.props.value} />;
     }
     else if (this.settings.type === 'number') {
-      numberInp();
+      createInput('number');
     }
     else if (this.settings.type === 'string') {
-      stringInp();
+      createInput('text');
     }
     else if (typeof(this.props.value) === 'function') {
       input = <Button
@@ -195,10 +201,10 @@ var JsonVisionItem = React.createClass({
         colored={this.settings.colored}/>;
     }
     else if (typeof(this.props.value) === 'number') {
-      numberInp();
+      createInput('number');
     }
     else {
-      stringInp();
+      createInput('text');
     }
 
     return input;
@@ -207,13 +213,16 @@ var JsonVisionItem = React.createClass({
   render () {
     this.settings = this.context.getSettings(this.props.path);
 
+    // var fu = new FuncUtil(this.props.path)
+    // console.log('render item', fu.fullPath, fu.value;
+
     var items = {},
       dragState = {},//this.getDragState(DND_TYPE),
       dropState = {};//this.getDropState(DND_TYPE);
 
     var styleBlock = _.defaults({
       opacity: dragState.isDragging ? 0.4 : 1,
-    }, this.hasChildren() ? style.lineGroup : style.line);
+    }, this.settings.highlighted ? style.lineGroup : style.line);
 
     var styleLabel = {
       flex:1,
@@ -241,22 +250,33 @@ var JsonVisionItem = React.createClass({
 
     //buttons
     if (this.settings.buttons) {
-      items.buttons = <span>
-        {this.settings.buttons.map(btn => <span style={{float:'left'}}>
-            <Button {...btn} key={++key} onClick={() => this.onBtnClick(btn)}/>
+      items.buttons = <span key='buttons'>
+        {this.settings.buttons.map(btn => <span style={{float:'left'}} key={++key}>
+            <Button {...btn} onClick={() => this.onBtnClick(btn)}/>
           </span>)}
       </span>;
     }
 
     return (
       <div>
-        <Base tooltip={this.settings.tooltip} contextMenu={this.settings.dropdownMenu} style={styleBlock}>
+        <div
+          tooltip={this.settings.tooltip}
+          contextMenu={this.settings.dropdownMenu}
+          style={styleBlock}
+          onClick={()=>{
+            if (this.settings.onClick) {
+
+              var scope = new FuncUtil(this.props.path);
+              this.settings.onClick.call(scope);
+            }
+          }}>
+
           {items.indent}
           {items.toggle}
           {items.label}
           {items.input}
           {items.buttons}
-        </Base>
+        </div>
         {items.children}
       </div>
     );

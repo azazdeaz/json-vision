@@ -72,6 +72,7 @@ var JsonVision = React.createClass({
         checkSettingsList(this.props.settings, []);
 
         compute('children');
+        compute('highlighted');
 
         return settings;
 
@@ -120,7 +121,12 @@ var JsonVision = React.createClass({
             match = value instanceof selector;
             // console.log(match, selector.prototype === match.prototype, path.length, path.reduce((v,k,i)=>v+(i%2===0?k+'/':''), ''), value);
           }
-          else if (selectorType === 'instance') {
+          else if (selectorType === 'key') {
+
+            let key = path[path.length-2];
+            match = key === selector;
+          }
+          else if (selectorType === 'value') {
 
             let value = path[1];
             match = value === selector;
@@ -154,7 +160,6 @@ var JsonVision = React.createClass({
 
             if (checkSettingsNode(settingsNode, path, preselectors)) {
 
-              console.log('match', settings, settingsNode)
               assign(settings, settingsNode);
             }
 
@@ -169,6 +174,12 @@ var JsonVision = React.createClass({
     };
   },
 
+  statics: {
+    doUpdate() {
+      this.forceUpdate();
+    },
+  },
+
   getChildContext() {
 
     return {
@@ -181,6 +192,7 @@ var JsonVision = React.createClass({
     return(
       <div style={styles.root}>
         <JsonVisionItem
+          key='root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}
           createAction = {createAction.bind(this)}
