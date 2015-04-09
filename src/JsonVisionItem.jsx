@@ -4,9 +4,10 @@ var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
 var FuncUtil = require('./FuncUtil');
 var Children = require('./Children');
+var Input = require('./Input');
 // var {DragDropMixin} = require('react-dnd');
 
-var {style, Button, Icon, Input, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
+var {style, Button, Icon} = require('react-matterkit');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -125,90 +126,6 @@ var Item = React.createClass({
     return this.settings.tooltip || 'This is a tooltip';
   },
 
-  // renderChildren() {
-  //
-  //   var children = has(this.settings, 'children') ?
-  //     this.settings.children :
-  //     (isObject(this.props.value) && this.props.value);
-  //
-  //   if (this.state.opened && children) {
-  //
-  //     var keys = true ?
-  //       keysIn(children) : Object.keys(children);
-  //
-  //     return keys.map((key, idx) => {
-  //
-  //       var {whitelist, blacklist} = this.settings;
-  //       if (whitelist && !includes(whitelist, key)) return;
-  //       if (blacklist && includes(whitelist, key)) return;
-  //
-  //       var value = children[key];
-  //
-  //       return <Item
-  //         key = {key}
-  //         name = {key}
-  //         value = {value}
-  //         parentObject = {children}
-  //         path = {this.props.path.concat([key, value])}
-  //         indent = {this.props.indent + 1}
-  //         createAction = {this.props.createAction}/>;
-  //     }, this);
-  //   }
-  // },
-
-  renderInput() {
-
-    if (isObject(this.props.value)) {
-      return null;
-    }
-
-    var input;
-
-    var createInput = (type) => input = <Input
-      type={type}
-      onChange={v=>this.update(v)}
-      value={this.props.value} />;
-
-    if (this.settings.type === 'dropdown' || _.isArray(this.settings.options)) {
-
-      input = <Dropdown
-        onChange={v=>this.update(v)}
-        options={this.settings.options}
-        value={this.props.value}/>;
-    }
-    else if (this.settings.type === 'checkbox') {
-      input = <Checkbox
-        onChange={v=>this.update(v)}
-        value={this.props.value} />;
-    }
-    else if (this.settings.type === 'slider') {
-      input = <Slider
-        onChange={v=>this.update(v)}
-        value={this.props.value} />;
-    }
-    else if (this.settings.type === 'number') {
-      createInput('number');
-    }
-    else if (this.settings.type === 'string') {
-      createInput('text');
-    }
-    else if (typeof(this.props.value) === 'function') {
-      input = <Button
-        icon={this.settings.icon}
-        text={this.settings.text || this.props.value.name || 'Button'}
-        onClick={this.props.value}
-        colored={this.settings.colored}/>;
-    }
-    else if (typeof(this.props.value) === 'number') {
-      createInput('number');
-    }
-    else {
-      createInput('text');
-    }
-
-    return input;
-  },
-
   render () {
     this.settings = this.context.getSettings(this.props.path);
 
@@ -243,8 +160,11 @@ var Item = React.createClass({
     //label
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
-
-    items.input = this.renderInput();
+    //input
+    items.input = <Input
+      settings={this.settings}
+      value={this.props.value}
+      update={this.props.update}/>;
 
     //buttons
     if (this.settings.buttons) {
@@ -254,6 +174,17 @@ var Item = React.createClass({
           </span>)}
       </span>;
     }
+
+    //children
+    if (this.state.opened) {
+      items.children = <Children
+        settings = {this.settings}
+        value = {this.props.value}
+        path = {this.props.path}
+        indent = {this.props.indent}
+        createAction = {this.props.createAction}/>;
+    }
+
 
     return (
       <div>
@@ -275,14 +206,7 @@ var Item = React.createClass({
           {items.input}
           {items.buttons}
         </div>
-
-        {this.state.opened ? <Children
-          settings = {this.settings}
-          value = {this.props.value}
-          path = {this.props.path}
-          indent = {this.props.indent}
-          createAction = {this.props.createAction}/> : null}
-
+        {items.children}
       </div>
     );
   }
