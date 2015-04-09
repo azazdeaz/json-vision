@@ -1,7 +1,7 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
-var JsonVisionItem = require('./JsonVisionItem');
-var FuncUtil = require('./FuncUtil')
+var Item = require('./JsonVisionItem');
+var FuncUtil = require('./FuncUtil');
 var JSPath = require('jspath');
 
 var styles = {
@@ -191,7 +191,7 @@ var JsonVision = React.createClass({
 
     return(
       <div style={styles.root}>
-        <JsonVisionItem
+        <Item
           key='root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}

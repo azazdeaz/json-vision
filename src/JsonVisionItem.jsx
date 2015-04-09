@@ -1,10 +1,9 @@
 var React = require('react');
 var _ = require('lodash');
 var isObject = require('lodash/lang/isObject');
-var includes = require('lodash/collection/includes');
 var has = require('lodash/object/has');
-var keysIn = require('lodash/object/keysIn');
 var FuncUtil = require('./FuncUtil');
+var Children = require('./Children');
 // var {DragDropMixin} = require('react-dnd');
 
 var {style, Button, Icon, Input, Slider, Dropdown, Checkbox, Base} = require('react-matterkit');
@@ -26,7 +25,7 @@ var styles = {
   }
 };
 
-var JsonVisionItem = React.createClass({
+var Item = React.createClass({
   mixins: [/*DragDropMixin*/],
   contextTypes: {
     getSettings: React.PropTypes.func.isRequired,
@@ -126,36 +125,36 @@ var JsonVisionItem = React.createClass({
     return this.settings.tooltip || 'This is a tooltip';
   },
 
-  renderChildren() {
-
-    var children = has(this.settings, 'children') ?
-      this.settings.children :
-      (isObject(this.props.value) && this.props.value);
-
-    if (this.state.opened && children) {
-
-      var keys = true ?
-        keysIn(children) : Object.keys(children);
-
-      return keys.map((key, idx) => {
-
-        var {whitelist, blacklist} = this.settings;
-        if (whitelist && !includes(whitelist, key)) return;
-        if (blacklist && includes(whitelist, key)) return;
-
-        var value = children[key];
-
-        return <JsonVisionItem
-          key = {key}
-          name = {key}
-          value = {value}
-          parentObject = {children}
-          path = {this.props.path.concat([key, value])}
-          indent = {this.props.indent + 1}
-          createAction = {this.props.createAction}/>;
-      }, this);
-    }
-  },
+  // renderChildren() {
+  //
+  //   var children = has(this.settings, 'children') ?
+  //     this.settings.children :
+  //     (isObject(this.props.value) && this.props.value);
+  //
+  //   if (this.state.opened && children) {
+  //
+  //     var keys = true ?
+  //       keysIn(children) : Object.keys(children);
+  //
+  //     return keys.map((key, idx) => {
+  //
+  //       var {whitelist, blacklist} = this.settings;
+  //       if (whitelist && !includes(whitelist, key)) return;
+  //       if (blacklist && includes(whitelist, key)) return;
+  //
+  //       var value = children[key];
+  //
+  //       return <Item
+  //         key = {key}
+  //         name = {key}
+  //         value = {value}
+  //         parentObject = {children}
+  //         path = {this.props.path.concat([key, value])}
+  //         indent = {this.props.indent + 1}
+  //         createAction = {this.props.createAction}/>;
+  //     }, this);
+  //   }
+  // },
 
   renderInput() {
 
@@ -245,7 +244,6 @@ var JsonVisionItem = React.createClass({
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
 
-    items.children = this.renderChildren();
     items.input = this.renderInput();
 
     //buttons
@@ -277,12 +275,19 @@ var JsonVisionItem = React.createClass({
           {items.input}
           {items.buttons}
         </div>
-        {items.children}
+
+        {this.state.opened ? <Children
+          settings = {this.settings}
+          value = {this.props.value}
+          path = {this.props.path}
+          indent = {this.props.indent}
+          createAction = {this.props.createAction}/> : null}
+
       </div>
     );
   }
 });
 
 
-
-module.exports = JsonVisionItem;
+Children.handleItem(Item);
+module.exports = Item;
