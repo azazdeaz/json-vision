@@ -89,7 +89,7 @@ var JsonVision = React.createClass({
 
           var match, selector, selectorType;
 
-          if (typeof(settingsNode === 'function')) {
+          if (typeof(settingsNode) === 'function') {
             let scope = new FuncUtil(path);
             settingsNode = settingsNode.call(scope);
           }
