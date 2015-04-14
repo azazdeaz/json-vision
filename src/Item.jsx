@@ -29,6 +29,7 @@ var styles = {
 var Item = React.createClass({
   mixins: [/*DragDropMixin*/],
   contextTypes: {
+    createAction: React.PropTypes.func.isRequired,
     getSettings: React.PropTypes.func.isRequired,
   },
   getInitialState () {
@@ -99,7 +100,7 @@ var Item = React.createClass({
   },
   update (value) {
 
-    this.props.createAction({
+    this.context.createAction({
       type: 'set',
       object: this.props.parentObject,
       key: this.props.name,
@@ -164,7 +165,7 @@ var Item = React.createClass({
     items.input = <Input
       settings={this.settings}
       value={this.props.value}
-      update={this.props.update}/>;
+      update={this.update}/>;
 
     //buttons
     if (this.settings.buttons) {
