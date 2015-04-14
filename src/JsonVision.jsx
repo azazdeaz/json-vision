@@ -89,11 +89,6 @@ var JsonVision = React.createClass({
 
           var match, selector, selectorType;
 
-          if (typeof(settingsNode) === 'function') {
-            let scope = new FuncUtil(path);
-            settingsNode = settingsNode.call(scope);
-          }
-
           if (!settingsNode.selector) {
 
             return true;
@@ -163,6 +158,15 @@ var JsonVision = React.createClass({
 
           settingsList.forEach(settingsNode => {
 
+            if (typeof(settingsNode) === 'function') {
+              let scope = new FuncUtil(path);
+              settingsNode = settingsNode.call(scope);
+            }
+
+            if (typeof(settingsNode) !== 'object') {
+              return;
+            }
+
             if (checkSettingsNode(settingsNode, path, preselectors)) {
 
               assign(settings, settingsNode);
@@ -200,6 +204,7 @@ var JsonVision = React.createClass({
           key='root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}
+          path = {['', this.props.value]}
           createAction = {createAction.bind(this)}
           getSettings = {this.getSettings}/>
       </div>

@@ -118,8 +118,8 @@ var Item = React.createClass({
         });
       }
     }
-    else {
-      btn.onClick.call(new FuncUtil(this.props.path ));
+    else if (typeof(btn.onClick) === 'function') {
+      btn.onClick.call(new FuncUtil(this.props.path));
     }
   },
   tooltipContent() {
@@ -169,9 +169,14 @@ var Item = React.createClass({
     //buttons
     if (this.settings.buttons) {
       items.buttons = <span key='buttons'>
-        {this.settings.buttons.map(btn => <span style={{float:'left'}} key={++key}>
+        {this.settings.buttons.map(btn => {
+
+          if (!has(btn, 'kind')) btn.kind = 'stamp';
+
+          return <span style={{float:'left'}} key={++key}>
             <Button {...btn} onClick={() => this.onBtnClick(btn)}/>
-          </span>)}
+          </span>;
+        })}
       </span>;
     }
 
