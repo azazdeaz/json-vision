@@ -4,15 +4,18 @@ var isArray = require('lodash/lang/isArray');
 var {style, Button, Icon, Input, Slider, Dropdown, Checkbox} = require('react-matterkit');
 var Item;
 
-var INput  = React.createClass({
+var Input  = React.createClass({
 
   render() {
 
     var {settings, value, update} = this.props;
     var input;
 
+    var empty = () => input = <div hidden={true}/>;
+
     if (isObject(value)) {
-      return null;
+      empty();
+      return input;
     }
 
 
@@ -20,7 +23,8 @@ var INput  = React.createClass({
       type={type}
       onChange={v=>update(v)}
       value={value} />;
-
+console.log('settings', settings)
+console.log('settings.type', settings.type)
     if (settings.type === 'dropdown' || isArray(settings.options)) {
 
       input = <Dropdown
@@ -48,6 +52,14 @@ var INput  = React.createClass({
 
       createInput('text');
     }
+    else if (settings.type === 'no-input') {
+
+      empty();
+    }
+    else if (settings.type) {
+
+      console.warn(`Unknown type: "${settings.type}"`);
+    }
     else if (typeof(value) === 'function') {
 
       input = <Button
@@ -60,12 +72,15 @@ var INput  = React.createClass({
 
       createInput('number');
     }
-    else {
+    else if (typeof(value) === 'string') {
       createInput('text');
+    }
+    else {
+      empty();
     }
 
     return input;
   }
 });
 
-export default INput;
+export default Input;

@@ -5,7 +5,7 @@ var has = require('lodash/object/has');
 var FuncUtil = require('./FuncUtil');
 var Children = require('./Children');
 var Input = require('./Input');
-// var {DragDropMixin} = require('react-dnd');
+var {DragDropMixin} = require('react-dnd');
 
 var {style, Button, Icon} = require('react-matterkit');
 
@@ -27,7 +27,9 @@ var styles = {
 };
 
 var Item = React.createClass({
-  mixins: [/*DragDropMixin*/],
+
+  mixins: [DragDropMixin],
+
   contextTypes: {
     createAction: React.PropTypes.func.isRequired,
     getSettings: React.PropTypes.func.isRequired,
@@ -45,14 +47,14 @@ var Item = React.createClass({
   },
   statics: {
     configureDragDrop(register) {
+
       register(DND_TYPE, {
 
         dragSource: {
           beginDrag(component) {
-            // console.log('begin drag', component.fullPath)
             return {
               item: {
-                component: component,
+                key: component.props.key,
               },
             };
           }
@@ -61,30 +63,8 @@ var Item = React.createClass({
         dropTarget: {
           acceptDrop(component, item, e, isHandled) {
 
-            if (isHandled){console.log('isHandled', component.props.path);return;}
-            else {console.log('isNotHandled', component.props.path);}
-            console.log('acceptDrop', component, item);
-
-            component.props.createAction({
-              type: 'set',
-              object: component.props.parentObject,
-              key: component.props.name,
-              value: component.props.value
-            });
-
-            component.props.createAction({
-              type: 'delete',
-              object: component.props.parentObject,
-              key: component.props.name,
-            });
-          },
-          canDrop(component, item) {
-
-            return component.hasChildren();
+            component.props.sort(item.key, component.props.key);
           }
-          // enter(component, item) {console.log('enter', component, item);},
-          // leave(component, item) {console.log('leave', component, item);},
-          // over(component, item) {console.log('over', component, item);},
         }
       });
     }
@@ -161,6 +141,7 @@ var Item = React.createClass({
     //label
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
+    console.log(this.props.path, this.settings)
     //input
     items.input = <Input
       settings={this.settings}
@@ -195,6 +176,8 @@ var Item = React.createClass({
     return (
       <div>
         <div
+          {...this.dragSourceFor(DND_TYPE)}
+          {...this.dropTargetFor(DND_TYPE)}
           tooltip={this.settings.tooltip}
           contextMenu={this.settings.dropdownMenu}
           style={styleBlock}

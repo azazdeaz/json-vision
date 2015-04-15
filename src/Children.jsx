@@ -1,17 +1,23 @@
-var React = require('react');
-var has = require('lodash/object/has');
-var isObject = require('lodash/lang/isObject');
-var keysIn = require('lodash/object/keysIn');
-var includes = require('lodash/collection/includes');
-var FuncUtil = require('./FuncUtil');
-var Item;
+import React from 'react';
+import has from 'lodash/object/has';
+import isObject from 'lodash/lang/isObject';
+import isArray from 'lodash/lang/isArray';
+import keysIn from 'lodash/object/keysIn';
+import includes from 'lodash/collection/includes';
+import FuncUtil from './FuncUtil';
+import Symbol from 'es6-symbol';
+var Item;//Will be injected
 
 var Children  = React.createClass({
+
+  contextTypes: {
+    createAction: React.PropTypes.func.isRequired,
+  },
 
   render() {
 
     var {settings, value, path, indent, createAction} = this.props;
-    var children;
+    var children, sort, SORT_DND_TYPE;
 
     if (has(settings, 'children')) {
 
@@ -20,6 +26,19 @@ var Children  = React.createClass({
     else if (isObject(value)) {
 
       children = value;
+    }
+
+    if (settings.sortable || isArray(children)) {
+
+      SORT_DND_TYPE = Symbol();
+
+      sort = (key, afterKey) => {
+
+        var value = children.splice(key, 1)[0];
+        children.splice(afterKey, 0, value);
+
+        createAction();
+      };
     }
 
     if (children) {
@@ -43,7 +62,9 @@ var Children  = React.createClass({
             parentObject = {children}
             path = {path.concat([key, value])}
             indent = {indent + 1}
-            createAction = {createAction}/>;
+            createAction = {createAction}
+            sort = {sort}
+            SORT_DND_TYPE = {SORT_DND_TYPE}/>;
         })}
         </div>;
     }

@@ -35,7 +35,7 @@ var JsonVision = React.createClass({
   },
 
   getInitialState() {
-
+    
     return {
       createAction: createAction.bind(this),
       getSettings: getSettings.bind(this),
@@ -82,7 +82,6 @@ module.exports = JsonVision;
 
 
 function createAction(change) {
-  console.log('crateAction', change);
 
   if (this.props.onAction && this.props.onAction(change) === false) {
 
@@ -160,7 +159,6 @@ function getSettings(path) {
     else {
       throw Error();
     }
-
 
 
     if (selectorType === 'function') {
