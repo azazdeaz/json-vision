@@ -54,7 +54,7 @@ var Item = React.createClass({
           beginDrag(component) {
             return {
               item: {
-                key: component.props.idx,
+                idx: component.props.idx,
               },
             };
           },
@@ -66,8 +66,23 @@ var Item = React.createClass({
 
         dropTarget: {
           acceptDrop(component, item, isHandled) {
-            console.log('acceptDrop', component, item, isHandled)
+
             component.props.sort(item.idx, component.props.idx);
+          },
+          enter(component, item) {
+
+            if (item.idx > component.props.idx) {
+              // component.setState({marginTop: 32});
+            }
+            else if (item.idx < component.props.idx) {
+              // component.setState({marginBottom: 32});
+            }
+          },
+          leave(component) {
+            // component.setState({
+            //   marginTop: 0,
+            //   marginBottom: 0,
+            // });
           }
         }
       });
@@ -115,17 +130,19 @@ var Item = React.createClass({
     this.settings = this.context.getSettings(this.props.path);
 
     var items = {},
-      dragState = {},//this.getDragState(DND_TYPE),
-      dropState = {};//this.getDropState(DND_TYPE);
+      dragState = this.getDragState(DND_TYPE),
+      dropState = this.getDropState(DND_TYPE);
 
     var styleBlock = defaults({
+      marginTop: this.state.marginTop,
+      marginBottom: this.state.marginBottom,
       opacity: dragState.isDragging ? 0.4 : 1,
     }, this.settings.highlighted ? style.lineGroup : style.line);
 
     var styleLabel = {
       flex:1,
-      color: dropState.isDragging ? style.palette.purple : 'inherit',
-      backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
+      // color: dropState.isDragging ? style.palette.purple : 'inherit',
+      // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     };
 
     //indent

@@ -4,6 +4,7 @@ import assign from 'lodash/object/assign';
 import isObject from 'lodash/lang/isObject';
 import isArray from 'lodash/lang/isArray';
 import keysIn from 'lodash/object/keysIn';
+import pluck from 'lodash/collection/pluck';
 import includes from 'lodash/collection/includes';
 import Symbol from 'es6-symbol';
 var Item;//Will be injected
@@ -34,9 +35,11 @@ var Children  = React.createClass({
       commonProps.draggable = true;
       commonProps.SORT_DND_TYPE = Symbol();
       commonProps.sort = (idx, afterIdx) => {
-
+        console.log(idx, afterIdx);
+        console.log('>',pluck(children.name))
         var value = children.splice(idx, 1)[0];
         children.splice(afterIdx, 0, value);
+        console.log('<',pluck(children.name))
 
         createAction();
       };
