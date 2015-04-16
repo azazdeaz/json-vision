@@ -1,7 +1,9 @@
 var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
-var {style, Button, Icon, Input, Slider, Dropdown, Checkbox} = require('react-matterkit');
+var Matterkit = require('react-matterkit');
+var {style, Button, Icon, Slider, Dropdown, Checkbox} = Matterkit;
+var MatterInput = Matterkit.Input;
 var Item;
 
 var Input  = React.createClass({
@@ -19,12 +21,12 @@ var Input  = React.createClass({
     }
 
 
-    var createInput = (type) => input = <Input
+    var createInput = (type) => input = <MatterInput
       type={type}
       onChange={v=>update(v)}
       value={value} />;
-console.log('settings', settings)
-console.log('settings.type', settings.type)
+// console.log('settings', settings)
+// console.log('settings.type', settings.type)
     if (settings.type === 'dropdown' || isArray(settings.options)) {
 
       input = <Dropdown

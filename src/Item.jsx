@@ -1,7 +1,7 @@
 var React = require('react');
-var _ = require('lodash');
 var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
+var defaults = require('lodash/object/defaults');
 var FuncUtil = require('./FuncUtil');
 var Children = require('./Children');
 var Input = require('./Input');
@@ -72,7 +72,7 @@ var Item = React.createClass({
   hasChildren() {
 
     var value = this.props.value;
-    return _.isObject(value) && Object.keys(value).length > 0;
+    return isObject(value) && Object.keys(value).length > 0;
   },
   onClickOpenToggle() {
 
@@ -117,7 +117,7 @@ var Item = React.createClass({
       dragState = {},//this.getDragState(DND_TYPE),
       dropState = {};//this.getDropState(DND_TYPE);
 
-    var styleBlock = _.defaults({
+    var styleBlock = defaults({
       opacity: dragState.isDragging ? 0.4 : 1,
     }, this.settings.highlighted ? style.lineGroup : style.line);
 
@@ -141,9 +141,10 @@ var Item = React.createClass({
     //label
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
-    console.log(this.props.path, this.settings)
+    console.log(this.props.path, this.settings);
     //input
     items.input = <Input
+      path={this.props.path}
       settings={this.settings}
       value={this.props.value}
       update={this.update}/>;
