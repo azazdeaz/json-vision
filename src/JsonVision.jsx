@@ -168,19 +168,15 @@ function getSettings(path) {
     }
     else if (selectorType === 'instanceOf') {
 
-      let value = path[path.length-1];
-      match = value instanceof selector;
-      // console.log(match, selector.prototype === match.prototype, path.length, path.reduce((v,k,i)=>v+(i%2===0?k+'/':''), ''), value);
+      match = utils.value instanceof selector;
     }
     else if (selectorType === 'key') {
 
-      let key = path[path.length-2];
-      match = key === selector;
+      match = utils.key === selector;
     }
     else if (selectorType === 'value') {
 
-      let value = path[1];
-      match = value === selector;
+      match = utils.value === selector;
     }
     else if (selectorType === 'path') {
     }

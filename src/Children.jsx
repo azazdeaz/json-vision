@@ -35,11 +35,8 @@ var Children  = React.createClass({
       commonProps.draggable = true;
       commonProps.SORT_DND_TYPE = Symbol();
       commonProps.sort = (idx, afterIdx) => {
-        console.log(idx, afterIdx);
-        console.log('>',pluck(children.name))
         var value = children.splice(idx, 1)[0];
         children.splice(afterIdx, 0, value);
-        console.log('<',pluck(children.name))
 
         createAction();
       };

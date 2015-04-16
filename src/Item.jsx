@@ -7,7 +7,7 @@ var Children = require('./Children');
 var Input = require('./Input');
 var {DragDropMixin} = require('react-dnd');
 
-var {style, Button, Icon} = require('react-matterkit');
+var {style, Button, Icon, ButtonGroup} = require('react-matterkit');
 
 const DND_TYPE = 'json-vision-drag-type';
 
@@ -168,16 +168,14 @@ var Item = React.createClass({
 
     //buttons
     if (this.settings.buttons) {
-      items.buttons = <span key='buttons'>
+      items.buttons = <ButtonGroup>
         {this.settings.buttons.map(btn => {
 
           if (!has(btn, 'kind')) btn.kind = 'stamp';
 
-          return <span style={{float:'left'}} key={++key}>
-            <Button {...btn} onClick={() => this.onBtnClick(btn)}/>
-          </span>;
+          return <Button {...btn} onClick={() => this.onBtnClick(btn)}/>;
         })}
-      </span>;
+      </ButtonGroup>;
     }
 
     //children
