@@ -1,10 +1,10 @@
 import React from 'react';
 import has from 'lodash/object/has';
+import assign from 'lodash/object/assign';
 import isObject from 'lodash/lang/isObject';
 import isArray from 'lodash/lang/isArray';
 import keysIn from 'lodash/object/keysIn';
 import includes from 'lodash/collection/includes';
-import FuncUtil from './FuncUtil';
 import Symbol from 'es6-symbol';
 var Item;//Will be injected
 
@@ -17,7 +17,8 @@ var Children  = React.createClass({
   render() {
 
     var {settings, value, path, indent, createAction} = this.props;
-    var children, sort, SORT_DND_TYPE;
+    var commonProps = {createAction, indent: indent + 1};
+    var children;
 
     if (has(settings, 'children')) {
 
@@ -30,12 +31,12 @@ var Children  = React.createClass({
 
     if (settings.sortable || isArray(children)) {
 
-      SORT_DND_TYPE = Symbol();
+      commonProps.draggable = true;
+      commonProps.SORT_DND_TYPE = Symbol();
+      commonProps.sort = (idx, afterIdx) => {
 
-      sort = (key, afterKey) => {
-
-        var value = children.splice(key, 1)[0];
-        children.splice(afterKey, 0, value);
+        var value = children.splice(idx, 1)[0];
+        children.splice(afterIdx, 0, value);
 
         createAction();
       };
@@ -55,16 +56,16 @@ var Children  = React.createClass({
 
           var value = children[key];
 
-          return <Item
-            key = {key}
-            name = {key}
-            value = {value}
-            parentObject = {children}
-            path = {path.concat([key, value])}
-            indent = {indent + 1}
-            createAction = {createAction}
-            sort = {sort}
-            SORT_DND_TYPE = {SORT_DND_TYPE}/>;
+          var props = assign({
+            key,
+            name: key,
+            idx: idx,
+            value,
+            parentObject: children,
+            path: path.concat([key, value]),
+          }, commonProps);
+
+          return <Item {...props}/>;
         })}
         </div>;
     }

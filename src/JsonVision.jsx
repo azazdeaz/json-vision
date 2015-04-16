@@ -1,7 +1,7 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
 var Item = require('./Item');
-var FuncUtil = require('./FuncUtil');
+var FuncUtils = require('./FuncUtils');
 var JSPath = require('jspath');
 
 var styles = {
@@ -35,7 +35,7 @@ var JsonVision = React.createClass({
   },
 
   getInitialState() {
-    
+
     return {
       createAction: createAction.bind(this),
       getSettings: getSettings.bind(this),
@@ -120,11 +120,13 @@ function createAction(change) {
 function getSettings(path) {
 
   var settings = {};
+  var utils = new FuncUtils(path);
 
   checkSettingsList(this.props.settings, []);
 
   compute('children');
   compute('highlighted');
+  compute('label');
 
   return settings;
 
@@ -132,8 +134,7 @@ function getSettings(path) {
 
     if (typeof(settings[key]) === 'function') {
 
-      let scope = new FuncUtil(path);
-      settings[key] = settings[key].call(scope);
+      settings[key] = settings[key](utils);
     }
   }
 
@@ -163,8 +164,7 @@ function getSettings(path) {
 
     if (selectorType === 'function') {
 
-      let scope = new FuncUtil(path);
-      match = selector.call(scope);
+      match = selector(utils);
     }
     else if (selectorType === 'instanceOf') {
 
@@ -210,8 +210,7 @@ function getSettings(path) {
     settingsList.forEach(settingsNode => {
 
       if (typeof(settingsNode) === 'function') {
-        let scope = new FuncUtil(path);
-        settingsNode = settingsNode.call(scope);
+        settingsNode = settingsNode(utils);
       }
 
       if (typeof(settingsNode) !== 'object') {

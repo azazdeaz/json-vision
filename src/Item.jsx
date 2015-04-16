@@ -2,7 +2,7 @@ var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
 var defaults = require('lodash/object/defaults');
-var FuncUtil = require('./FuncUtil');
+var FuncUtils = require('./FuncUtils');
 var Children = require('./Children');
 var Input = require('./Input');
 var {DragDropMixin} = require('react-dnd');
@@ -54,16 +54,20 @@ var Item = React.createClass({
           beginDrag(component) {
             return {
               item: {
-                key: component.props.key,
+                key: component.props.idx,
               },
             };
+          },
+
+          canDrag(component) {
+            return component.props.draggable;
           }
         },
 
         dropTarget: {
-          acceptDrop(component, item, e, isHandled) {
-
-            component.props.sort(item.key, component.props.key);
+          acceptDrop(component, item, isHandled) {
+            console.log('acceptDrop', component, item, isHandled)
+            component.props.sort(item.idx, component.props.idx);
           }
         }
       });
@@ -100,7 +104,7 @@ var Item = React.createClass({
       }
     }
     else if (typeof(btn.onClick) === 'function') {
-      btn.onClick.call(new FuncUtil(this.props.path));
+      btn.onClick(new FuncUtils(this.props.path));
     }
   },
   tooltipContent() {
@@ -109,9 +113,6 @@ var Item = React.createClass({
 
   render () {
     this.settings = this.context.getSettings(this.props.path);
-
-    // var fu = new FuncUtil(this.props.path)
-    // console.log('render item', fu.fullPath, fu.value;
 
     var items = {},
       dragState = {},//this.getDragState(DND_TYPE),
@@ -141,7 +142,6 @@ var Item = React.createClass({
     //label
     items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
 
-    console.log(this.props.path, this.settings);
     //input
     items.input = <Input
       path={this.props.path}
@@ -185,8 +185,8 @@ var Item = React.createClass({
           onClick={()=>{
             if (this.settings.onClick) {
 
-              var scope = new FuncUtil(this.props.path);
-              this.settings.onClick.call(scope);
+              var utils = new FuncUtils(this.props.path);
+              this.settings.onClick(utils);
             }
           }}>
 
