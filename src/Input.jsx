@@ -15,11 +15,6 @@ var Input  = React.createClass({
 
     var empty = () => input = <div hidden={true}/>;
 
-    if (isObject(value)) {
-      empty();
-      return input;
-    }
-
 
     var createInput = (type) => input = <MatterInput
       type={type}
@@ -27,7 +22,11 @@ var Input  = React.createClass({
       value={value} />;
 // console.log('settings', settings)
 // console.log('settings.type', settings.type)
-    if (settings.type === 'dropdown' || isArray(settings.options)) {
+
+    if (isObject(value)) {
+      empty();
+    }
+    else if (settings.type === 'dropdown' || isArray(settings.options)) {
 
       input = <Dropdown
         onChange={v=>update(v)}
@@ -54,12 +53,17 @@ var Input  = React.createClass({
 
       createInput('text');
     }
+    else if (settings.type === 'color') {
+
+      createInput('text');
+    }
     else if (settings.type === 'no-input') {
 
       empty();
     }
     else if (settings.type) {
 
+      empty();
       console.warn(`Unknown type: "${settings.type}"`);
     }
     else if (typeof(value) === 'function') {
