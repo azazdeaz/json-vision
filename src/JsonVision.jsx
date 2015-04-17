@@ -1,5 +1,7 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
+var includes = require('lodash/collection/includes');
+var isArray = require('lodash/lang/isArray');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
 var JSPath = require('jspath');
@@ -168,15 +170,30 @@ function getSettings(path) {
     }
     else if (selectorType === 'instanceOf') {
 
-      match = utils.value instanceof selector;
+      if (isArray(selector)) {
+        match = selector.some(s => utils.value instanceof s);
+      }
+      else {
+        match = utils.value instanceof selector;
+      }
     }
     else if (selectorType === 'key') {
 
-      match = utils.key === selector;
+      if (isArray(selector)) {
+        match = includes(selector, utils.key);
+      }
+      else {
+        match = utils.key === selector;
+      }
     }
     else if (selectorType === 'value') {
 
-      match = utils.value === selector;
+      if (isArray(selector)) {
+        match = includes(selector, utils.value);
+      }
+      else {
+        match = utils.value === selector;
+      }
     }
     else if (selectorType === 'path') {
     }
