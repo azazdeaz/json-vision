@@ -1,10 +1,11 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
+var set = require('lodash/object/set');
+var get = require('lodash/object/get');
 var includes = require('lodash/collection/includes');
 var isArray = require('lodash/lang/isArray');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
-var JSPath = require('jspath');
 
 var styles = {
   root: {
@@ -129,14 +130,25 @@ function getSettings(path) {
   compute('children');
   compute('highlighted');
   compute('label');
+  compute('buttons');
+  if (isArray(settings.buttons)) {
+    settings.buttons.forEach(button => {
+      compute('kind', button);
+      compute('label', button);
+      compute('icon', button);
+    });
+  }
 
   return settings;
 
-  function compute(key) {
+  function compute(path, root) {
 
-    if (typeof(settings[key]) === 'function') {
+    root = root || settings;
+    var value = get(root, path);
 
-      settings[key] = settings[key](utils);
+    if (typeof(value) === 'function') {
+      
+      set(root, path, value(utils));
     }
   }
 
