@@ -13,6 +13,7 @@
     "react-matterkit": "git://github.com/azazdeaz/react-matterkit.git"
   },
   "peerDependencies": {
+    "react-dnd": "^0.9.8",
     "react": ">=0.13 <0.14.0"
   },
   "devDependencies": {

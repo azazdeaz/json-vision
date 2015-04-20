@@ -130,6 +130,7 @@ function getSettings(path) {
   compute('children');
   compute('highlighted');
   compute('label');
+  // compute('draggable');
   compute('buttons');
   if (isArray(settings.buttons)) {
     settings.buttons.forEach(button => {
@@ -147,7 +148,7 @@ function getSettings(path) {
     var value = get(root, path);
 
     if (typeof(value) === 'function') {
-      
+
       set(root, path, value(utils));
     }
   }

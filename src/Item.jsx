@@ -9,7 +9,7 @@ var {DragDropMixin} = require('react-dnd');
 
 var {style, Button, Icon, ButtonGroup} = require('react-matterkit');
 
-const DND_TYPE = 'json-vision-drag-type';
+const DND_TYPE = 'dnd';
 
 var key = 0;
 
@@ -55,6 +55,7 @@ var Item = React.createClass({
             return {
               item: {
                 idx: component.props.idx,
+                value: component.props.value,
               },
             };
           },
@@ -66,7 +67,7 @@ var Item = React.createClass({
 
         dropTarget: {
           acceptDrop(component, item, isHandled) {
-
+            
             component.props.sort(item.idx, component.props.idx);
           },
           enter(component, item) {
@@ -141,7 +142,7 @@ var Item = React.createClass({
 
     var styleLabel = {
       flex:1,
-      color: dropState.isDragging ? style.palette.purple : 'inherit',
+      // color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     };
 
