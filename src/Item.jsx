@@ -141,7 +141,7 @@ var Item = React.createClass({
 
     var styleLabel = {
       flex:1,
-      // color: dropState.isDragging ? style.palette.purple : 'inherit',
+      color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     };
 
