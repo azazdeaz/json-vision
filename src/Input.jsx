@@ -16,12 +16,14 @@ var Input  = React.createClass({
     var empty = () => input = <div hidden={true}/>;
 
 
-    var createInput = (type) => input = <MatterInput
+    var createInput = type => input = <MatterInput
       type={type}
       onChange={v=>update(v)}
       value={value} />;
-// console.log('settings', settings)
-// console.log('settings.type', settings.type)
+
+    var createCheckbox = () => input = <Checkbox
+      onChange={v=>update(v)}
+      value={value} />;
 
     if (isObject(value)) {
       empty();
@@ -35,9 +37,7 @@ var Input  = React.createClass({
     }
     else if (settings.type === 'checkbox') {
 
-      input = <Checkbox
-        onChange={v=>update(v)}
-        value={value} />;
+      createCheckbox();
     }
     else if (settings.type === 'slider') {
 
@@ -79,7 +79,12 @@ var Input  = React.createClass({
       createInput('number');
     }
     else if (typeof(value) === 'string') {
+
       createInput('text');
+    }
+    else if (typeof(value) === 'boolean') {
+
+      createCheckbox();
     }
     else {
       empty();
