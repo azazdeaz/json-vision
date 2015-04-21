@@ -6,7 +6,8 @@ var includes = require('lodash/collection/includes');
 var isArray = require('lodash/lang/isArray');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
-
+var minimatch = require('minimatch');
+global.minimatch = minimatch
 var styles = {
   root: {
     background: 'rgba(255,255,255,.34)',
@@ -209,6 +210,10 @@ function getSettings(path) {
       }
     }
     else if (selectorType === 'path') {
+    }
+    else if (selectorType === 'glob') {
+
+      match = minimatch(utils.fullPath, selector);
     }
     else {
       throw Error();

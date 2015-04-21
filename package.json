@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^3.7.0",
+    "minimatch": "^2.0.4",
     "react-matterkit": "git://github.com/azazdeaz/react-matterkit.git"
   },
   "peerDependencies": {
