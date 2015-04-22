@@ -13,11 +13,12 @@ var Input  = React.createClass({
     var {settings, value, update} = this.props;
     var input;
 
-    var empty = () => input = <div hidden={true}/>;
+    var empty = () => input = null;
 
 
     var createInput = type => input = <MatterInput
       type={type}
+      background='transparent'
       onChange={v=>update(v)}
       value={value} />;
 
@@ -43,7 +44,7 @@ var Input  = React.createClass({
 
       input = <Slider
         onChange={v=>update(v)}
-        value={value} />;
+        value={value}/>;
     }
     else if (settings.type === 'number') {
 
@@ -90,7 +91,9 @@ var Input  = React.createClass({
       empty();
     }
 
-    return input;
+    return input ?
+      <span style={{flex: 1}}>{input}</span> :
+      <span hidden={true}/>;
   }
 });
 
