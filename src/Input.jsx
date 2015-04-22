@@ -10,7 +10,7 @@ var Input  = React.createClass({
 
   render() {
 
-    var {settings, value, update} = this.props;
+    var {type, options, label, icon, value, onChange, key} = this.props;
     var input;
 
     var empty = () => input = null;
@@ -19,61 +19,61 @@ var Input  = React.createClass({
     var createInput = type => input = <MatterInput
       type={type}
       background='transparent'
-      onChange={v=>update(v)}
+      onChange={v=>onChange(v)}
       value={value} />;
 
     var createCheckbox = () => input = <Checkbox
-      onChange={v=>update(v)}
+      onChange={v=>onChange(v)}
       value={value} />;
 
     if (isObject(value)) {
       empty();
     }
-    else if (settings.type === 'dropdown' || isArray(settings.options)) {
+    else if (type === 'dropdown' || isArray(options)) {
 
       input = <Dropdown
-        onChange={v=>update(v)}
-        options={settings.options}
+        onChange={v=>onChange(v)}
+        options={options}
         value={value}/>;
     }
-    else if (settings.type === 'checkbox') {
+    else if (type === 'checkbox') {
 
       createCheckbox();
     }
-    else if (settings.type === 'slider') {
+    else if (type === 'slider') {
 
       input = <Slider
-        onChange={v=>update(v)}
+        onChange={v=>onChange(v)}
         value={value}/>;
     }
-    else if (settings.type === 'number') {
+    else if (type === 'number') {
 
       createInput('number');
     }
-    else if (settings.type === 'string') {
+    else if (type === 'string') {
 
       createInput('text');
     }
-    else if (settings.type === 'color') {
+    else if (type === 'color') {
 
       createInput('text');
     }
-    else if (settings.type === 'no-input') {
+    else if (type === 'no-input') {
 
       empty();
     }
-    else if (settings.type) {
+    else if (type) {
 
       empty();
-      console.warn(`Unknown type: "${settings.type}"`);
+      console.warn(`Unknown type: "${type}"`);
     }
     else if (typeof(value) === 'function') {
 
       input = <Button
-        icon={settings.icon}
-        text={settings.text || value.name || 'Button'}
+        icon={icon}
+        label={label || value.name || 'Button'}
         onClick={value}
-        colored={settings.colored}/>;
+        colored={colored}/>;
     }
     else if (typeof(value) === 'number') {
 
@@ -92,8 +92,8 @@ var Input  = React.createClass({
     }
 
     return input ?
-      <span style={{flex: 1}}>{input}</span> :
-      <span hidden={true}/>;
+      <span style={{flex: 1}} key={key}>{input}</span> :
+      <span hidden={true} key={key}/>;
   }
 });
 

@@ -68,9 +68,7 @@ var JsonVision = React.createClass({
           key='root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}
-          path = {['', this.props.value]}
-          createAction = {createAction.bind(this)}
-          getSettings = {this.getSettings}/>
+          path = {['', this.props.value]}/>
       </div>
     );
   }
@@ -133,6 +131,13 @@ function getSettings(path) {
   compute('label');
   // compute('draggable');
   compute('buttons');
+  if (isArray(settings.inputs)) {
+    settings.inputs.forEach(input => {
+      compute('type', input);
+      compute('value', input);
+      compute('options', input);
+    });
+  }
   if (isArray(settings.buttons)) {
     settings.buttons.forEach(button => {
       compute('kind', button);

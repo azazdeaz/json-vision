@@ -67,7 +67,7 @@ var Item = React.createClass({
 
         dropTarget: {
           acceptDrop(component, item, isHandled) {
-            
+
             component.props.sort(item.idx, component.props.idx);
           },
           enter(component, item) {
@@ -153,8 +153,8 @@ var Item = React.createClass({
     //show/hide toggle btn
     items.toggle = <Icon
       icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
-        onClick={this.hasChildren() ? this.onClickOpenToggle : null}
-        style={{margin:'0 4px'}}/>;
+      onClick={this.hasChildren() ? this.onClickOpenToggle : null}
+      style={{margin:'0 4px'}}/>;
 
 
     //label
@@ -165,7 +165,19 @@ var Item = React.createClass({
       path={this.props.path}
       settings={this.settings}
       value={this.props.value}
-      update={this.update}/>;
+      type={this.settings.type}
+      options={this.settings.options}
+      label={this.settings.label}
+      icon={this.settings.icon}
+      onChange={this.update}/>;
+
+    if (this.settings.inputs) {
+      items.extraInputs = <span style={{flex: 1}}>
+        {this.settings.inputs.map((inputProps, idx) => {
+          return <Input {...inputProps} key={idx}/>;
+        })}
+      </span>;
+    }
 
     //buttons
     if (this.settings.buttons) {
@@ -210,6 +222,7 @@ var Item = React.createClass({
           {items.toggle}
           {items.label}
           {items.input}
+          {items.extraInputs}
           {items.buttons}
         </div>
         {items.children}
