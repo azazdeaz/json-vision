@@ -129,13 +129,15 @@ function getSettings(path) {
   compute('children');
   compute('highlighted');
   compute('label');
-  // compute('draggable');
+  compute('draggable');
   compute('buttons');
   if (isArray(settings.inputs)) {
     settings.inputs.forEach(input => {
       compute('type', input);
       compute('value', input);
       compute('options', input);
+      compute('types', input);
+      compute('chooseType', input);
     });
   }
   if (isArray(settings.buttons)) {

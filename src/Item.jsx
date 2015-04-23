@@ -113,7 +113,7 @@ var Item = React.createClass({
 
       if (btn.onClick === 'delete') {
 
-        this.props.createAction({
+        this.context.createAction({
           path: this.fullPath,
           type: 'delete',
         });
@@ -169,6 +169,8 @@ var Item = React.createClass({
       options={this.settings.options}
       label={this.settings.label}
       icon={this.settings.icon}
+      types={this.settings.types}
+      chooseType={this.settings.chooseType}
       onChange={this.update}/>;
 
     if (this.settings.inputs) {
@@ -198,7 +200,7 @@ var Item = React.createClass({
         value = {this.props.value}
         path = {this.props.path}
         indent = {this.props.indent}
-        createAction = {this.props.createAction}/>;
+        createAction = {this.context.createAction}/>;
     }
 
 

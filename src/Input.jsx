@@ -2,7 +2,8 @@ var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
 var Matterkit = require('react-matterkit');
-var {style, Button, Icon, Slider, Dropdown, Checkbox} = Matterkit;
+var {style, Button, Icon, Slider, Dropdown, Checkbox,
+  MultiTypeInput} = Matterkit;
 var MatterInput = Matterkit.Input;
 var Item;
 
@@ -10,7 +11,8 @@ var Input  = React.createClass({
 
   render() {
 
-    var {type, options, label, icon, value, onChange, key} = this.props;
+    var {type, options, label, icon, value, onChange, key,
+       types, chooseType} = this.props;
     var input;
 
     var empty = () => input = null;
@@ -28,6 +30,14 @@ var Input  = React.createClass({
 
     if (isObject(value)) {
       empty();
+    }
+    else if (type === 'multi') {
+      input = <MultiTypeInput
+      background='transparent'
+        onChange={v=>onChange(v)}
+        types={types}
+        chooseType={chooseType}
+        value={value}/>;
     }
     else if (type === 'dropdown' || isArray(options)) {
 
