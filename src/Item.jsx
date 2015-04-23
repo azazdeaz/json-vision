@@ -2,7 +2,6 @@ var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
 var defaults = require('lodash/object/defaults');
-var FuncUtils = require('./FuncUtils');
 var Children = require('./Children');
 var Input = require('./Input');
 var {DragDropMixin} = require('react-dnd');
@@ -31,8 +30,9 @@ var Item = React.createClass({
   mixins: [DragDropMixin],
 
   contextTypes: {
-    createAction: React.PropTypes.func.isRequired,
     getSettings: React.PropTypes.func.isRequired,
+    createAction: React.PropTypes.func.isRequired,
+    createUtils: React.PropTypes.func.isRequired,
   },
   getInitialState () {
 
@@ -98,14 +98,9 @@ var Item = React.createClass({
 
     this.setState({opened: !this.state.opened});
   },
-  update (value) {
+  update(value, utils) {
 
-    this.context.createAction({
-      type: 'set',
-      object: this.props.parentObject,
-      key: this.props.name,
-      value: value
-    });
+    utils.value = value;
   },
   onBtnClick (btn) {
 
@@ -120,7 +115,8 @@ var Item = React.createClass({
       }
     }
     else if (typeof(btn.onClick) === 'function') {
-      btn.onClick(new FuncUtils(this.props.path));
+      var utils = this.context.createUtils(this.props.path);
+      btn.onClick(utils);
     }
   },
   tooltipContent() {
@@ -176,7 +172,10 @@ var Item = React.createClass({
     if (this.settings.inputs) {
       items.extraInputs = <span style={{flex: 1}}>
         {this.settings.inputs.map((inputProps, idx) => {
-          return <Input {...inputProps} key={idx}/>;
+          return <Input
+            {...inputProps}
+            path={this.props.path}
+            key={idx}/>;
         })}
       </span>;
     }
@@ -215,7 +214,7 @@ var Item = React.createClass({
           onClick={()=>{
             if (this.settings.onClick) {
 
-              var utils = new FuncUtils(this.props.path);
+              var utils = this.context.createUtils(this.props.path);
               this.settings.onClick(utils);
             }
           }}>

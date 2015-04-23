@@ -1,8 +1,9 @@
 export default class {
 
-  constructor(path) {
+  constructor(path, reportChange) {
 
     this.path = path;
+    this.reportChange = reportChange;
   }
 
   val() {
@@ -11,16 +12,32 @@ export default class {
   }
 
   get value() {
-    return this.path[this.path.length - 1];
+    return this._getAt(1);
+  }
+  set value(v) {
+    this._setAt(1, v);
+    this.reportChange();
   }
 
   get key() {
-    return this.path[this.path.length - 2];
+    return this._getAt(2);
   }
 
   get fullPath() {
     return this.path.reduce((path, val, idx) => {
       return path + (idx % 2 === 0 ? `/${val}` : '');
     }, '');
+  }
+
+
+  _getAt(pos) {
+    var {path} = this;
+    return path[path.length - pos];
+  }
+
+  _setAt(pos, value) {
+    var {path} = this;
+    var key = path[path.length - (pos+1)];
+    path[path.length - (pos+2)][key] = value;
   }
 }

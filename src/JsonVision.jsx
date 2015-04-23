@@ -4,12 +4,14 @@ var merge = require('lodash/object/merge');
 var set = require('lodash/object/set');
 var get = require('lodash/object/get');
 var includes = require('lodash/collection/includes');
+var forEach = require('lodash/collection/forEach');
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
+var clone = require('lodash/lang/clone');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
 var minimatch = require('minimatch');
-global.minimatch = minimatch
+
 var styles = {
   root: {
     background: 'rgba(255,255,255,.34)',
@@ -29,6 +31,7 @@ var JsonVision = React.createClass({
   childContextTypes: {
     getSettings: React.PropTypes.func.isRequired,
     createAction: React.PropTypes.func.isRequired,
+    createUtils: React.PropTypes.func.isRequired,
   },
 
   getDefaultProps() {
@@ -43,8 +46,11 @@ var JsonVision = React.createClass({
   getInitialState() {
 
     return {
-      createAction: createAction.bind(this),
       getSettings: getSettings.bind(this),
+      createAction: createAction.bind(this),
+      createUtils: path => {
+        return new FuncUtils(path, this.state.createAction);
+      }
     };
   },
 
@@ -59,6 +65,7 @@ var JsonVision = React.createClass({
     return {
       createAction: this.state.createAction,
       getSettings: this.state.getSettings,
+      createUtils: this.state.createUtils,
     };
   },
 
@@ -124,14 +131,14 @@ function createAction(change) {
 function getSettings(path) {
 
   var settings = {};
-  var utils = new FuncUtils(path);
+  var utils = this.state.createUtils(path);
 
   checkSettingsList(this.props.settings, []);
 
   compute('children');
   compute('highlighted');
   compute('label');
-  compute('draggable');
+  // compute('draggable');
   compute('buttons');
   if (isArray(settings.inputs)) {
     settings.inputs.forEach(input => {
@@ -259,16 +266,30 @@ function getSettings(path) {
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
 
-        merge(settings, settingsNode, (a, b) => {
+        // merge(settings, settingsNode, (a, b) => {
+        //
+        //    if (isArray(b)) {
+        //      if (!isArray(a)) a = [];
+        //      return a.concat(b);
+        //    }
+        //    else if (isObject(b)) {
+        //      if (!isObject(a)) a = {};
+        //      return merge(a, b);
+        //    }
+        // });
 
-          //  if (isArray(b)) {
-          //    if (!isArray(a)) a = [];
-          //    return a.concat(b);
-          //  }
-          //  else if (isObject(b)) {
-          //    if (!isObject(a)) a = {};
-          //    return merge(a, b);
-          //  }
+        forEach(settingsNode, (value, key) => {
+
+          if (key === 'inputs' || key === 'buttons') {
+
+            let copy = value.map(clone);
+            let curr = settings[key];
+            settings[key] = isArray(curr) ? curr.concat(copy) : copy;
+          }
+          else {
+            settings[key] = value;
+          }
+
         });
       }
 

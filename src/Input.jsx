@@ -9,32 +9,42 @@ var Item;
 
 var Input  = React.createClass({
 
+  contextTypes: {
+    createUtils: React.PropTypes.func.isRequired,
+  },
+
   render() {
 
     var {type, options, label, icon, value, onChange, key,
-       types, chooseType} = this.props;
-    var input;
+       types, chooseType, path} = this.props;
+    var input = null;
+    var utils = this.context.createUtils(path);
+    var handleChange = value => {
+      if (typeof(onChange) === 'function') {
+        onChange(value, utils);
+      }
+    };
 
-    var empty = () => input = null;
+    if (!path) throw Error;
 
 
     var createInput = type => input = <MatterInput
       type={type}
       background='transparent'
-      onChange={v=>onChange(v)}
+      onChange={handleChange}
       value={value} />;
 
     var createCheckbox = () => input = <Checkbox
-      onChange={v=>onChange(v)}
+      onChange={handleChange}
       value={value} />;
 
     if (isObject(value)) {
-      empty();
+      //no input
     }
     else if (type === 'multi') {
       input = <MultiTypeInput
       background='transparent'
-        onChange={v=>onChange(v)}
+        onChange={handleChange}
         types={types}
         chooseType={chooseType}
         value={value}/>;
@@ -42,7 +52,7 @@ var Input  = React.createClass({
     else if (type === 'dropdown' || isArray(options)) {
 
       input = <Dropdown
-        onChange={v=>onChange(v)}
+        onChange={handleChange}
         options={options}
         value={value}/>;
     }
@@ -53,7 +63,7 @@ var Input  = React.createClass({
     else if (type === 'slider') {
 
       input = <Slider
-        onChange={v=>onChange(v)}
+        onChange={handleChange}
         value={value}/>;
     }
     else if (type === 'number') {
@@ -70,11 +80,10 @@ var Input  = React.createClass({
     }
     else if (type === 'no-input') {
 
-      empty();
+      //no input
     }
     else if (type) {
-
-      empty();
+      //no input
       console.warn(`Unknown type: "${type}"`);
     }
     else if (typeof(value) === 'function') {
@@ -96,9 +105,6 @@ var Input  = React.createClass({
     else if (typeof(value) === 'boolean') {
 
       createCheckbox();
-    }
-    else {
-      empty();
     }
 
     return input ?
