@@ -1,8 +1,10 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
+var merge = require('lodash/object/merge');
 var set = require('lodash/object/set');
 var get = require('lodash/object/get');
 var includes = require('lodash/collection/includes');
+var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
@@ -257,7 +259,17 @@ function getSettings(path) {
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
 
-        assign(settings, settingsNode);
+        merge(settings, settingsNode, (a, b) => {
+
+          //  if (isArray(b)) {
+          //    if (!isArray(a)) a = [];
+          //    return a.concat(b);
+          //  }
+          //  else if (isObject(b)) {
+          //    if (!isObject(a)) a = {};
+          //    return merge(a, b);
+          //  }
+        });
       }
 
       if (settingsNode.settings) {
