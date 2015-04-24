@@ -2,6 +2,7 @@ var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
 var defaults = require('lodash/object/defaults');
+var assign = require('lodash/object/assign');
 var Children = require('./Children');
 var Input = require('./Input');
 var {DragDropMixin} = require('react-dnd');
@@ -136,12 +137,6 @@ var Item = React.createClass({
       opacity: dragState.isDragging ? 0.4 : 1,
     }, this.settings.highlighted ? style.lineGroup : style.line);
 
-    var styleLabel = {
-      flex:1,
-      // color: dropState.isDragging ? style.palette.purple : 'inherit',
-      // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
-    };
-
     //indent
     items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
 
@@ -154,7 +149,15 @@ var Item = React.createClass({
 
 
     //label
-    items.label = <span style={styleLabel}>{this.settings.label || this.props.name}</span>;
+    var styleLabel = assign({
+      flex:1,
+      // color: dropState.isDragging ? style.palette.purple : 'inherit',
+      // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
+    }, this.settings.labelStyle);
+
+    items.label = <span style={styleLabel}>
+      {this.settings.label || this.props.name}
+    </span>;
 
     //input
     items.input = <Input

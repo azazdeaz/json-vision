@@ -6,11 +6,6 @@ export default class {
     this.reportChange = reportChange;
   }
 
-  val() {
-    console.warn('FuncUtils.val() is deprecated. Use the FuncUtils.value getter instead!');
-    return this.path[this.path.length - 1];
-  }
-
   get value() {
     return this._getAt(1);
   }
@@ -23,10 +18,19 @@ export default class {
     return this._getAt(2);
   }
 
+  get parent() {
+    return this._getAt(3);
+  }
+
   get fullPath() {
     return this.path.reduce((path, val, idx) => {
       return path + (idx % 2 === 0 ? `/${val}` : '');
     }, '');
+  }
+
+  delete() {
+    var parent = this.parent;
+    delete parent[this.key];
   }
 
 

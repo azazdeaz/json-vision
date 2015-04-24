@@ -1,12 +1,12 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
 var merge = require('lodash/object/merge');
-var set = require('lodash/object/set');
-var get = require('lodash/object/get');
+var mapValues = require('lodash/object/mapValues');
 var includes = require('lodash/collection/includes');
 var forEach = require('lodash/collection/forEach');
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
+var isFunction = require('lodash/lang/isFunction');
 var clone = require('lodash/lang/clone');
 var Item = require('./Item');
 var FuncUtils = require('./FuncUtils');
@@ -125,9 +125,6 @@ function createAction(change) {
 }
 
 
-
-
-
 function getSettings(path) {
 
   var settings = {};
@@ -135,40 +132,7 @@ function getSettings(path) {
 
   checkSettingsList(this.props.settings, []);
 
-  compute('children');
-  compute('highlighted');
-  compute('label');
-  // compute('draggable');
-  compute('buttons');
-  if (isArray(settings.inputs)) {
-    settings.inputs.forEach(input => {
-      compute('type', input);
-      compute('value', input);
-      compute('options', input);
-      compute('types', input);
-      compute('chooseType', input);
-    });
-  }
-  if (isArray(settings.buttons)) {
-    settings.buttons.forEach(button => {
-      compute('kind', button);
-      compute('label', button);
-      compute('icon', button);
-    });
-  }
-
   return settings;
-
-  function compute(path, root) {
-
-    root = root || settings;
-    var value = get(root, path);
-
-    if (typeof(value) === 'function') {
-
-      set(root, path, value(utils));
-    }
-  }
 
   function checkSettingsNode(settingsNode, path, preselectors) {
 
@@ -266,30 +230,30 @@ function getSettings(path) {
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
 
-        // merge(settings, settingsNode, (a, b) => {
-        //
-        //    if (isArray(b)) {
-        //      if (!isArray(a)) a = [];
-        //      return a.concat(b);
-        //    }
-        //    else if (isObject(b)) {
-        //      if (!isObject(a)) a = {};
-        //      return merge(a, b);
-        //    }
-        // });
-
         forEach(settingsNode, (value, key) => {
+
+          value = compute(value, key);
 
           if (key === 'inputs' || key === 'buttons') {
 
-            let copy = value.map(clone);
+            let copy = value.map((val, idx) => {
+
+              var itemValue = compute(val, idx);
+
+              return mapValues(itemValue, (val, key) => compute(val, key));
+            });
+
             let curr = settings[key];
-            settings[key] = isArray(curr) ? curr.concat(copy) : copy;
+            if (curr) {
+              curr.push(...copy);
+            }
+            else {
+              settings[key] = copy;
+            }
           }
-          else {
+          else if (value !== undefined) {
             settings[key] = value;
           }
-
         });
       }
 
@@ -300,4 +264,55 @@ function getSettings(path) {
       }
     });
   }
+
+  function compute(value, key) {
+
+    var type = typeof(value);
+
+    if (type === 'function' &&
+      ['onClick', 'onChange', 'chooseType'].indexOf(key) === -1) {
+
+      return value(utils);
+    }
+    else if (type === 'object') {
+      return clone(value);
+    }
+    else {
+      return value;
+    }
+  }
 }
+
+
+/**Settings Node
+{
+  children: [],
+  highlighted: true,
+  label: 'Prop',
+  labelStyle: {color: style.palette.red}
+  draggable: true,
+  whitelist: ['foo', 'bar'],
+  blacklist: ['qux', 'baz'],
+  onClick: utils => {}
+  inputs: [
+    {
+      type: 'string'
+      value: 8
+      options: ['first', 'secound', 'third'],
+      types: [
+        {--//--}
+      ],
+      chooseType: utils => return 0;
+    }
+  ],
+  buttons: [
+    {
+      kind: 'colored'
+      label: 'Push'
+      icon: 'github'
+      onClick: utils => {}
+    }
+  ]
+}
+
+*/
