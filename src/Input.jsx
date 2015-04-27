@@ -16,7 +16,7 @@ var Input  = React.createClass({
   render() {
 
     var {type, options, label, icon, value, onChange, key,
-       types, chooseType, path} = this.props;
+      min, max, hints, types, chooseType, path} = this.props;
     var input = null;
     var utils = this.context.createUtils(path);
     var handleChange = value => {
@@ -29,7 +29,10 @@ var Input  = React.createClass({
 
 
     var createInput = type => input = <MatterInput
-      type={type}
+      type = {type}
+      min = {min}
+      max = {max}
+      hints = {hints}
       background='transparent'
       onChange={handleChange}
       value={value} />;
