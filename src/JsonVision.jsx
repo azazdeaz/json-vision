@@ -27,7 +27,7 @@ var styles = {
 
 
 var JsonVision = React.createClass({
-  
+
   childContextTypes: {
     getSettings: React.PropTypes.func.isRequired,
     createAction: React.PropTypes.func.isRequired,
@@ -270,7 +270,7 @@ function getSettings(path) {
     var type = typeof(value);
 
     if (type === 'function' &&
-      ['onClick', 'onChange', 'chooseType'].indexOf(key) === -1) {
+      ['onClick', 'onChange', 'chooseType', 'getDragPreview'].indexOf(key) === -1) {
 
       return value(utils);
     }
@@ -294,6 +294,7 @@ function getSettings(path) {
   whitelist: ['foo', 'bar'],
   blacklist: ['qux', 'baz'],
   onClick: utils => {}
+  getDragPreview: utils => utils.value.getClonedDOMNode(),
   inputs: [
     {
       type: 'string'

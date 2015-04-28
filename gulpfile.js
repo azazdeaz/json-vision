@@ -20,16 +20,11 @@ var reload = browserSync.reload;
 var SOURCES = './src/**/*.{js,jsx}';
 
 gulp.task('clean', function () {
-  return gulp.src('demo/build/*')
+  return gulp.src('lib/**/*.*')
     .pipe(rimraf({force: true}));
 });
 
-gulp.task('copy-demo-statics', ['clean'], function() {
-  return gulp.src(['./demo/src/index.html', './demo/src/componentPages/utils/react-live-edit/static/**.*'])
-    .pipe(gulp.dest('./demo/build'));
-});
-
-gulp.task('build', function () {
+gulp.task('build', ['clean'], function () {
   return gulp.src(SOURCES)
     .pipe(size())
     .pipe(plumber())
@@ -47,47 +42,8 @@ gulp.task('watch-build', function () {
     .pipe(gulp.dest('lib'));
 });
 
-(function () {
-  // add custom browserify options here
-  var customOpts = {
-    entries: ['./demo/src/index.jsx'],
-    debug: true,
-  };
-  var opts = assign({}, watchify.args, customOpts);
-  var b = watchify(browserify(opts).transform(babelify));
 
-  gulp.task('js', ['copy-demo-statics', 'build'], bundle); // so you can run `gulp js` to build the file
-  b.on('update', bundle); // on any dep update, runs the bundler
-  b.on('log', gutil.log); // output build logs to terminal
-
-  function bundle() {
-    return b.bundle()
-      // log errors if they happen
-      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe(source('index.js'))
-      // optional, remove if you don't need to buffer file contents
-      .pipe(buffer())
-      // optional, remove if you dont want sourcemaps
-      .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
-         // Add transformation tasks to the pipeline here.
-      .pipe(sourcemaps.write('./')) // writes .map file
-      .pipe(size())
-      .pipe(gulp.dest('./demo/build'))
-      .pipe(reload({stream: true}));
-  }
-})();
-
-// Static server
-gulp.task('browser-sync', function() {
-  browserSync({
-    server: {
-      baseDir: './demo/build'
-    }
-  });
-});
-//
-// gulp.task('default', ['watch-build', 'js', 'browser-sync']);
-gulp.task('default', ['watch-build']);
+gulp.task('default', ['build', 'watch-build']);
 
 
 

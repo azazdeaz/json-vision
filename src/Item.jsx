@@ -54,16 +54,56 @@ var Item = React.createClass({
 
         dragSource: {
           beginDrag(component) {
+
+            function getDragPreview() {
+
+              if (component.settings.getDragPreview) {
+
+                let {path} = component.props;
+                let {createUtils} = component.context;
+                let utils = createUtils(path);
+                let dragPreview = component.settings.getDragPreview(utils);
+
+                //hack
+                var dp = document.querySelector('#drag-preview');
+
+                if (!dp) {
+                  dp = document.createElement('div');
+                  dp.id = 'drag-preview';
+                  dp.style.width = 0;
+                  dp.style.height = 0;
+                  dp.style.overflow = 'hidden';
+                  document.body.appendChild(dp);
+                }
+
+                dp.appendChild(dragPreview);
+
+                component._dragPreview = dragPreview;
+
+                return dragPreview;
+              }
+            }
+
             return {
               item: {
                 idx: component.props.idx,
                 value: component.props.value,
               },
+              dragPreview: getDragPreview(),
             };
           },
 
           canDrag(component) {
             return component.props.draggable;
+          },
+
+          endDrag(component) {
+
+            var dragPreview = component._dragPreview;
+
+            if (dragPreview && dragPreview.parentNode) {
+              dragPreview.parentNode.removeChild(dragPreview);
+            }
           }
         },
 
@@ -71,6 +111,10 @@ var Item = React.createClass({
           acceptDrop(component, item, isHandled) {
 
             component.props.sort(item.idx, component.props.idx);
+
+            if (item.dragPreview && item.dragPreview.parentNode) {
+              item.dragPreview.parentNode.removeChild(item.dragPreview);
+            }
           },
           enter(component, item) {
 
@@ -92,6 +136,8 @@ var Item = React.createClass({
     }
   },
   hasChildren() {
+
+
 
     var value = this.props.value;
     return isObject(value) && Object.keys(value).length > 0;
@@ -140,13 +186,6 @@ var Item = React.createClass({
 
     //indent
     items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
-
-
-    //show/hide toggle btn
-    items.toggle = <Icon
-      icon={this.hasChildren() ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
-      onClick={this.hasChildren() ? this.onClickOpenToggle : null}
-      style={{margin:'0 4px'}}/>;
 
 
     //label
@@ -215,6 +254,16 @@ var Item = React.createClass({
         createAction = {this.context.createAction}/>;
     }
 
+    //show/hide toggle btn
+    (() => {
+      // var hasChildren = !items.children.props.hidden;
+      var hasChildren = this.hasChildren();
+
+      items.toggle = <Icon
+        icon={hasChildren ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
+        onClick={hasChildren ? this.onClickOpenToggle : null}
+        style={{margin:'0 4px'}}/>;
+    })();
 
     return (
       <div>

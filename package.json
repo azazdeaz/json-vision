@@ -1,8 +1,8 @@
 {
   "name": "json-vision",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/JsonVision.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -15,7 +15,7 @@
     "react": ">=0.13 <0.14.0"
   },
   "devDependencies": {
-    "babel": "^5.1.10",
+    "babel": "^5.1.13",
     "babelify": "^6.0.2",
     "browser-sync": "^2.6.5",
     "browserify": "^9.0.8",
