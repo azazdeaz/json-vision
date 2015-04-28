@@ -224,8 +224,8 @@ var Item = React.createClass({
           tooltip={this.settings.tooltip}
           contextMenu={this.settings.dropdownMenu}
           style={styleBlock}
-          onMouseEnter={() => {this.setState({hover: true}); console.log('h-true')}}
-          onMouseLeave={() => {this.setState({hover: false}); console.log('h-false')}}
+          onMouseEnter={() => this.setState({hover: true})}
+          onMouseLeave={() => this.setState({hover: false})}
           onClick={()=>{
             if (this.settings.onClick) {
 
