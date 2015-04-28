@@ -27,7 +27,7 @@ var styles = {
 
 
 var JsonVision = React.createClass({
-
+  
   childContextTypes: {
     getSettings: React.PropTypes.func.isRequired,
     createAction: React.PropTypes.func.isRequired,
@@ -310,7 +310,8 @@ function getSettings(path) {
       kind: 'colored'
       label: 'Push'
       icon: 'github'
-      onClick: utils => {}
+      onClick: utils => {},
+      hideWhenLeaved: true,
     }
   ]
 }

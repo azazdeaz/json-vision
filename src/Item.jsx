@@ -35,7 +35,10 @@ var Item = React.createClass({
   },
   getInitialState () {
 
-    return {opened: true};
+    return {
+      opened: true,
+      hover: false,
+    };
   },
   getDefaultProps() {
     return {
@@ -191,7 +194,13 @@ var Item = React.createClass({
 
           if (!has(btn, 'kind')) btn.kind = 'stamp';
 
-          return <Button {...btn} onClick={() => this.onBtnClick(btn)}/>;
+          var s = assign({}, btn.style);
+          if (btn.hideWhenLeaved && !this.state.hover) s.visibility = 'hidden';
+
+          return <Button
+            {...btn}
+            style={s}
+            onClick={() => this.onBtnClick(btn)}/>;
         })}
       </ButtonGroup>;
     }
@@ -215,6 +224,8 @@ var Item = React.createClass({
           tooltip={this.settings.tooltip}
           contextMenu={this.settings.dropdownMenu}
           style={styleBlock}
+          onMouseEnter={() => {this.setState({hover: true}); console.log('h-true')}}
+          onMouseLeave={() => {this.setState({hover: false}); console.log('h-false')}}
           onClick={()=>{
             if (this.settings.onClick) {
 

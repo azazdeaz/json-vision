@@ -1,7 +1,7 @@
 var React = require('react');
 var JsonVision = require('./JsonVision');
 // var demo = require('./demo/demo');
-var _ = require('lodash');
+var has = require('lodash/object/has');
 
 JsonVision.create = function  (props) {
 
@@ -12,7 +12,7 @@ JsonVision.create = function  (props) {
       report: change => this._report(change),
   }), parent);
 
-  if (!props.parent && (!_.has(props, 'autoPlace') || props.autoPlace !== false)) {
+  if (!props.parent && (!has(props, 'autoPlace') || props.autoPlace !== false)) {
 
       this.domElem.style.position = 'fixed';
       this.domElem.style.top = '0px';

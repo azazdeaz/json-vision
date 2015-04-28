@@ -1,6 +1,6 @@
 {
   "name": "json-vision",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -18,6 +18,22 @@
     "react": ">=0.13 <0.14.0"
   },
   "devDependencies": {
-    "babel": "^5.1.10"
+    "babel": "^5.1.10",
+    "babelify": "^6.0.2",
+    "browser-sync": "^2.6.5",
+    "browserify": "^9.0.8",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-callback": "0.0.3",
+    "gulp-filesize": "0.0.6",
+    "gulp-plumber": "^1.0.0",
+    "gulp-rimraf": "^0.1.1",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-util": "^3.0.4",
+    "gulp-watch": "^4.2.4",
+    "lodash": "^3.7.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.0"
   }
 }
