@@ -17,18 +17,8 @@ var Children  = React.createClass({
 
   render() {
 
-    var {settings, value, path, indent, createAction} = this.props;
+    var {settings, value, path, indent, createAction, children} = this.props;
     var commonProps = {createAction, indent: indent + 1};
-    var children;
-
-    if (has(settings, 'children')) {
-
-      children = settings.children;
-    }
-    else if (isObject(value)) {
-
-      children = value;
-    }
 
     if (settings.sortable || isArray(children)) {
 

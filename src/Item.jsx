@@ -135,13 +135,23 @@ var Item = React.createClass({
       });
     }
   },
-  hasChildren() {
+  // hasChildren() {
+  //   var value = this.props.value;
+  //   return isObject(value) && Object.keys(value).length > 0;
+  // },
 
+  getChildren() {
 
+    if (has(this.settings, 'children')) {
 
-    var value = this.props.value;
-    return isObject(value) && Object.keys(value).length > 0;
+      return this.settings.children;
+    }
+    else if (isObject(this.props.value)) {
+
+      return this.props.value;
+    }
   },
+
   onClickOpenToggle() {
 
     this.setState({opened: !this.state.opened});
@@ -150,6 +160,7 @@ var Item = React.createClass({
 
     utils.value = value;
   },
+
   onBtnClick (btn) {
 
     if (typeof(btn.onClick) === 'string') {
@@ -167,14 +178,17 @@ var Item = React.createClass({
       btn.onClick(utils);
     }
   },
+
   tooltipContent() {
     return this.settings.tooltip || 'This is a tooltip';
   },
 
   render () {
+
     this.settings = this.context.getSettings(this.props.path);
 
     var items = {},
+      children = this.getChildren(),
       dragState = this.getDragState(DND_TYPE),
       dropState = this.getDropState(DND_TYPE);
 
@@ -250,20 +264,17 @@ var Item = React.createClass({
         settings = {this.settings}
         value = {this.props.value}
         path = {this.props.path}
+        children = {children}
         indent = {this.props.indent}
         createAction = {this.context.createAction}/>;
     }
 
     //show/hide toggle btn
-    (() => {
-      // var hasChildren = !items.children.props.hidden;
-      var hasChildren = this.hasChildren();
-
-      items.toggle = <Icon
-        icon={hasChildren ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
-        onClick={hasChildren ? this.onClickOpenToggle : null}
-        style={{margin:'0 4px'}}/>;
-    })();
+    
+    items.toggle = <Icon
+      icon={children ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
+      onClick={children ? this.onClickOpenToggle : null}
+      style={{margin:'0 4px'}}/>;
 
     return (
       <div>
