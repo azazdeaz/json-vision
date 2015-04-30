@@ -128,7 +128,8 @@ function createAction(change) {
 function getSettings(path) {
 
   var settings = {};
-  var utils = this.state.createUtils(path);
+  var {createUtils} = this.state;
+  var utils = createUtils(path);
 
   checkSettingsList(this.props.settings, []);
 
@@ -137,6 +138,7 @@ function getSettings(path) {
   function checkSettingsNode(settingsNode, path, preselectors) {
 
     var match, selector, selectorType;
+    var utils = createUtils(path);
 
     if (!settingsNode.selector) {
 
