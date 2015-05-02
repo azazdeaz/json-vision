@@ -272,7 +272,8 @@ function getSettings(path) {
     var type = typeof(value);
 
     if (type === 'function' &&
-      ['onClick', 'onChange', 'chooseType', 'getDragPreview'].indexOf(key) === -1) {
+      ['onClick', 'onChange', 'chooseType',
+        'canDrop', 'getDragPreview'].indexOf(key) === -1) {
 
       return value(utils);
     }

@@ -50,6 +50,13 @@ var Item = React.createClass({
   statics: {
     configureDragDrop(register) {
 
+      function createUltils(component) {
+
+        var {path} = component.props;
+        var {createUtils} = component.context;
+        return createUtils(path);
+      }
+
       register(DND_TYPE, {
 
         dragSource: {
@@ -59,26 +66,24 @@ var Item = React.createClass({
 
               if (component.settings.getDragPreview) {
 
-                let {path} = component.props;
-                let {createUtils} = component.context;
-                let utils = createUtils(path);
+                let utils = createUtils(component);
                 let dragPreview = component.settings.getDragPreview(utils);
 
                 //hack
-                var dp = document.querySelector('#drag-preview');
-
-                if (!dp) {
-                  dp = document.createElement('div');
-                  dp.id = 'drag-preview';
-                  dp.style.width = 0;
-                  dp.style.height = 0;
-                  dp.style.overflow = 'hidden';
-                  document.body.appendChild(dp);
-                }
-
-                dp.appendChild(dragPreview);
-
-                component._dragPreview = dragPreview;
+                // var dp = document.querySelector('#drag-preview');
+                //
+                // if (!dp) {
+                //   dp = document.createElement('div');
+                //   dp.id = 'drag-preview';
+                //   dp.style.width = 0;
+                //   dp.style.height = 0;
+                //   dp.style.overflow = 'hidden';
+                //   document.body.appendChild(dp);
+                // }
+                //
+                // dp.appendChild(dragPreview);
+                //
+                // component._dragPreview = dragPreview;
 
                 return dragPreview;
               }
@@ -99,31 +104,55 @@ var Item = React.createClass({
 
           endDrag(component) {
 
-            var dragPreview = component._dragPreview;
-
-            if (dragPreview && dragPreview.parentNode) {
-              dragPreview.parentNode.removeChild(dragPreview);
-            }
+            // var dragPreview = component._dragPreview;
+            //
+            // if (dragPreview && dragPreview.parentNode) {
+            //   dragPreview.parentNode.removeChild(dragPreview);
+            // }
           }
         },
 
         dropTarget: {
+          canDrop(component, item) {
+
+            var {settings} = component;
+            var utils = createUtils(component);
+
+            if (settings.canDrop && settings.canDrop(utils, item.value)) {
+              return true;
+            }
+            else if (isArray(utils.value) && settings.sortable &&
+              includes(utils.value, item.value))
+            {
+              return true;
+            }
+            else {
+              item.dropChildKey = utils.key;
+            }
+          },
+
           acceptDrop(component, item, isHandled) {
 
-            component.props.sort(item.idx, component.props.idx);
+            var {settings} = component;
+            var utils = createUtils(component);
 
-            if (item.dragPreview && item.dragPreview.parentNode) {
-              item.dragPreview.parentNode.removeChild(item.dragPreview);
+            // component.props.sort(item.idx, component.props.idx);
+
+            if (settings.acceptDrop) {
+              return component.settings.acceptDrop(item.value);
+            }
+            else if (isArray(utils.value) && settings.sortable &&
+              includes(utils.value, item.value))
+            {
+              
             }
           },
           enter(component, item) {
 
-            if (item.idx > component.props.idx) {
-              // component.setState({marginTop: 32});
-            }
-            else if (item.idx < component.props.idx) {
-              // component.setState({marginBottom: 32});
-            }
+            var {settings} = component;
+            var utils = createUtils(component);
+
+
           },
           leave(component) {
             // component.setState({
@@ -270,7 +299,7 @@ var Item = React.createClass({
     }
 
     //show/hide toggle btn
-    
+
     items.toggle = <Icon
       icon={children ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
       onClick={children ? this.onClickOpenToggle : null}
