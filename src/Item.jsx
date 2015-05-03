@@ -313,7 +313,7 @@ var Item = React.createClass({
       style={{margin:'0 4px'}}/>;
 
     return (
-      <div>
+      <div hidden = {this.settings.hidden}>
         <div
           {...this.dragSourceFor(DND_TYPE)}
           {...this.dropTargetFor(DND_TYPE)}

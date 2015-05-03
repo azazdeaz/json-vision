@@ -296,7 +296,11 @@ function getSettings(path) {
   draggable: true,
   whitelist: ['foo', 'bar'],
   blacklist: ['qux', 'baz'],
+  order: ['tux', 'baz'],
   onClick: utils => {}
+  hidden: true,
+  canDrop: (targetUtils, itemUtils, idx) => {},
+  acceptDrop: (targetUtils, itemUtils, idx) => {},
   getDragPreview: utils => utils.value.getClonedDOMNode(),
   inputs: [
     {
