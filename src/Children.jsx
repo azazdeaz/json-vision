@@ -20,6 +20,7 @@ var Children  = React.createClass({
     var {settings, value, path, indent, createAction, children,
       onDragOver} = this.props;
     var commonProps = {createAction, indent: indent + 1};
+    var {whitelist, blacklist, order} = settings;
 
     if (settings.sortable || isArray(children)) {
 
@@ -31,10 +32,23 @@ var Children  = React.createClass({
       var keys = settings.includeInheriteds ?
         keysIn(children) : Object.keys(children);
 
+      if (order) {
+        let l = keys.length - 1;
+        keys = keys.sort((a, b) => {
+
+          var aIdx = order.indexOf(a);
+          var bIdx = order.indexOf(b);
+
+          if (aIdx !== -1) aIdx = l - aIdx;
+          if (bIdx !== -1) bIdx = l - bIdx;
+          
+          return bIdx - aIdx;
+        });
+      }
+
       return <div>
         {keys.map((key, idx) => {
 
-          var {whitelist, blacklist} = settings;
           if (whitelist && !includes(whitelist, key)) return;
           if (blacklist && includes(whitelist, key)) return;
 
