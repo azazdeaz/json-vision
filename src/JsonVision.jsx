@@ -112,7 +112,7 @@ function createAction(change) {
         break;
 
       case 'splice':
-        change.object[change.key].splice(change.index, change.removedCound, ...change.items);
+        // change.object[change.key].splice(change.index, change.removedCound, ...change.items);
         break;
     }
   }
@@ -273,7 +273,7 @@ function getSettings(path) {
 
     if (type === 'function' &&
       ['onClick', 'onChange', 'chooseType',
-        'canDrop', 'getDragPreview'].indexOf(key) === -1) {
+        'canDrop', 'acceptDrop',  'getDragPreview'].indexOf(key) === -1) {
 
       return value(utils);
     }

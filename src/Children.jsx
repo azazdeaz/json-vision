@@ -17,19 +17,13 @@ var Children  = React.createClass({
 
   render() {
 
-    var {settings, value, path, indent, createAction, children} = this.props;
+    var {settings, value, path, indent, createAction, children,
+      onDragOver} = this.props;
     var commonProps = {createAction, indent: indent + 1};
 
     if (settings.sortable || isArray(children)) {
 
       commonProps.draggable = true;
-      commonProps.SORT_DND_TYPE = Symbol();
-      commonProps.sort = (idx, afterIdx) => {
-        var value = children.splice(idx, 1)[0];
-        children.splice(afterIdx, 0, value);
-
-        createAction();
-      };
     }
 
     if (children) {
@@ -53,6 +47,7 @@ var Children  = React.createClass({
             value,
             parentObject: children,
             path: path.concat([key, value]),
+            onDragOver: () => onDragOver(idx)
           }, commonProps);
 
           return <Item {...props}/>;

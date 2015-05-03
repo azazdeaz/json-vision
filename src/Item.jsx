@@ -1,5 +1,6 @@
 var React = require('react');
 var isObject = require('lodash/lang/isObject');
+var isArray = require('lodash/lang/isArray');
 var has = require('lodash/object/has');
 var defaults = require('lodash/object/defaults');
 var assign = require('lodash/object/assign');
@@ -11,7 +12,7 @@ var {style, Button, Icon, ButtonGroup} = require('react-matterkit');
 
 const DND_TYPE = 'dnd';
 
-var key = 0;
+// var key = 0;
 
 var styles = {
   root: {
@@ -50,11 +51,11 @@ var Item = React.createClass({
   statics: {
     configureDragDrop(register) {
 
-      function createUltils(component) {
+      function createUtils(component) {
 
         var {path} = component.props;
-        var {createUtils} = component.context;
-        return createUtils(path);
+        var create = component.context.createUtils;
+        return create(path);
       }
 
       register(DND_TYPE, {
@@ -91,10 +92,9 @@ var Item = React.createClass({
 
             return {
               item: {
-                idx: component.props.idx,
-                value: component.props.value,
+                utils: createUtils(component),
               },
-              dragPreview: getDragPreview(),
+              // dragPreview: getDragPreview(),
             };
           },
 
@@ -116,9 +116,11 @@ var Item = React.createClass({
           canDrop(component, item) {
 
             var {settings} = component;
+            var {canDrop} = settings;
+            var dragOverIdx = component._dragOverIdx;
             var utils = createUtils(component);
 
-            if (settings.canDrop && settings.canDrop(utils, item.value)) {
+            if (canDrop && canDrop(utils, item.utils, dragOverIdx)) {
               return true;
             }
             else if (isArray(utils.value) && settings.sortable &&
@@ -134,25 +136,29 @@ var Item = React.createClass({
           acceptDrop(component, item, isHandled) {
 
             var {settings} = component;
+            var {acceptDrop} = settings;
+            var dragOverIdx = component._dragOverIdx;
             var utils = createUtils(component);
 
-            // component.props.sort(item.idx, component.props.idx);
-
-            if (settings.acceptDrop) {
-              return component.settings.acceptDrop(item.value);
+            if (acceptDrop) {
+              return acceptDrop(utils, item.utils, dragOverIdx);
             }
-            else if (isArray(utils.value) && settings.sortable &&
-              includes(utils.value, item.value))
+            else if (isArray(utils.value))
             {
-              
+              item.utils.remove();
+              utils.value.splice(dragOverIdx, 0, item.utils.value);
+            }
+            else if (isObject(utils.value)) {
+              utils.value[item.utils.key] = item.utils.value;
             }
           },
           enter(component, item) {
 
-            var {settings} = component;
-            var utils = createUtils(component);
+            var {onDragOver, idx} = component.props;
 
-
+            if (onDragOver) {
+                onDragOver(idx);
+            }
           },
           leave(component) {
             // component.setState({
@@ -295,6 +301,7 @@ var Item = React.createClass({
         path = {this.props.path}
         children = {children}
         indent = {this.props.indent}
+        onDragOver = {idx => {this._dragOverIdx = idx; console.log('doidx', idx)}}
         createAction = {this.context.createAction}/>;
     }
 
