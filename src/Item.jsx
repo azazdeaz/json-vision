@@ -63,11 +63,12 @@ var Item = React.createClass({
         dragSource: {
           beginDrag(component) {
 
+            var utils = createUtils(component);
+
             function getDragPreview() {
 
               if (component.settings.getDragPreview) {
 
-                let utils = createUtils(component);
                 let dragPreview = component.settings.getDragPreview(utils);
 
                 //hack
@@ -92,7 +93,8 @@ var Item = React.createClass({
 
             return {
               item: {
-                utils: createUtils(component),
+                value: utils.value,
+                utils,
               },
               // dragPreview: getDragPreview(),
             };
