@@ -15,7 +15,7 @@ var Input  = React.createClass({
 
   render() {
 
-    var {type, options, label, icon, value, onChange, key,
+    var {type, options, label, icon, value, onChange, key, dragSpeed,
       min, max, hints, types, chooseType, path} = this.props;
     var input = null;
     var utils = this.context.createUtils(path);
@@ -33,6 +33,7 @@ var Input  = React.createClass({
       min = {min}
       max = {max}
       hints = {hints}
+      dragSpeed = {dragSpeed}
       background='transparent'
       onChange={handleChange}
       value={value} />;

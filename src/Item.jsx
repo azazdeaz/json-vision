@@ -255,6 +255,7 @@ var Item = React.createClass({
       path={this.props.path}
       settings={this.settings}
       value={this.props.value}
+      dragSpeed={this.settings.dragSpeed}
       type={this.settings.type}
       min={this.settings.min}
       max={this.settings.max}

@@ -302,10 +302,15 @@ function getSettings(path) {
   canDrop: (targetUtils, itemUtils, idx) => {},
   acceptDrop: (targetUtils, itemUtils, idx) => {},
   getDragPreview: utils => utils.value.getClonedDOMNode(),
+  input: {
+    dragSpeed: 0.1,
+    type: 'number',
+  },
   inputs: [
     {
       type: 'string'
-      value: 8
+      value: 8,
+      dragSpeed: 0.1,
       options: ['first', 'secound', 'third'],
       types: [
         {--//--}

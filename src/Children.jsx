@@ -41,7 +41,7 @@ var Children  = React.createClass({
 
           if (aIdx !== -1) aIdx = l - aIdx;
           if (bIdx !== -1) bIdx = l - bIdx;
-          
+
           return bIdx - aIdx;
         });
       }
@@ -50,7 +50,7 @@ var Children  = React.createClass({
         {keys.map((key, idx) => {
 
           if (whitelist && !includes(whitelist, key)) return;
-          if (blacklist && includes(whitelist, key)) return;
+          if (blacklist && includes(blacklist, key)) return;
 
           var value = children[key];
 
