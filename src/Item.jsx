@@ -270,9 +270,9 @@ var Item = React.createClass({
       items.extraInputs = <span style={{flex: 1}}>
         {this.settings.inputs.map((inputProps, idx) => {
           return <Input
+            key={idx}
             {...inputProps}
-            path={this.props.path}
-            key={idx}/>;
+            path={this.props.path}/>;
         })}
       </span>;
     }
@@ -280,7 +280,7 @@ var Item = React.createClass({
     //buttons
     if (this.settings.buttons) {
       items.buttons = <ButtonGroup>
-        {this.settings.buttons.map(btn => {
+        {this.settings.buttons.map((btn, idx) => {
 
           if (!has(btn, 'kind')) btn.kind = 'stamp';
 
@@ -288,6 +288,7 @@ var Item = React.createClass({
           if (btn.hideWhenLeaved && !this.state.hover) s.visibility = 'hidden';
 
           return <Button
+            key={idx}
             {...btn}
             style={s}
             onClick={() => this.onBtnClick(btn)}/>;
