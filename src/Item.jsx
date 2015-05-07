@@ -6,6 +6,7 @@ var defaults = require('lodash/object/defaults');
 var assign = require('lodash/object/assign');
 var Children = require('./Children');
 var Input = require('./Input');
+var Buttons = require('./Buttons');
 var {DragDropMixin} = require('react-dnd');
 
 var {style, Button, Icon, ButtonGroup} = require('react-matterkit');
@@ -198,24 +199,6 @@ var Item = React.createClass({
     utils.value = value;
   },
 
-  onBtnClick (btn) {
-
-    if (typeof(btn.onClick) === 'string') {
-
-      if (btn.onClick === 'delete') {
-
-        this.context.createAction({
-          path: this.fullPath,
-          type: 'delete',
-        });
-      }
-    }
-    else if (typeof(btn.onClick) === 'function') {
-      var utils = this.context.createUtils(this.props.path);
-      btn.onClick(utils);
-    }
-  },
-
   tooltipContent() {
     return this.settings.tooltip || 'This is a tooltip';
   },
@@ -252,24 +235,20 @@ var Item = React.createClass({
 
     //input
     items.input = <Input
-      path={this.props.path}
-      settings={this.settings}
+      {...assign({}, this.settings, this.settings.input)}
       value={this.props.value}
-      dragSpeed={this.settings.dragSpeed}
-      type={this.settings.type}
-      min={this.settings.min}
-      max={this.settings.max}
-      hints={this.settings.hints}
-      options={this.settings.options}
-      label={this.settings.label}
-      icon={this.settings.icon}
-      types={this.settings.types}
-      chooseType={this.settings.chooseType}
+      path={this.props.path}
       onChange={this.update}/>;
 
     if (this.settings.inputs) {
+      console.warn('settings.inputs is deprecated. Use settigns.extraInputs instead!');
+    }
+    var extraInputs = this.settings.extraInputs || this.settings.inputs;
+    if (extraInputs) {
+
       items.extraInputs = <span style={{flex: 1}}>
-        {this.settings.inputs.map((inputProps, idx) => {
+
+        {extraInputs.map((inputProps, idx) => {
           return <Input
             key={idx}
             {...inputProps}
@@ -280,21 +259,10 @@ var Item = React.createClass({
 
     //buttons
     if (this.settings.buttons) {
-      items.buttons = <ButtonGroup>
-        {this.settings.buttons.map((btn, idx) => {
-
-          if (!has(btn, 'kind')) btn.kind = 'stamp';
-
-          var s = assign({}, btn.style);
-          if (btn.hideWhenLeaved && !this.state.hover) s.visibility = 'hidden';
-
-          return <Button
-            key={idx}
-            {...btn}
-            style={s}
-            onClick={() => this.onBtnClick(btn)}/>;
-        })}
-      </ButtonGroup>;
+      items.buttons = <Buttons
+        hover = {this.state.hover}
+        path = {this.props.path}
+        buttons = {this.settings.buttons}/>;
     }
 
     //children
@@ -305,7 +273,7 @@ var Item = React.createClass({
         path = {this.props.path}
         children = {children}
         indent = {this.props.indent}
-        onDragOver = {idx => {this._dragOverIdx = idx; console.log('doidx', idx)}}
+        onDragOver = {idx => this._dragOverIdx = idx}
         createAction = {this.context.createAction}/>;
     }
 

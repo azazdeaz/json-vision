@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react/addons');
+var {PureRenderMixin} = React;
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
 var Matterkit = require('react-matterkit');
@@ -9,6 +10,8 @@ var Item;
 
 var Input  = React.createClass({
 
+  mixins: [PureRenderMixin],
+
   contextTypes: {
     createUtils: React.PropTypes.func.isRequired,
   },
@@ -16,7 +19,8 @@ var Input  = React.createClass({
   render() {
 
     var {type, options, label, icon, value, onChange, key, dragSpeed,
-      min, max, hints, types, chooseType, path} = this.props;
+      min, max, hints, types, chooseType, path,
+      addonLabel, addonIcon} = this.props;
     var input = null;
     var utils = this.context.createUtils(path);
     var handleChange = value => {
@@ -33,6 +37,8 @@ var Input  = React.createClass({
       min = {min}
       max = {max}
       hints = {hints}
+      addonLabel = {addonLabel}
+      addonIcon = {addonIcon}
       dragSpeed = {dragSpeed}
       background='transparent'
       onChange={handleChange}

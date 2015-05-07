@@ -306,7 +306,7 @@ function getSettings(path) {
     dragSpeed: 0.1,
     type: 'number',
   },
-  inputs: [
+  extraInputs: [
     {
       type: 'string'
       value: 8,
