@@ -23,8 +23,25 @@ var styles = {
     fontWeight: style.fontWeight,
     borderRadius: '1px',
     margin: '3px',
-  }
+  },
+
+  line: {
+    height: style.lineHeightPX,
+    lineHeight: style.lineHeightPX,
+    display: 'flex',
+    color: '#96a6ad',
+    fontSize: '13px',
+    backgroundColor: '#262a2e',
+    borderBottom: 'solid 1px #1a1d21',
+    boxSizing: 'border-box',
+  },
+
 };
+
+styles.lineGroup = defaults({
+  color: style.palette.grey4,
+  backgroundColor: style.palette.blue,
+}, styles.line);
 
 var Item = React.createClass({
 
@@ -216,7 +233,7 @@ var Item = React.createClass({
       marginTop: this.state.marginTop,
       marginBottom: this.state.marginBottom,
       opacity: dragState.isDragging ? 0.4 : 1,
-    }, this.settings.highlighted ? style.lineGroup : style.line);
+    }, this.settings.highlighted ? styles.lineGroup : styles.line);
 
     //indent
     items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
