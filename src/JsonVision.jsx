@@ -76,7 +76,8 @@ var JsonVision = React.createClass({
     return(
       <div style={styles.root}>
         <Item
-          key='root'
+          hideHead = {this.props.hideHead}
+          key = 'root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}
           path = {path}
@@ -275,7 +276,7 @@ function getSettings(path) {
     var type = typeof(value);
 
     if (type === 'function' &&
-      ['onClick', 'onChange', 'chooseType',
+      ['onClick', 'onChange', 'chooseType', 'Component',
         'canDrop', 'acceptDrop',  'getDragPreview'].indexOf(key) === -1) {
 
       return value(utils);
@@ -305,6 +306,7 @@ function getSettings(path) {
   canDrop: (targetUtils, itemUtils, idx) => {},
   acceptDrop: (targetUtils, itemUtils, idx) => {},
   getDragPreview: utils => utils.value.getClonedDOMNode(),
+  Component: ReactComponent
   input: {
     dragSpeed: 0.1,
     type: 'number',

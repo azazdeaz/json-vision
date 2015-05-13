@@ -221,7 +221,11 @@ var Item = React.createClass({
 
   render () {
 
-    var {settings} = this.props;
+    var {settings, hideHead, indent} = this.props;
+
+    if (settings.Component) {
+      return <settings.Component {...this.props}/>;
+    }
 
     var items = {},
       children = this.getChildren(),
@@ -235,7 +239,7 @@ var Item = React.createClass({
     }, settings.highlighted ? styles.lineGroup : styles.line);
 
     //indent
-    items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
+    items.indent = <span style={{width: indent*5, backgroundColor: style.palette.grey4}}/>;
 
 
     //label
@@ -288,7 +292,7 @@ var Item = React.createClass({
         value = {this.props.value}
         path = {this.props.path}
         children = {children}
-        indent = {this.props.indent}
+        indent = {hideHead ? indent - 1 : indent}
         onDragOver = {idx => this._dragOverIdx = idx}
         createAction = {this.context.createAction}/>;
     }
@@ -300,31 +304,36 @@ var Item = React.createClass({
       onClick={children ? this.onClickOpenToggle : null}
       style={{margin:'0 4px'}}/>;
 
+    var renderItem = () => {
+
+      return hideHead ? null : <div
+        {...this.dragSourceFor(DND_TYPE)}
+        {...this.dropTargetFor(DND_TYPE)}
+        tooltip={settings.tooltip}
+        contextMenu={settings.dropdownMenu}
+        style={styleBlock}
+        onMouseEnter={() => this.setState({hover: true})}
+        onMouseLeave={() => this.setState({hover: false})}
+        onClick={()=>{
+          if (settings.onClick) {
+
+            var utils = this.context.createUtils(this.props.path);
+            settings.onClick(utils);
+          }
+        }}>
+
+        {items.indent}
+        {items.toggle}
+        {items.label}
+        {items.input}
+        {items.extraInputs}
+        {items.buttons}
+      </div>;
+    };
+
     return (
       <div hidden = {settings.hidden}>
-        <div
-          {...this.dragSourceFor(DND_TYPE)}
-          {...this.dropTargetFor(DND_TYPE)}
-          tooltip={settings.tooltip}
-          contextMenu={settings.dropdownMenu}
-          style={styleBlock}
-          onMouseEnter={() => this.setState({hover: true})}
-          onMouseLeave={() => this.setState({hover: false})}
-          onClick={()=>{
-            if (settings.onClick) {
-
-              var utils = this.context.createUtils(this.props.path);
-              settings.onClick(utils);
-            }
-          }}>
-
-          {items.indent}
-          {items.toggle}
-          {items.label}
-          {items.input}
-          {items.extraInputs}
-          {items.buttons}
-        </div>
+        {renderItem()}
         {items.children}
       </div>
     );
