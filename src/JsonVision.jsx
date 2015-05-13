@@ -71,13 +71,16 @@ var JsonVision = React.createClass({
 
   render() {
 
+    var path = ['', this.props.value];
+
     return(
       <div style={styles.root}>
         <Item
           key='root'
           value = {this.props.value}
           name = {this.props.name || this.props.title}
-          path = {['', this.props.value]}/>
+          path = {path}
+          settings = {this.state.getSettings(path)}/>
       </div>
     );
   }

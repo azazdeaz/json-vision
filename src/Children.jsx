@@ -13,6 +13,7 @@ var Children  = React.createClass({
 
   contextTypes: {
     createAction: React.PropTypes.func.isRequired,
+    getSettings: React.PropTypes.func.isRequired,
   },
 
   render() {
@@ -53,20 +54,22 @@ var Children  = React.createClass({
           if (blacklist && includes(blacklist, key)) return;
 
           var value = children[key];
+          var childPath = path.concat([key, value]);
 
           var props = assign({
             key,
+            path: childPath,
+            settings: this.context.getSettings(childPath),
             name: key,
             idx: idx,
             value,
             parentObject: children,
-            path: path.concat([key, value]),
             onDragOver: () => onDragOver(idx)
           }, commonProps);
 
           return <Item {...props}/>;
         })}
-        </div>;
+      </div>;
     }
     else {
       return <div hidden={true}/>;

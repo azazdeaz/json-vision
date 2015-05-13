@@ -48,7 +48,6 @@ var Item = React.createClass({
   mixins: [DragDropMixin],
 
   contextTypes: {
-    getSettings: React.PropTypes.func.isRequired,
     createAction: React.PropTypes.func.isRequired,
     createUtils: React.PropTypes.func.isRequired,
   },
@@ -155,7 +154,7 @@ var Item = React.createClass({
 
           acceptDrop(component, item, isHandled) {
 
-            var {settings} = component;
+            var {settings} = component.props;
             var {acceptDrop} = settings;
             var dragOverIdx = component._dragOverIdx;
             var utils = createUtils(component);
@@ -197,9 +196,9 @@ var Item = React.createClass({
 
   getChildren() {
 
-    if (has(this.settings, 'children')) {
+    if (has(this.props.settings, 'children')) {
 
-      return this.settings.children;
+      return this.props.settings.children;
     }
     else if (isObject(this.props.value)) {
 
@@ -217,12 +216,12 @@ var Item = React.createClass({
   },
 
   tooltipContent() {
-    return this.settings.tooltip || 'This is a tooltip';
+    return this.props.settings.tooltip || 'This is a tooltip';
   },
 
   render () {
 
-    this.settings = this.context.getSettings(this.props.path);
+    var {settings} = this.props;
 
     var items = {},
       children = this.getChildren(),
@@ -233,7 +232,7 @@ var Item = React.createClass({
       marginTop: this.state.marginTop,
       marginBottom: this.state.marginBottom,
       opacity: dragState.isDragging ? 0.4 : 1,
-    }, this.settings.highlighted ? styles.lineGroup : styles.line);
+    }, settings.highlighted ? styles.lineGroup : styles.line);
 
     //indent
     items.indent = <span style={{width:this.props.indent*5, backgroundColor: style.palette.grey4}}/>;
@@ -244,23 +243,23 @@ var Item = React.createClass({
       flex:1,
       // color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
-    }, this.settings.labelStyle);
+    }, settings.labelStyle);
 
     items.label = <span style={styleLabel}>
-      {this.settings.label || this.props.name}
+      {settings.label || this.props.name}
     </span>;
 
     //input
     items.input = <Input
-      {...assign({}, this.settings, this.settings.input)}
+      {...assign({}, settings, settings.input)}
       value={this.props.value}
       path={this.props.path}
       onChange={this.update}/>;
 
-    if (this.settings.inputs) {
-      console.warn('settings.inputs is deprecated. Use settigns.extraInputs instead!');
+    if (settings.inputs) {
+      console.warn('settings.inputs is deprecated. Use settings.extraInputs instead!');
     }
-    var extraInputs = this.settings.extraInputs || this.settings.inputs;
+    var extraInputs = settings.extraInputs || settings.inputs;
     if (extraInputs) {
 
       items.extraInputs = <span style={{flex: 1}}>
@@ -275,17 +274,17 @@ var Item = React.createClass({
     }
 
     //buttons
-    if (this.settings.buttons) {
+    if (settings.buttons) {
       items.buttons = <Buttons
         hover = {this.state.hover}
         path = {this.props.path}
-        buttons = {this.settings.buttons}/>;
+        buttons = {settings.buttons}/>;
     }
 
     //children
     if (this.state.opened) {
       items.children = <Children
-        settings = {this.settings}
+        settings = {settings}
         value = {this.props.value}
         path = {this.props.path}
         children = {children}
@@ -302,20 +301,20 @@ var Item = React.createClass({
       style={{margin:'0 4px'}}/>;
 
     return (
-      <div hidden = {this.settings.hidden}>
+      <div hidden = {settings.hidden}>
         <div
           {...this.dragSourceFor(DND_TYPE)}
           {...this.dropTargetFor(DND_TYPE)}
-          tooltip={this.settings.tooltip}
-          contextMenu={this.settings.dropdownMenu}
+          tooltip={settings.tooltip}
+          contextMenu={settings.dropdownMenu}
           style={styleBlock}
           onMouseEnter={() => this.setState({hover: true})}
           onMouseLeave={() => this.setState({hover: false})}
           onClick={()=>{
-            if (this.settings.onClick) {
+            if (settings.onClick) {
 
               var utils = this.context.createUtils(this.props.path);
-              this.settings.onClick(utils);
+              settings.onClick(utils);
             }
           }}>
 
