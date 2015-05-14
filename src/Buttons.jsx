@@ -17,9 +17,9 @@ var Buttons  = React.createClass({
 
     var {hover, buttons} = this.props;
 
-    return hover === next.hover &&
-      buttons.length === next.buttons.length &&
-      buttons.every((btn, idx) => shallowEquals(btn, next.buttons[idx]));
+    return hover !== next.hover ||
+      buttons.length !== next.buttons.length ||
+      !buttons.every((btn, idx) => shallowEquals(btn, next.buttons[idx]));
 
   },
 
