@@ -23,9 +23,15 @@ var Children  = React.createClass({
     var commonProps = {createAction, indent: indent + 1};
     var {whitelist, blacklist, order} = settings;
 
-    if (settings.sortable || isArray(children)) {
+    if (settings.canDrop && isArray(children)) {
 
-      commonProps.draggable = true;
+      commonProps.parentCanDrop = settings.canDrop;
+      commonProps.parentAcceptDrop = settings.acceptDrop;
+    }
+
+    if (settings.canDropAround) {
+
+      commonProps.canDropAround = function () {};
     }
 
     if (children) {

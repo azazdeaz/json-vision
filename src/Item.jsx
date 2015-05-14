@@ -26,6 +26,7 @@ var styles = {
   },
 
   line: {
+    position: 'relaitve',
     height: style.lineHeightPX,
     lineHeight: style.lineHeightPX,
     display: 'flex',
@@ -66,7 +67,7 @@ var Item = React.createClass({
     };
   },
   statics: {
-    configureDragDrop(register) {
+    configureDragDrop(register, dragDropContext) {
 
       function createUtils(component) {
 
@@ -134,17 +135,23 @@ var Item = React.createClass({
         dropTarget: {
           canDrop(component, item) {
 
-            var {settings} = component;
+            var {settings, parentCanDrop} = component.props;
             var {canDrop} = settings;
-            var dragOverIdx = component._dragOverIdx;
             var utils = createUtils(component);
+            var idx = 0;
 
-            if (canDrop && canDrop(utils, item.utils, dragOverIdx)) {
+            if (isArray(utils.parent)) {
+              idx = utils.parent.indexOf(utils.value);
+
+              if (this.state.dropPosition === 'after') {
+                idx += 1;
+              }
+            }
+
+            if (canDrop && canDrop(utils, item.utils)) {
               return true;
             }
-            else if (isArray(utils.value) && settings.sortable &&
-              includes(utils.value, item.value))
-            {
+            else if (parentCanDrop && parentCanDrop(utils, item.utils, idx)) {
               return true;
             }
             else {
@@ -179,11 +186,19 @@ var Item = React.createClass({
                 onDragOver(idx);
             }
           },
+          over(component) {
+            var clientPos = dragDropContext.getCurrentOffsetFromClient();
+            var node = React.findDOMNode(component);
+            var br = node.getBoundingClientRect();
+            var y = clientPos.y - br.top;
+            var pos = y / br.height;
+
+            if (pos < 0.2) component.setState({dropPosition: 'before'});
+            else if (pos < 0.8) component.setState({dropPosition: 'in'});
+            else component.setState({dropPosition: 'after'});
+          },
           leave(component) {
-            // component.setState({
-            //   marginTop: 0,
-            //   marginBottom: 0,
-            // });
+            component.setState({dropPosition: undefined});
           }
         }
       });
@@ -304,6 +319,22 @@ var Item = React.createClass({
       onClick={children ? this.onClickOpenToggle : null}
       style={{margin:'0 4px'}}/>;
 
+    if (this.state.dropPosition) {
+
+      let pos = this.state.dropPosition;
+
+      var s = {
+        position: 'absolute',
+        width: '100%',
+        left: 0,
+        height: pos === 'in' ? '100%' : '6px',
+        [pos === 'after' ? 'bottom' : 'top']: 0,
+        backgroundColor: 'rgba(0,0,222,.34)',
+      };
+
+      items.dropEffect = <div style={s}/>;
+    }
+
     var renderItem = () => {
 
       return hideHead ? null : <div
@@ -328,11 +359,12 @@ var Item = React.createClass({
         {items.input}
         {items.extraInputs}
         {items.buttons}
+        {items.dropEffect}
       </div>;
     };
 
     return (
-      <div hidden = {settings.hidden}>
+      <div hidden = {settings.hidden} style={{position: 'relative'}}>
         {renderItem()}
         {items.children}
       </div>
