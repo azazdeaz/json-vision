@@ -14,6 +14,7 @@ var Children  = React.createClass({
   contextTypes: {
     createAction: React.PropTypes.func.isRequired,
     getSettings: React.PropTypes.func.isRequired,
+    createUtils: React.PropTypes.func.isRequired,
   },
 
   render() {
@@ -23,10 +24,16 @@ var Children  = React.createClass({
     var commonProps = {createAction, indent: indent + 1};
     var {whitelist, blacklist, order} = settings;
 
-    if (settings.canDrop && isArray(children)) {
+    if (isArray(children)) {
 
-      commonProps.parentCanDrop = settings.canDrop;
-      commonProps.parentAcceptDrop = settings.acceptDrop;
+      let utils = this.context.createUtils(path);
+
+      commonProps.canDropAround = (childUtils, targetUtils, idx) => {
+        return settings.canDrop(utils, targetUtils, idx);
+      };
+      commonProps.acceptDropAround = (childUtils, targetUtils, idx) => {
+        return settings.acceptDrop(utils, targetUtils, idx);
+      };
     }
 
     if (settings.canDropAround) {

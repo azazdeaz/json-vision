@@ -40,9 +40,9 @@ var Input  = React.createClass({
       addonLabel = {addonLabel}
       addonIcon = {addonIcon}
       dragSpeed = {dragSpeed}
-      background='transparent'
-      onChange={handleChange}
-      value={value} />;
+      background = 'transparent'
+      onChange = {handleChange}
+      value = {value}/>;
 
     var createCheckbox = () => input = <Checkbox
       onChange={handleChange}
