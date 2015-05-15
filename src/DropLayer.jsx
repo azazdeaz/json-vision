@@ -44,9 +44,11 @@ var DropLayer  = React.createClass({
 
     var dropTargetUtils = this.getDropTargetUtils(dropPosition);
     var idx = this.getIdx(dropTargetUtils, dropPosition);
+    var canDrop = dropPosition === 'in' ?
+      this.props.canDrop : this.props.canDropAround;
 
     if (around) {
-      return this.props.canDrop(dropTargetUtils, item, idx);
+      return canDrop(dropTargetUtils, item, idx);
     }
   },
 
@@ -54,9 +56,11 @@ var DropLayer  = React.createClass({
 
     var dropTargetUtils = this.getDropTargetUtils(dropPosition);
     var idx = this.getIdx(dropTargetUtils, dropPosition);
+    var acceptDrop = dropPosition === 'in' ?
+      this.props.acceptDrop : this.props.acceptDropAround;
 
     if (around) {
-      return this.props.acceptDrop(dropTargetUtils, item, idx);
+      return acceptDrop(dropTargetUtils, item, idx);
     }
   },
 
