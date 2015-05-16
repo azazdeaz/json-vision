@@ -7,6 +7,7 @@ var assign = require('lodash/object/assign');
 var Children = require('./Children');
 var Input = require('./Input');
 var Buttons = require('./Buttons');
+var DropLayer = require('./DropLayer');
 var {DragDropMixin} = require('react-dnd');
 var Config = require('./Config');
 
@@ -105,90 +106,89 @@ var Item = React.createClass({
 
           canDrag(component) {
 
-            return component.props.draggable ||
-              component.props.settings.draggable;
+            return component.props.settings.draggable;
           },
         },
 
-        dropTarget: {
-          canDrop(component, item) {
-
-            var {settings, canDropAround} = component.props;
-            var {canDrop} = settings;
-            var utils = createUtils(component);
-            var idx = getIdx(utils, component.state.dragDropPosition);
-
-            if (canDrop && canDrop(utils, item.utils)) {
-              return true;
-            }
-            else if (canDropAround && canDropAround(utils, item.utils, idx)) {
-              return true;
-            }
-            else {
-              item.dropChildKey = utils.key;
-            }
-          },
-
-          acceptDrop(component, item, isHandled) {
-
-            var {settings, acceptDropAround} = component.props;
-            var {acceptDrop} = settings;
-            var utils = createUtils(component);
-            var idx = getIdx(utils, component.state.dragDropPosition);
-
-            if (acceptDrop) {
-              return acceptDrop(utils, item.utils, idx);
-            }
-            else if (acceptDropAround) {
-              return acceptDropAround(utils, item.utils, idx);
-            }
-            else if (isArray(utils.value))
-            {
-              item.utils.remove();
-              utils.value.splice(idx, 0, item.utils.value);
-            }
-            else if (isObject(utils.value)) {
-              item.utils.remove();
-              utils.value[item.utils.key] = item.utils.value;
-            }
-          },
-          over(component, item) {
-            var clientPos = dragDropContext.getCurrentOffsetFromClient();
-            var node = React.findDOMNode(component);
-            var br = node.getBoundingClientRect();
-            var y = clientPos.y - br.top;
-            var pos = y / br.height;
-
-            var dropPosition = 'in';
-
-            var utils = createUtils(component);
-            var {canDropAround} = component.props;
-
-            if (canDropAround) {
-
-              if (pos < 0.2) {
-                let idx = getIdx(utils, 'before');
-                if (canDropAround(utils, item.utils, idx)) {
-                  dropPosition = 'befor';
-                }
-              }
-              else if (pos > 0.8) {
-                let idx = getIdx(utils, 'after');
-                if (canDropAround(utils, item.utils, idx)) {
-                  dropPosition = 'after';
-                }
-              }
-            }
-
-            component.setState({dropPosition});
-          },
-          leave(component) {
-            component.setState({dropPosition: undefined});
-          },
-          drop(component) {
-            component.setState({dropPosition: undefined});
-          }
-        }
+        // dropTarget: {
+        //   canDrop(component, item) {
+        //
+        //     var {settings, canDropAround} = component.props;
+        //     var {canDrop} = settings;
+        //     var utils = createUtils(component);
+        //     var idx = getIdx(utils, component.state.dragDropPosition);
+        //
+        //     if (canDrop && canDrop(utils, item.utils)) {
+        //       return true;
+        //     }
+        //     else if (canDropAround && canDropAround(utils, item.utils, idx)) {
+        //       return true;
+        //     }
+        //     else {
+        //       item.dropChildKey = utils.key;
+        //     }
+        //   },
+        //
+        //   acceptDrop(component, item, isHandled) {
+        //
+        //     var {settings, acceptDropAround} = component.props;
+        //     var {acceptDrop} = settings;
+        //     var utils = createUtils(component);
+        //     var idx = getIdx(utils, component.state.dragDropPosition);
+        //
+        //     if (acceptDrop) {
+        //       return acceptDrop(utils, item.utils, idx);
+        //     }
+        //     else if (acceptDropAround) {
+        //       return acceptDropAround(utils, item.utils, idx);
+        //     }
+        //     else if (isArray(utils.value))
+        //     {
+        //       item.utils.remove();
+        //       utils.value.splice(idx, 0, item.utils.value);
+        //     }
+        //     else if (isObject(utils.value)) {
+        //       item.utils.remove();
+        //       utils.value[item.utils.key] = item.utils.value;
+        //     }
+        //   },
+        //   over(component, item) {
+        //     var clientPos = dragDropContext.getCurrentOffsetFromClient();
+        //     var node = React.findDOMNode(component);
+        //     var br = node.getBoundingClientRect();
+        //     var y = clientPos.y - br.top;
+        //     var pos = y / br.height;
+        //
+        //     var dropPosition = 'in';
+        //
+        //     var utils = createUtils(component);
+        //     var {canDropAround} = component.props;
+        //
+        //     if (canDropAround) {
+        //
+        //       if (pos < 0.2) {
+        //         let idx = getIdx(utils, 'before');
+        //         if (canDropAround(utils, item.utils, idx)) {
+        //           dropPosition = 'befor';
+        //         }
+        //       }
+        //       else if (pos > 0.8) {
+        //         let idx = getIdx(utils, 'after');
+        //         if (canDropAround(utils, item.utils, idx)) {
+        //           dropPosition = 'after';
+        //         }
+        //       }
+        //     }
+        //
+        //     component.setState({dropPosition});
+        //   },
+        //   leave(component) {
+        //     component.setState({dropPosition: undefined});
+        //   },
+        //   drop(component) {
+        //     component.setState({dropPosition: undefined});
+        //   }
+        // }
       });
     }
   },
@@ -196,59 +196,6 @@ var Item = React.createClass({
   //   var value = this.props.value;
   //   return isObject(value) && Object.keys(value).length > 0;
   // },
-
-
-  canDrop(item) {
-
-    var {settings, canDropAround} = this.props;
-    var {canDrop} = settings;
-    var utils = this.context.createUtils(this.props.path);
-    var idx = getIdx(utils, component.state.dragDropPosition);
-
-    if (canDrop && canDrop(utils, item.utils)) {
-      return true;
-    }
-    else if (canDropAround && canDropAround(utils, item.utils, idx)) {
-      return true;
-    }
-    else {
-      item.dropChildKey = utils.key;
-    }
-  },
-
-  renderDropLayer() {
-
-    return <DropLayer
-      path = {this.props.path}
-      canDrop = {this.canDrop}
-      acceptDrop = {this.acceptDrop}
-      canDropAround = {this.props.canDropAround}
-      acceptDropAround = {this.props.acceptDropAround}/>;
-  },
-
-  acceptDrop(component, item, isHandled) {
-
-    var {settings, acceptDropAround} = component.props;
-    var {acceptDrop} = settings;
-    var utils = this.context.createUtils(this.props.path);
-    var idx = getIdx(utils, component.state.dragDropPosition);
-
-    if (acceptDrop) {
-      return acceptDrop(utils, item.utils, idx);
-    }
-    else if (acceptDropAround) {
-      return acceptDropAround(utils, item.utils, idx);
-    }
-    else if (isArray(utils.value))
-    {
-      item.utils.remove();
-      utils.value.splice(idx, 0, item.utils.value);
-    }
-    else if (isObject(utils.value)) {
-      item.utils.remove();
-      utils.value[item.utils.key] = item.utils.value;
-    }
-  },
 
   getChildren() {
 
@@ -275,6 +222,38 @@ var Item = React.createClass({
     return this.props.settings.tooltip || 'This is a tooltip';
   },
 
+  canDrop(utils, item, idx) {
+
+    var {canDrop} = this.props.settings;
+
+    if (canDrop && canDrop(utils, item, idx)) {
+      return true;
+    }
+  },
+
+  acceptDrop(utils, item, idx) {
+
+    var {acceptDrop} = this.props.settings;
+
+    if (acceptDrop) {
+      acceptDrop(utils, item, idx);
+    }
+    else {
+      //TODO accept drop
+    }
+  },
+
+  renderDropLayer() {
+
+    return <DropLayer
+      idx = {this.props.idx}
+      path = {this.props.path}
+      canDrop = {this.canDrop}
+      acceptDrop = {this.acceptDrop}
+      canDropAround = {this.props.canDropAround}
+      acceptDropAround = {this.props.acceptDropAround}/>;
+  },
+
   render () {
 
     var {settings, hideHead, indent} = this.props;
@@ -285,7 +264,7 @@ var Item = React.createClass({
 
     var items = {},
       children = this.getChildren(),
-      dragState = this.getDragState(DND_TYPE);
+      dragState = this.getDragState(Config.DND_TYPE);
 
     var styleBlock = defaults({
       marginTop: this.state.marginTop,
@@ -398,7 +377,7 @@ var Item = React.createClass({
         {items.input}
         {items.extraInputs}
         {items.buttons}
-        {this.renderDropLayer}
+        {this.renderDropLayer()}
       </div>;
     };
 

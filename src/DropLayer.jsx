@@ -2,6 +2,8 @@ var React = require('react/addons');
 var {PureRenderMixin} = React;
 var {DragDropMixin} = require('react-dnd');
 var Config = require('./Config');
+var isArray = require('lodash/lang/isArray');
+var {style} = require('react-matterkit');
 
 var DropLayer  = React.createClass({
 
@@ -11,17 +13,15 @@ var DropLayer  = React.createClass({
 
   getIdx(utils, dropPosition) {
 
-    var idx = 0;
-
-    if (isArray(utils.parent)) {
-      idx = utils.parent.indexOf(utils.value);
-
-      if (dropPosition === 'after') {
-        idx += 1;
-      }
+    if (dropPosition === 'in') {
+      return 0;
     }
-
-    return idx;
+    else if (dropPosition === 'before') {
+      return this.props.idx;
+    }
+    else if (dropPosition === 'after') {
+      return this.props.idx + 1;
+    }
   },
 
   getDropTargetUtils(dropPosition) {
@@ -47,9 +47,7 @@ var DropLayer  = React.createClass({
     var canDrop = dropPosition === 'in' ?
       this.props.canDrop : this.props.canDropAround;
 
-    if (around) {
-      return canDrop(dropTargetUtils, item, idx);
-    }
+    return canDrop(dropTargetUtils, item, idx);
   },
 
   acceptDrop(dropPosition, item) {
@@ -59,29 +57,31 @@ var DropLayer  = React.createClass({
     var acceptDrop = dropPosition === 'in' ?
       this.props.acceptDrop : this.props.acceptDropAround;
 
-    if (around) {
-      return acceptDrop(dropTargetUtils, item, idx);
-    }
+    return acceptDrop(dropTargetUtils, item, idx);
   },
 
   render() {
 
-    var {canDrop, acceptDrop, canDropAround, acceptDropAround,
-      path} = this.props;
+    var {canDropAround} = this.props;
 
-
-
-    function createDropField(pos, canDrop, acceptDrop) {
+    var createDropField = pos => {
       return <DropField
         pos = {pos}
-        canDrop = {canDrop}
-        acceptDrop = {acceptDrop}/>;
-    }
+        canDrop = {this.canDrop}
+        acceptDrop = {this.acceptDrop}/>;
+    };
 
-    return <div>
-      {canDropAround ? dropField('before', this.canDrop, this.accepDrop) : ''}
-      {dropField('in', this.canDrop, this.accepDrop)}
-      {canDropAround ? dropField('after', this.canDrop, this.accepDrop) : ''}
+    var s = {
+      position: 'absolute',
+      left: 0,
+      width: '100%',
+      height: '100%',
+    };
+
+    return <div style={s}>
+      {createDropField('in')}
+      {canDropAround ? createDropField('before') : ''}
+      {canDropAround ? createDropField('after') : ''}
     </div>;
   }
 });
@@ -93,42 +93,20 @@ var DropField = React.createClass({
   mixins: [DragDropMixin],
 
   statics: {
-    configureDragDrop(register, dragDropContext) {
-
-      function createUtils(component) {
-
-        var {path} = component.props;
-        var create = component.context.createUtils;
-        return create(path);
-      }
-
-      function getIdx(utils, dropPosition) {
-
-        var idx = 0;
-
-        if (isArray(utils.parent)) {
-          idx = utils.parent.indexOf(utils.value);
-
-          if (dropPosition === 'after') {
-            idx += 1;
-          }
-        }
-
-        return idx;
-      }
+    configureDragDrop(register) {
 
       register(Config.DND_TYPE, {
 
         dropTarget: {
           canDrop(component, item) {
 
-            return component.props.canDrop(item);
+            return component.props.canDrop(component.props.pos, item);
           },
 
           acceptDrop(component, item, isHandled) {
 
-            return component.props.acceptDrop(item);
-          },
+            return component.props.acceptDrop(component.props.pos, item);
+          }
         }
       });
     }
@@ -137,20 +115,20 @@ var DropField = React.createClass({
   render() {
 
     var {pos} = this.props;
-    var {hover} = this.getDropState(Config.DND_TYPE);
+    var {isHovering} = this.getDropState(Config.DND_TYPE);
 
     var s = {
       position: 'absolute',
       width: '100%',
       left: 0,
-      height: pos === 'in' ? '100%' : '6px',
       [pos === 'after' ? 'bottom' : 'top']: 0,
+      height: pos === 'in' ? '100%' : '6px',
       backgroundColor: style.palette.green,
-      opacity: hover ? 0.3 : 0,
+      opacity: isHovering ? 0.3 : 0,
     };
 
-    items.dropEffect = <div
-      {...this.dropTargetFor(DND_TYPE)}
+    return <div
+      {...this.dropTargetFor(Config.DND_TYPE)}
       style={s}/>;
   }
 });
