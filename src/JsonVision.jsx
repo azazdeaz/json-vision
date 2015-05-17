@@ -240,7 +240,7 @@ function getSettings(path) {
 
           value = compute(value, key);
 
-          if (key === 'inputs' || key === 'buttons') {
+          if (key === 'extraInputs' || key === 'buttons') {
 
             let copy = value.map((val, idx) => {
 
@@ -277,8 +277,8 @@ function getSettings(path) {
 
     if (type === 'function' &&
       ['onClick', 'onChange', 'chooseType', 'Component',
-        'canDrop', 'acceptDrop',  'getDragPreview'].indexOf(key) === -1) {
-
+        'canDrop', 'acceptDrop', 'getDragPreview'].indexOf(key) === -1)
+    {
       return value(utils);
     }
     else if (type === 'object') {

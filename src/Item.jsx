@@ -279,15 +279,12 @@ var Item = React.createClass({
       path={this.props.path}
       onChange={this.update}/>;
 
-    if (settings.inputs) {
-      console.warn('settings.inputs is deprecated. Use settings.extraInputs instead!');
-    }
-    var extraInputs = settings.extraInputs || settings.inputs;
-    if (extraInputs) {
+    //extraInputs
+    if (settings.extraInputs) {
 
       items.extraInputs = <span style={{flex: 1}}>
 
-        {extraInputs.map((inputProps, idx) => {
+        {settings.extraInputs.map((inputProps, idx) => {
           return <Input
             key={idx}
             {...inputProps}
