@@ -1,6 +1,6 @@
 {
   "name": "json-vision",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "lib/JsonVision.js",
   "author": "",
@@ -17,9 +17,11 @@
   },
   "devDependencies": {
     "babel": "^5.1.13",
+    "babel-eslint": "^3.1.4",
     "babelify": "^6.0.2",
     "browser-sync": "^2.6.5",
     "browserify": "^9.0.8",
+    "eslint": "^0.21.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^5.1.0",
     "gulp-callback": "0.0.3",

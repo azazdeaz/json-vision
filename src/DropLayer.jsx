@@ -7,8 +7,94 @@ var {style} = require('react-matterkit');
 
 var DropLayer  = React.createClass({
 
+  mixins: [DragDropMixin],
+
   contextTypes: {
     createUtils: React.PropTypes.func.isRequired,
+  },
+
+  getInitialState() {
+    return {
+      dropPosition: undefined,
+    }
+  },
+
+  statics: {
+    configureDragDrop(register, context) {
+
+
+      function getDropPosition(component) {
+
+        var node = React.findDOMNode(component);
+        var br = node.getBoundingClientRect();
+        var pos = context.getCurrentOffsetFromClient();
+        var y = (pos.y - br.top) / br.height;
+        var dropPosition;
+
+        if (y < 0.2) dropPosition = 'before';
+        else if (y > 0.8) dropPosition = 'after';
+        else dropPosition = 'in';
+
+        return dropPosition;
+      }
+
+      register(Config.DND_TYPE, {
+
+        dragSource: {
+          beginDrag(component) {
+
+            var {path} = component.props;
+            var utils = component.context.createUtils(path);
+
+            return {
+              item: {
+                value: utils.value,
+                utils,
+              },
+            };
+          },
+
+          canDrag(component) {
+
+            return component.props.draggable;
+          },
+        },
+
+        dropTarget: {
+
+          canDrop(component, item) {
+
+            var dropPosition = getDropPosition(component);
+            component.setState({dropPosition});
+
+            var {canDrop, canDropAround} = component.props;
+            var dropTargetUtils = component.getDropTargetUtils(dropPosition);
+            var idx = component.getIdx(dropTargetUtils, dropPosition);
+            var canDrop = dropPosition === 'in' ? canDrop : canDropAround;
+
+            return canDrop(dropTargetUtils, item, idx);
+          },
+
+          acceptDrop(component, item) {
+
+            var {dropPosition} = component.state;
+            var {acceptDrop, acceptDropAround} = component.props;
+            var dropTargetUtils = component.getDropTargetUtils(dropPosition);
+            var idx = component.getIdx(dropTargetUtils, dropPosition);
+            var acceptDrop = dropPosition === 'in' ?
+              acceptDrop : acceptDropAround;
+
+            component.setState({dropPosition: undefined});
+
+            return acceptDrop(dropTargetUtils, item, idx);
+          },
+
+          leave(component) {
+            component.setState({dropPosition: undefined});
+          },
+        }
+      });
+    }
   },
 
   getIdx(utils, dropPosition) {
@@ -40,48 +126,23 @@ var DropLayer  = React.createClass({
     return dropTargetUtils;
   },
 
-  canDrop(dropPosition, item) {
-
-    var dropTargetUtils = this.getDropTargetUtils(dropPosition);
-    var idx = this.getIdx(dropTargetUtils, dropPosition);
-    var canDrop = dropPosition === 'in' ?
-      this.props.canDrop : this.props.canDropAround;
-
-    return canDrop(dropTargetUtils, item, idx);
-  },
-
-  acceptDrop(dropPosition, item) {
-
-    var dropTargetUtils = this.getDropTargetUtils(dropPosition);
-    var idx = this.getIdx(dropTargetUtils, dropPosition);
-    var acceptDrop = dropPosition === 'in' ?
-      this.props.acceptDrop : this.props.acceptDropAround;
-
-    return acceptDrop(dropTargetUtils, item, idx);
-  },
-
   render() {
+    
+    var {dropPosition} = this.state;
 
-    var {canDropAround} = this.props;
+    return <div
+      style = {this.props.style}
+      onMouseEnter = {this.props.onMouseEnter}
+      onMouseLeave = {this.props.onMouseLeave}
+      onClick = {this.props.onClick}
+      {...this.dragSourceFor(Config.DND_TYPE)}
+      {...this.dropTargetFor(Config.DND_TYPE)}>
 
-    var createDropField = pos => {
-      return <DropField
-        pos = {pos}
-        canDrop = {this.canDrop}
-        acceptDrop = {this.acceptDrop}/>;
-    };
+      {this.props.children}
 
-    var s = {
-      position: 'absolute',
-      left: 0,
-      width: '100%',
-      height: '100%',
-    };
-
-    return <div style={s}>
-      {createDropField('in')}
-      {canDropAround ? createDropField('before') : ''}
-      {canDropAround ? createDropField('after') : ''}
+      <DropField pos='in' currPos={dropPosition}/>
+      <DropField pos='before' currPos={dropPosition}/>
+      <DropField pos='after' currPos={dropPosition}/>
     </div>;
   }
 });
@@ -90,34 +151,13 @@ export default DropLayer;
 
 var DropField = React.createClass({
 
-  mixins: [DragDropMixin],
-
-  statics: {
-    configureDragDrop(register) {
-
-      register(Config.DND_TYPE, {
-
-        dropTarget: {
-          canDrop(component, item) {
-
-            return component.props.canDrop(component.props.pos, item);
-          },
-
-          acceptDrop(component, item, isHandled) {
-
-            return component.props.acceptDrop(component.props.pos, item);
-          }
-        }
-      });
-    }
-  },
-
   render() {
 
-    var {pos} = this.props;
-    var {isHovering} = this.getDropState(Config.DND_TYPE);
+    var {pos, currPos} = this.props;
+    var isHovering = pos === currPos;
 
     var s = {
+      pointerEvents: 'none',
       position: 'absolute',
       width: '100%',
       left: 0,
@@ -127,8 +167,6 @@ var DropField = React.createClass({
       opacity: isHovering ? 0.3 : 0,
     };
 
-    return <div
-      {...this.dropTargetFor(Config.DND_TYPE)}
-      style={s}/>;
+    return <div style={s}/>;
   }
 });

@@ -44,8 +44,6 @@ styles.lineGroup = defaults({
 
 var Item = React.createClass({
 
-  mixins: [DragDropMixin],
-
   contextTypes: {
     createAction: React.PropTypes.func.isRequired,
     createUtils: React.PropTypes.func.isRequired,
@@ -64,134 +62,134 @@ var Item = React.createClass({
       indent: 0,
     };
   },
-  statics: {
-    configureDragDrop(register, dragDropContext) {
-
-      function createUtils(component) {
-
-        var {path} = component.props;
-        var create = component.context.createUtils;
-        return create(path);
-      }
-
-      function getIdx(utils, dropPosition) {
-
-        var idx = 0;
-
-        if (isArray(utils.parent)) {
-          idx = utils.parent.indexOf(utils.value);
-
-          if (dropPosition === 'after') {
-            idx += 1;
-          }
-        }
-
-        return idx;
-      }
-
-      register(Config.DND_TYPE, {
-
-        dragSource: {
-          beginDrag(component) {
-
-            var utils = createUtils(component);
-
-            return {
-              item: {
-                value: utils.value,
-                utils,
-              },
-            };
-          },
-
-          canDrag(component) {
-
-            return component.props.settings.draggable;
-          },
-        },
-
-        // dropTarget: {
-        //   canDrop(component, item) {
-        //
-        //     var {settings, canDropAround} = component.props;
-        //     var {canDrop} = settings;
-        //     var utils = createUtils(component);
-        //     var idx = getIdx(utils, component.state.dragDropPosition);
-        //
-        //     if (canDrop && canDrop(utils, item.utils)) {
-        //       return true;
-        //     }
-        //     else if (canDropAround && canDropAround(utils, item.utils, idx)) {
-        //       return true;
-        //     }
-        //     else {
-        //       item.dropChildKey = utils.key;
-        //     }
-        //   },
-        //
-        //   acceptDrop(component, item, isHandled) {
-        //
-        //     var {settings, acceptDropAround} = component.props;
-        //     var {acceptDrop} = settings;
-        //     var utils = createUtils(component);
-        //     var idx = getIdx(utils, component.state.dragDropPosition);
-        //
-        //     if (acceptDrop) {
-        //       return acceptDrop(utils, item.utils, idx);
-        //     }
-        //     else if (acceptDropAround) {
-        //       return acceptDropAround(utils, item.utils, idx);
-        //     }
-        //     else if (isArray(utils.value))
-        //     {
-        //       item.utils.remove();
-        //       utils.value.splice(idx, 0, item.utils.value);
-        //     }
-        //     else if (isObject(utils.value)) {
-        //       item.utils.remove();
-        //       utils.value[item.utils.key] = item.utils.value;
-        //     }
-        //   },
-        //   over(component, item) {
-        //     var clientPos = dragDropContext.getCurrentOffsetFromClient();
-        //     var node = React.findDOMNode(component);
-        //     var br = node.getBoundingClientRect();
-        //     var y = clientPos.y - br.top;
-        //     var pos = y / br.height;
-        //
-        //     var dropPosition = 'in';
-        //
-        //     var utils = createUtils(component);
-        //     var {canDropAround} = component.props;
-        //
-        //     if (canDropAround) {
-        //
-        //       if (pos < 0.2) {
-        //         let idx = getIdx(utils, 'before');
-        //         if (canDropAround(utils, item.utils, idx)) {
-        //           dropPosition = 'befor';
-        //         }
-        //       }
-        //       else if (pos > 0.8) {
-        //         let idx = getIdx(utils, 'after');
-        //         if (canDropAround(utils, item.utils, idx)) {
-        //           dropPosition = 'after';
-        //         }
-        //       }
-        //     }
-        //
-        //     component.setState({dropPosition});
-        //   },
-        //   leave(component) {
-        //     component.setState({dropPosition: undefined});
-        //   },
-        //   drop(component) {
-        //     component.setState({dropPosition: undefined});
-        //   }
-        // }
-      });
-    }
-  },
+  // statics: {
+  //   configureDragDrop(register, dragDropContext) {
+  //
+  //     function createUtils(component) {
+  //
+  //       var {path} = component.props;
+  //       var create = component.context.createUtils;
+  //       return create(path);
+  //     }
+  //
+  //     function getIdx(utils, dropPosition) {
+  //
+  //       var idx = 0;
+  //
+  //       if (isArray(utils.parent)) {
+  //         idx = utils.parent.indexOf(utils.value);
+  //
+  //         if (dropPosition === 'after') {
+  //           idx += 1;
+  //         }
+  //       }
+  //
+  //       return idx;
+  //     }
+  //
+  //     // register(Config.DND_TYPE, {
+  //
+  //       // dragSource: {
+  //       //   beginDrag(component) {
+  //       //
+  //       //     var utils = createUtils(component);
+  //       //
+  //       //     return {
+  //       //       item: {
+  //       //         value: utils.value,
+  //       //         utils,
+  //       //       },
+  //       //     };
+  //       //   },
+  //       //
+  //       //   canDrag(component) {
+  //       //
+  //       //     return component.props.settings.draggable;
+  //       //   },
+  //       // },
+  //
+  //       // dropTarget: {
+  //       //   canDrop(component, item) {
+  //       //
+  //       //     var {settings, canDropAround} = component.props;
+  //       //     var {canDrop} = settings;
+  //       //     var utils = createUtils(component);
+  //       //     var idx = getIdx(utils, component.state.dragDropPosition);
+  //       //
+  //       //     if (canDrop && canDrop(utils, item.utils)) {
+  //       //       return true;
+  //       //     }
+  //       //     else if (canDropAround && canDropAround(utils, item.utils, idx)) {
+  //       //       return true;
+  //       //     }
+  //       //     else {
+  //       //       item.dropChildKey = utils.key;
+  //       //     }
+  //       //   },
+  //       //
+  //       //   acceptDrop(component, item, isHandled) {
+  //       //
+  //       //     var {settings, acceptDropAround} = component.props;
+  //       //     var {acceptDrop} = settings;
+  //       //     var utils = createUtils(component);
+  //       //     var idx = getIdx(utils, component.state.dragDropPosition);
+  //       //
+  //       //     if (acceptDrop) {
+  //       //       return acceptDrop(utils, item.utils, idx);
+  //       //     }
+  //       //     else if (acceptDropAround) {
+  //       //       return acceptDropAround(utils, item.utils, idx);
+  //       //     }
+  //       //     else if (isArray(utils.value))
+  //       //     {
+  //       //       item.utils.remove();
+  //       //       utils.value.splice(idx, 0, item.utils.value);
+  //       //     }
+  //       //     else if (isObject(utils.value)) {
+  //       //       item.utils.remove();
+  //       //       utils.value[item.utils.key] = item.utils.value;
+  //       //     }
+  //       //   },
+  //       //   over(component, item) {
+  //       //     var clientPos = dragDropContext.getCurrentOffsetFromClient();
+  //       //     var node = React.findDOMNode(component);
+  //       //     var br = node.getBoundingClientRect();
+  //       //     var y = clientPos.y - br.top;
+  //       //     var pos = y / br.height;
+  //       //
+  //       //     var dropPosition = 'in';
+  //       //
+  //       //     var utils = createUtils(component);
+  //       //     var {canDropAround} = component.props;
+  //       //
+  //       //     if (canDropAround) {
+  //       //
+  //       //       if (pos < 0.2) {
+  //       //         let idx = getIdx(utils, 'before');
+  //       //         if (canDropAround(utils, item.utils, idx)) {
+  //       //           dropPosition = 'befor';
+  //       //         }
+  //       //       }
+  //       //       else if (pos > 0.8) {
+  //       //         let idx = getIdx(utils, 'after');
+  //       //         if (canDropAround(utils, item.utils, idx)) {
+  //       //           dropPosition = 'after';
+  //       //         }
+  //       //       }
+  //       //     }
+  //       //
+  //       //     component.setState({dropPosition});
+  //       //   },
+  //       //   leave(component) {
+  //       //     component.setState({dropPosition: undefined});
+  //       //   },
+  //       //   drop(component) {
+  //       //     component.setState({dropPosition: undefined});
+  //       //   }
+  //       // }
+  //     // });
+  //   }
+  // },
   // hasChildren() {
   //   var value = this.props.value;
   //   return isObject(value) && Object.keys(value).length > 0;
@@ -243,17 +241,6 @@ var Item = React.createClass({
     }
   },
 
-  renderDropLayer() {
-
-    return <DropLayer
-      idx = {this.props.idx}
-      path = {this.props.path}
-      canDrop = {this.canDrop}
-      acceptDrop = {this.acceptDrop}
-      canDropAround = {this.props.canDropAround}
-      acceptDropAround = {this.props.acceptDropAround}/>;
-  },
-
   render () {
 
     var {settings, hideHead, indent} = this.props;
@@ -262,14 +249,12 @@ var Item = React.createClass({
       return <settings.Component {...this.props}/>;
     }
 
-    var items = {},
-      children = this.getChildren(),
-      dragState = this.getDragState(Config.DND_TYPE);
+    var items = {};
+    var children = this.getChildren();
 
     var styleBlock = defaults({
       marginTop: this.state.marginTop,
       marginBottom: this.state.marginBottom,
-      opacity: dragState.isDragging ? 0.4 : 1,
     }, settings.highlighted ? styles.lineGroup : styles.line);
 
     //indent
@@ -356,29 +341,31 @@ var Item = React.createClass({
 
     var renderItem = () => {
 
-      return hideHead ? null : <div
-        {...this.dragSourceFor(Config.DND_TYPE)}
-        tooltip={settings.tooltip}
-        contextMenu={settings.dropdownMenu}
+      return hideHead ? null : <DropLayer
         style={styleBlock}
         onMouseEnter={() => this.setState({hover: true})}
         onMouseLeave={() => this.setState({hover: false})}
         onClick={()=>{
           if (settings.onClick) {
-
             var utils = this.context.createUtils(this.props.path);
             settings.onClick(utils);
           }
-        }}>
+        }}
+        idx = {this.props.idx}
+        path = {this.props.path}
+        draggable = {this.props.settings.draggable}
+        canDrop = {this.canDrop}
+        acceptDrop = {this.acceptDrop}
+        canDropAround = {this.props.canDropAround}
+        acceptDropAround = {this.props.acceptDropAround}>
 
-        {items.indent}
-        {items.toggle}
-        {items.label}
-        {items.input}
-        {items.extraInputs}
-        {items.buttons}
-        {this.renderDropLayer()}
-      </div>;
+          {items.indent}
+          {items.toggle}
+          {items.label}
+          {items.input}
+          {items.extraInputs}
+          {items.buttons}
+      </DropLayer>;
     };
 
     return (
