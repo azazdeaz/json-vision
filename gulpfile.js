@@ -34,7 +34,7 @@ gulp.task('build', ['clean'], function () {
 });
 
 gulp.task('watch-build', function () {
-  return watch(SOURCES,{base: 'src' })
+  return watch(SOURCES, {base: 'src'})
     .pipe(size())
     .pipe(plumber())
     .pipe(babel())
@@ -44,35 +44,3 @@ gulp.task('watch-build', function () {
 
 
 gulp.task('default', ['build', 'watch-build']);
-
-
-
-
-
-
-
-// var gulp = require('gulp'),
-//     babel = require('gulp-babel'),
-//     watch = require('gulp-watch'),
-//     plumber = require('gulp-plumber'),
-//
-// path = {
-//     src: {
-//         js: SOURCES,
-//     },
-//     dist: {
-//         js: "lib/"
-//     }
-// };
-//
-// gulp.task('6to5', function () {
-//     gulp.src(SOURCES)
-//         // .pipe(plumber())
-//         .pipe(babel())
-//         // .pipe(plumber.stop())
-//         .pipe(gulp.dest(path.dist.js));
-// });
-//
-// gulp.task('watchez', ['6to5'], function (){
-//     gulp.watch([SOURCES], [babel]);
-// });

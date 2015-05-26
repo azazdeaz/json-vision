@@ -1,6 +1,5 @@
 var React = require('react');
 var isObject = require('lodash/lang/isObject');
-var isArray = require('lodash/lang/isArray');
 var has = require('lodash/object/has');
 var defaults = require('lodash/object/defaults');
 var assign = require('lodash/object/assign');
@@ -8,39 +7,9 @@ var Children = require('./Children');
 var Input = require('./Input');
 var Buttons = require('./Buttons');
 var DropLayer = require('./DropLayer');
-var {DragDropMixin} = require('react-dnd');
-var Config = require('./Config');
-
-var {style, Button, Icon, ButtonGroup} = require('react-matterkit');
-
-var styles = {
-  root: {
-    background: 'rgba(255,255,255,.34)',
-    color: '#191D21',
-    fontFamily: style.fontFamily,
-    fontWeight: style.fontWeight,
-    borderRadius: '1px',
-    margin: '3px',
-  },
-
-  line: {
-    position: 'relaitve',
-    height: style.lineHeightPX,
-    lineHeight: style.lineHeightPX,
-    display: 'flex',
-    color: '#96a6ad',
-    fontSize: '13px',
-    backgroundColor: '#262a2e',
-    borderBottom: 'solid 1px #1a1d21',
-    boxSizing: 'border-box',
-  },
-
-};
-
-styles.lineGroup = defaults({
-  color: style.palette.grey4,
-  backgroundColor: style.palette.blue,
-}, styles.line);
+var Matter = require('react-matterkit');
+var {Icon} = Matter;
+var getStyles = Matter.utils.getStyles;
 
 var Item = React.createClass({
 
@@ -62,138 +31,6 @@ var Item = React.createClass({
       indent: 0,
     };
   },
-  // statics: {
-  //   configureDragDrop(register, dragDropContext) {
-  //
-  //     function createUtils(component) {
-  //
-  //       var {path} = component.props;
-  //       var create = component.context.createUtils;
-  //       return create(path);
-  //     }
-  //
-  //     function getIdx(utils, dropPosition) {
-  //
-  //       var idx = 0;
-  //
-  //       if (isArray(utils.parent)) {
-  //         idx = utils.parent.indexOf(utils.value);
-  //
-  //         if (dropPosition === 'after') {
-  //           idx += 1;
-  //         }
-  //       }
-  //
-  //       return idx;
-  //     }
-  //
-  //     // register(Config.DND_TYPE, {
-  //
-  //       // dragSource: {
-  //       //   beginDrag(component) {
-  //       //
-  //       //     var utils = createUtils(component);
-  //       //
-  //       //     return {
-  //       //       item: {
-  //       //         value: utils.value,
-  //       //         utils,
-  //       //       },
-  //       //     };
-  //       //   },
-  //       //
-  //       //   canDrag(component) {
-  //       //
-  //       //     return component.props.settings.draggable;
-  //       //   },
-  //       // },
-  //
-  //       // dropTarget: {
-  //       //   canDrop(component, item) {
-  //       //
-  //       //     var {settings, canDropAround} = component.props;
-  //       //     var {canDrop} = settings;
-  //       //     var utils = createUtils(component);
-  //       //     var idx = getIdx(utils, component.state.dragDropPosition);
-  //       //
-  //       //     if (canDrop && canDrop(utils, item.utils)) {
-  //       //       return true;
-  //       //     }
-  //       //     else if (canDropAround && canDropAround(utils, item.utils, idx)) {
-  //       //       return true;
-  //       //     }
-  //       //     else {
-  //       //       item.dropChildKey = utils.key;
-  //       //     }
-  //       //   },
-  //       //
-  //       //   acceptDrop(component, item, isHandled) {
-  //       //
-  //       //     var {settings, acceptDropAround} = component.props;
-  //       //     var {acceptDrop} = settings;
-  //       //     var utils = createUtils(component);
-  //       //     var idx = getIdx(utils, component.state.dragDropPosition);
-  //       //
-  //       //     if (acceptDrop) {
-  //       //       return acceptDrop(utils, item.utils, idx);
-  //       //     }
-  //       //     else if (acceptDropAround) {
-  //       //       return acceptDropAround(utils, item.utils, idx);
-  //       //     }
-  //       //     else if (isArray(utils.value))
-  //       //     {
-  //       //       item.utils.remove();
-  //       //       utils.value.splice(idx, 0, item.utils.value);
-  //       //     }
-  //       //     else if (isObject(utils.value)) {
-  //       //       item.utils.remove();
-  //       //       utils.value[item.utils.key] = item.utils.value;
-  //       //     }
-  //       //   },
-  //       //   over(component, item) {
-  //       //     var clientPos = dragDropContext.getCurrentOffsetFromClient();
-  //       //     var node = React.findDOMNode(component);
-  //       //     var br = node.getBoundingClientRect();
-  //       //     var y = clientPos.y - br.top;
-  //       //     var pos = y / br.height;
-  //       //
-  //       //     var dropPosition = 'in';
-  //       //
-  //       //     var utils = createUtils(component);
-  //       //     var {canDropAround} = component.props;
-  //       //
-  //       //     if (canDropAround) {
-  //       //
-  //       //       if (pos < 0.2) {
-  //       //         let idx = getIdx(utils, 'before');
-  //       //         if (canDropAround(utils, item.utils, idx)) {
-  //       //           dropPosition = 'befor';
-  //       //         }
-  //       //       }
-  //       //       else if (pos > 0.8) {
-  //       //         let idx = getIdx(utils, 'after');
-  //       //         if (canDropAround(utils, item.utils, idx)) {
-  //       //           dropPosition = 'after';
-  //       //         }
-  //       //       }
-  //       //     }
-  //       //
-  //       //     component.setState({dropPosition});
-  //       //   },
-  //       //   leave(component) {
-  //       //     component.setState({dropPosition: undefined});
-  //       //   },
-  //       //   drop(component) {
-  //       //     component.setState({dropPosition: undefined});
-  //       //   }
-  //       // }
-  //     // });
-  //   }
-  // },
-  // hasChildren() {
-  //   var value = this.props.value;
-  //   return isObject(value) && Object.keys(value).length > 0;
-  // },
 
   getChildren() {
 
@@ -249,21 +86,36 @@ var Item = React.createClass({
       return <settings.Component {...this.props}/>;
     }
 
+    var styleConfig = getStyles(this).get('config');
+
+    var styleBlock = {
+      marginTop: this.state.marginTop,
+      marginBottom: this.state.marginBottom,
+      position: 'relaitve',
+      height: styleConfig.lineHeight,
+      lineHeight: `${styleConfig.lineHeight}px`,
+      display: 'flex',
+      color: settings.highlighted ? styleConfig.palette.blue : styleConfig.palette.grey2,
+      fontSize: '13px',
+      backgroundColor: settings.highlighted ? styleConfig.palette.blue : styleConfig.palette.bg,
+      borderBottom: 'solid 1px #1a1d21',
+      boxSizing: 'border-box',
+    };
+
     var items = {};
     var children = this.getChildren();
 
-    var styleBlock = defaults({
-      marginTop: this.state.marginTop,
-      marginBottom: this.state.marginBottom,
-    }, settings.highlighted ? styles.lineGroup : styles.line);
-
     //indent
-    items.indent = <span style={{width: indent*5, backgroundColor: style.palette.grey4}}/>;
+    items.indent = <span
+      style={{
+        width: indent * 5,
+        backgroundColor: styleConfig.palette.grey4}
+      }/>;
 
 
     //label
     var styleLabel = assign({
-      flex:1,
+      flex: 1,
       // color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     }, settings.labelStyle);
@@ -329,7 +181,7 @@ var Item = React.createClass({
         left: 0,
         height: pos === 'in' ? '100%' : '6px',
         [pos === 'after' ? 'bottom' : 'top']: 0,
-        backgroundColor: style.palette.green,
+        backgroundColor: styleConfig.palette.green,
         opacity: 0.3
       };
 

@@ -3,8 +3,7 @@ var shallowEquals = require('shallow-equals');
 var has = require('lodash/object/has');
 var assign = require('lodash/object/assign');
 var Matterkit = require('react-matterkit');
-var {ButtonGroup, Button} = Matterkit;
-var Item;
+var {ItemGroup, Button} = Matterkit;
 
 var Buttons  = React.createClass({
 
@@ -33,7 +32,7 @@ var Buttons  = React.createClass({
 
     var {buttons} = this.props;
 
-    return <ButtonGroup>
+    return <ItemGroup>
       {buttons.map((btn, idx) => {
 
         if (!has(btn, 'kind')) btn.kind = 'stamp';
@@ -47,7 +46,7 @@ var Buttons  = React.createClass({
           style={s}
           onClick={() => this.onBtnClick(btn)}/>;
       })}
-    </ButtonGroup>;
+    </ItemGroup>;
   }
 });
 

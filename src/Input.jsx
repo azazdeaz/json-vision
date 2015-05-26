@@ -3,12 +3,10 @@ var {PureRenderMixin} = React;
 var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
 var Matterkit = require('react-matterkit');
-var {style, Button, Icon, Slider, Dropdown, Checkbox,
-  MultiTypeInput} = Matterkit;
+var {Button, Slider, Dropdown, Checkbox, MultiTypeInput} = Matterkit;
 var MatterInput = Matterkit.Input;
-var Item;
 
-var Input  = React.createClass({
+var Input = React.createClass({
 
   mixins: [PureRenderMixin],
 

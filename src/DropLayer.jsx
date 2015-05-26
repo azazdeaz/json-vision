@@ -1,11 +1,9 @@
-var React = require('react/addons');
-var {PureRenderMixin} = React;
+var React = require('react');
 var {DragDropMixin} = require('react-dnd');
 var Config = require('./Config');
-var isArray = require('lodash/lang/isArray');
-var {style} = require('react-matterkit');
+var {getStyles} = require('react-matterkit').utils;
 
-var DropLayer  = React.createClass({
+var DropLayer = React.createClass({
 
   mixins: [DragDropMixin],
 
@@ -16,7 +14,7 @@ var DropLayer  = React.createClass({
   getInitialState() {
     return {
       dropPosition: undefined,
-    }
+    };
   },
 
   statics: {
@@ -70,7 +68,8 @@ var DropLayer  = React.createClass({
             var {canDrop, canDropAround} = component.props;
             var dropTargetUtils = component.getDropTargetUtils(dropPosition);
             var idx = component.getIdx(dropTargetUtils, dropPosition);
-            var canDrop = dropPosition === 'in' ? canDrop : canDropAround;
+
+            canDrop = dropPosition === 'in' ? canDrop : canDropAround;
 
             return canDrop(dropTargetUtils, item, idx);
           },
@@ -81,7 +80,8 @@ var DropLayer  = React.createClass({
             var {acceptDrop, acceptDropAround} = component.props;
             var dropTargetUtils = component.getDropTargetUtils(dropPosition);
             var idx = component.getIdx(dropTargetUtils, dropPosition);
-            var acceptDrop = dropPosition === 'in' ?
+
+            acceptDrop = dropPosition === 'in' ?
               acceptDrop : acceptDropAround;
 
             component.setState({dropPosition: undefined});
@@ -127,7 +127,7 @@ var DropLayer  = React.createClass({
   },
 
   render() {
-    
+
     var {dropPosition} = this.state;
 
     return <div
@@ -156,6 +156,8 @@ var DropField = React.createClass({
     var {pos, currPos} = this.props;
     var isHovering = pos === currPos;
 
+    var styleConfig = getStyles(this).get('config');
+
     var s = {
       pointerEvents: 'none',
       position: 'absolute',
@@ -163,7 +165,7 @@ var DropField = React.createClass({
       left: 0,
       [pos === 'after' ? 'bottom' : 'top']: 0,
       height: pos === 'in' ? '100%' : '6px',
-      backgroundColor: style.palette.green,
+      backgroundColor: styleConfig.palette.green,
       opacity: isHovering ? 0.3 : 0,
     };
 

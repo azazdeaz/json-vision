@@ -22,6 +22,7 @@
     "browser-sync": "^2.6.5",
     "browserify": "^9.0.8",
     "eslint": "^0.21.1",
+    "eslint-plugin-react": "^2.3.0",
     "gulp": "^3.8.11",
     "gulp-babel": "^5.1.0",
     "gulp-callback": "0.0.3",

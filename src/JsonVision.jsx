@@ -9,6 +9,7 @@ var isArray = require('lodash/lang/isArray');
 var isFunction = require('lodash/lang/isFunction');
 var clone = require('lodash/lang/clone');
 var Item = require('./Item');
+var {getStyles} = require('react-matterkit').utils;
 var FuncUtils = require('./FuncUtils');
 var minimatch = require('minimatch');
 
@@ -19,9 +20,6 @@ var styles = {
     fontFamily: 'Open Sans',
     fontWeight: '300',
     borderRadius: '1px',
-    // margin: '3px',
-    // boxShadow: '0 0 1px #000',
-    // overflow: 'hidden',
   }
 };
 
@@ -73,17 +71,23 @@ var JsonVision = React.createClass({
 
     var path = ['', this.props.value];
 
-    return(
-      <div style={styles.root}>
-        <Item
-          hideHead = {this.props.hideHead}
-          key = 'root'
-          value = {this.props.value}
-          name = {this.props.name || this.props.title}
-          path = {path}
-          settings = {this.state.getSettings(path)}/>
-      </div>
-    );
+    var styleConfig = getStyles(this).get('config');
+    var style = {
+      background: styleConfig.palette.grey4,
+      color: styleConfig.fontColor.normal,
+      fontFamily: styleConfig.fontFamily,
+      fontWeight: styleConfig.fontWeight,
+    };
+
+    return <div style={style}>
+      <Item
+        hideHead = {this.props.hideHead}
+        key = 'root'
+        value = {this.props.value}
+        name = {this.props.name || this.props.title}
+        path = {path}
+        settings = {this.state.getSettings(path)}/>
+    </div>;
   }
 });
 
