@@ -91,7 +91,7 @@ var Item = React.createClass({
     var styleBlock = {
       marginTop: this.state.marginTop,
       marginBottom: this.state.marginBottom,
-      position: 'relaitve',
+      position: 'relative',
       height: styleConfig.lineHeight,
       lineHeight: `${styleConfig.lineHeight}px`,
       display: 'flex',
