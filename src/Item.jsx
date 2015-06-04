@@ -51,6 +51,15 @@ var Item = React.createClass({
   update(value, utils) {
 
     utils.value = value;
+
+    if (has(this.props.settings.input, 'onChange')) {
+
+      let {onChange} = this.props.settings.input;
+
+      if (typeof onChange === 'function') {
+        onChange(value, utils);
+      }
+    }
   },
 
   tooltipContent() {
