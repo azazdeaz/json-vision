@@ -218,11 +218,11 @@ function getSettings(path) {
 
     settingsList.forEach(settingsNode => {
 
-      if (typeof(settingsNode) === 'function') {
+      if (typeof settingsNode === 'function') {
         settingsNode = settingsNode(utils);
       }
 
-      if (typeof(settingsNode) !== 'object') {
+      if (typeof settingsNode !== 'object') {
         return;
       }
 
@@ -238,7 +238,7 @@ function getSettings(path) {
 
               var itemValue = compute(val, idx);
 
-              return mapValues(itemValue, (val, key) => compute(val, key));
+              return computeObjectValues(itemValue);
             });
 
             let curr = settings[key];
@@ -248,6 +248,9 @@ function getSettings(path) {
             else {
               settings[key] = copy;
             }
+          }
+          else if (key === 'input') {
+            settings[key] = computeObjectValues(value);
           }
           else if (value !== undefined) {
             settings[key] = value;
@@ -261,6 +264,10 @@ function getSettings(path) {
         checkSettingsList(settingsNode.settings, newPreselectors);
       }
     });
+  }
+
+  function computeObjectValues(obj) {
+    return mapValues(obj, (val, key) => compute(val, key));
   }
 
   function compute(value, key) {

@@ -133,7 +133,7 @@ var Item = React.createClass({
 
     //input
     items.input = <Input
-      {...assign({}, settings, settings.input)}
+      {...assign({}, settings.input, settings)}
       value={this.props.value}
       path={this.props.path}
       onChange={this.update}/>;
