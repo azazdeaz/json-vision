@@ -89,11 +89,9 @@ var Item = React.createClass({
     var styleConfig = getStyles(this).get('config');
 
     var styleBlock = {
-      marginTop: this.state.marginTop,
-      marginBottom: this.state.marginBottom,
       position: 'relative',
-      height: styleConfig.lineHeight,
-      lineHeight: `${styleConfig.lineHeight}px`,
+      height: styleConfig.lineHeight + 3,
+      lineHeight: `${styleConfig.lineHeight + 3}px`,
       display: 'flex',
       color: settings.highlighted ? styleConfig.palette.blue : styleConfig.palette.grey2,
       fontSize: '13px',

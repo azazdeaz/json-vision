@@ -1,28 +1,14 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
-var merge = require('lodash/object/merge');
 var mapValues = require('lodash/object/mapValues');
 var includes = require('lodash/collection/includes');
 var forEach = require('lodash/collection/forEach');
-var isObject = require('lodash/lang/isObject');
 var isArray = require('lodash/lang/isArray');
-var isFunction = require('lodash/lang/isFunction');
 var clone = require('lodash/lang/clone');
 var Item = require('./Item');
 var {getStyles} = require('react-matterkit').utils;
 var FuncUtils = require('./FuncUtils');
 var minimatch = require('minimatch');
-
-var styles = {
-  root: {
-    background: 'rgba(255,255,255,.34)',
-    color: '#191D21',
-    fontFamily: 'Open Sans',
-    fontWeight: '300',
-    borderRadius: '1px',
-  }
-};
-
 
 var JsonVision = React.createClass({
 
@@ -72,12 +58,12 @@ var JsonVision = React.createClass({
     var path = ['', this.props.value];
 
     var styleConfig = getStyles(this).get('config');
-    var style = {
+    var style = assign(this.props.style, {
       background: styleConfig.palette.grey4,
       color: styleConfig.fontColor.normal,
       fontFamily: styleConfig.fontFamily,
       fontWeight: styleConfig.fontWeight,
-    };
+    });
 
     return <div style={style}>
       <Item
@@ -200,6 +186,8 @@ function getSettings(path) {
       }
     }
     else if (selectorType === 'path') {
+    }
+    else if (selectorType === 'regexp') {
     }
     else if (selectorType === 'glob') {
 
