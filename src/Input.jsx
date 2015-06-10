@@ -21,6 +21,7 @@ var Input = React.createClass({
       addonLabel, addonIcon} = this.props;
     var input = null;
     var utils = this.context.createUtils(path);
+
     var handleChange = value => {
       if (typeof(onChange) === 'function') {
         onChange(value, utils);
@@ -61,8 +62,16 @@ var Input = React.createClass({
 
       input = <Dropdown
         onChange={handleChange}
-        options={options}
-        value={value}/>;
+        options={options.map(option => {
+          if (typeof option === 'string') {
+            return {label: option, value: option};
+          }
+          else {
+            return option;
+          }
+        })}
+        value={value}
+        />;
     }
     else if (type === 'checkbox') {
 

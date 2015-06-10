@@ -292,6 +292,7 @@ function getSettings(path) {
 
 /**Settings Node
 {
+  selector: {key, value, function, instanceof, glob, path, regex, }
   children: [],
   highlighted: true,
   label: 'Prop',
@@ -305,10 +306,11 @@ function getSettings(path) {
   canDrop: (targetUtils, itemUtils, idx) => {},
   acceptDrop: (targetUtils, itemUtils, idx) => {},
   getDragPreview: utils => utils.value.getClonedDOMNode(),
-  Component: ReactComponent
+  Component: ReactComponent //use custom component
   input: {
-    dragSpeed: 0.1,
     type: 'number',
+    dragSpeed: 0.1,
+    ...
   },
   extraInputs: [
     {

@@ -8,16 +8,15 @@ JsonVision.create = function  (props) {
   var parent = props.parent || document.createElement('div');
 
   var component = React.render(React.createElement(JVComponent, {
-      title: this.title,
-      report: change => this._report(change),
+    title: this.title,
+    report: change => this._report(change),
   }), parent);
 
   if (!props.parent && (!has(props, 'autoPlace') || props.autoPlace !== false)) {
-
-      this.domElem.style.position = 'fixed';
-      this.domElem.style.top = '0px';
-      this.domElem.style.right = '15px';
-      document.body.appendChild(this.domElem);
+    this.domElem.style.position = 'fixed';
+    this.domElem.style.top = '0px';
+    this.domElem.style.right = '15px';
+    document.body.appendChild(this.domElem);
   }
 };
 
@@ -35,14 +34,12 @@ module.exports = JsonVision;
 if (window) window.JsonVision = JsonVision;
 
 JsonVision.loadFonts = () => {
-
   function insertCssLink(href) {
-
-      var link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = href;
-      document.head.appendChild(link);
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = href;
+    document.head.appendChild(link);
   }
 
   insertCssLink('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css');
