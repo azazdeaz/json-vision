@@ -10,45 +10,56 @@ var {getStyles} = require('react-matterkit').utils;
 var FuncUtils = require('./FuncUtils');
 var minimatch = require('minimatch');
 
-var JsonVision = React.createClass({
+export default class JsonVision extends React.Component {
 
-  childContextTypes: {
+  static create() {//TODO
+    // var parent = props.parent || document.createElement('div');
+    //
+    // React.render(<JsonVision
+    //   title = {this.title}
+    //   report = {change => this._report(change)}/>, parent);
+    //
+    // if (!props.parent && (!has(props, 'autoPlace') || props.autoPlace !== false)) {
+    //   this.domElem.style.position = 'fixed';
+    //   this.domElem.style.top = '0px';
+    //   this.domElem.style.right = '15px';
+    //   document.body.appendChild(this.domElem);
+    // }
+  }
+
+  static childContextTypes = {
     getSettings: React.PropTypes.func.isRequired,
     createAction: React.PropTypes.func.isRequired,
     createUtils: React.PropTypes.func.isRequired,
-  },
+  }
 
-  getDefaultProps() {
+  static defaultProps = {
+    title: 'json vision',
+    value: {},
+    settings: [],
+  }
 
-    return {
-      title: 'json vision',
-      value: {},
-      settings: [],
-    };
-  },
+  constructor(props) {
+    super(props);
 
-  getInitialState() {
-
-    return {
+    this.state = {
       getSettings: getSettings.bind(this),
       createAction: createAction.bind(this),
       createUtils: path => {
         return new FuncUtils(path, this.state.createAction);
       }
     };
-  },
+  }
 
   getChildContext() {
-
     return {
       createAction: this.state.createAction,
       getSettings: this.state.getSettings,
       createUtils: this.state.createUtils,
     };
-  },
+  }
 
   render() {
-
     var path = ['', this.props.value];
 
     var styleConfig = getStyles(this).get('config');
@@ -69,9 +80,7 @@ var JsonVision = React.createClass({
         settings = {this.state.getSettings(path)}/>
     </div>;
   }
-});
-
-module.exports = JsonVision;
+}
 
 
 
