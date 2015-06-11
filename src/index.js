@@ -3,7 +3,7 @@ var JsonVision = require('./JsonVision');
 // var demo = require('./demo/demo');
 var has = require('lodash/object/has');
 
-JsonVision.create = function  (props) {
+JsonVision.create = function (props) {
 
   var parent = props.parent || document.createElement('div');
 

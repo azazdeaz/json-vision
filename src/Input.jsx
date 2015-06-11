@@ -22,17 +22,17 @@ var Input = React.createClass({
     var input = null;
     var utils = this.context.createUtils(path);
 
-    var handleChange = value => {
-      if (typeof(onChange) === 'function') {
-        onChange(value, utils);
+    var handleChange = val => {
+      if (typeof onChange === 'function') {
+        onChange(val, utils);
       }
     };
 
     if (!path) throw Error;
 
 
-    var createInput = type => input = <MatterInput
-      type = {type}
+    var createInput = inputType => input = <MatterInput
+      type = {inputType}
       min = {min}
       max = {max}
       hints = {hints}
@@ -103,23 +103,22 @@ var Input = React.createClass({
       //no input
       console.warn(`Unknown type: "${type}"`);
     }
-    else if (typeof(value) === 'function') {
+    else if (typeof value === 'function') {
 
       input = <Button
         icon={icon}
         label={label || value.name || 'Button'}
-        onClick={value}
-        colored={colored}/>;
+        onClick={value}/>;
     }
-    else if (typeof(value) === 'number') {
+    else if (typeof value === 'number') {
 
       createInput('number');
     }
-    else if (typeof(value) === 'string') {
+    else if (typeof value === 'string') {
 
       createInput('text');
     }
-    else if (typeof(value) === 'boolean') {
+    else if (typeof value === 'boolean') {
 
       createCheckbox();
     }

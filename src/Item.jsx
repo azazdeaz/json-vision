@@ -1,7 +1,6 @@
 var React = require('react');
 var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
-var defaults = require('lodash/object/defaults');
 var assign = require('lodash/object/assign');
 var Children = require('./Children');
 var Input = require('./Input');

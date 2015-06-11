@@ -38,12 +38,6 @@ var JsonVision = React.createClass({
     };
   },
 
-  statics: {
-    doUpdate() {
-      this.forceUpdate();
-    },
-  },
-
   getChildContext() {
 
     return {
