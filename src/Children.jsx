@@ -1,12 +1,8 @@
 import React from 'react';
-import has from 'lodash/object/has';
 import assign from 'lodash/object/assign';
-import isObject from 'lodash/lang/isObject';
 import isArray from 'lodash/lang/isArray';
 import keysIn from 'lodash/object/keysIn';
-import pluck from 'lodash/collection/pluck';
 import includes from 'lodash/collection/includes';
-import Symbol from 'es6-symbol';
 var Item;//Will be injected
 
 var Children  = React.createClass({
@@ -19,7 +15,7 @@ var Children  = React.createClass({
 
   render() {
 
-    var {settings, value, path, indent, createAction, children,
+    var {settings, path, indent, createAction, children,
       onDragOver} = this.props;
     var commonProps = {createAction, indent: indent + 1};
     var {whitelist, blacklist, order} = settings;
@@ -63,8 +59,8 @@ var Children  = React.createClass({
       return <div>
         {keys.map((key, idx) => {
 
-          if (whitelist && !includes(whitelist, key)) return;
-          if (blacklist && includes(blacklist, key)) return;
+          if (whitelist && !includes(whitelist, key)) return null;
+          if (blacklist && includes(blacklist, key)) return null;
 
           var value = children[key];
           var childPath = path.concat([key, value]);

@@ -1,5 +1,4 @@
 lib
-browser
-
+dist
 node_modules
 *.log
