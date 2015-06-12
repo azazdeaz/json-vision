@@ -9,7 +9,7 @@
     "lodash": "^3.7.0",
     "minimatch": "^2.0.4",
     "react-matterkit": "git://github.com/azazdeaz/react-matterkit.git",
-    "shallow-equals": "0.0.0"
+    "react-pure-render": "^1.0.2"
   },
   "peerDependencies": {
     "react-dnd": "^0.9.8",

@@ -15,7 +15,6 @@ var Input = React.createClass({
   },
 
   render() {
-
     var {type, options, label, icon, value, onChange, key, dragSpeed,
       min, max, hints, types, chooseType, path,
       addonLabel, addonIcon} = this.props;

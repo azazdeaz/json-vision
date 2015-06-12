@@ -1,6 +1,6 @@
 require('whatwg-fetch');
 
-import React from 'react';
+import React from 'react/addons';
 import JsonVision from 'SRC/JsonVision';
 
 export default class App extends React.Component {
@@ -11,15 +11,29 @@ export default class App extends React.Component {
     this.state = {
       users: [],
     };
+
+    window.testPerf = () => {
+      var {Perf} = React.addons;
+      Perf.start();
+      this.forceUpdate();
+      Perf.stop();
+      Perf.printInclusive();
+      Perf.printExclusive();
+      Perf.printWasted();
+    };
   }
 
   componentDidMount() {
-    fetch('http://api.randomuser.me/?results=5')
+    fetch('http://api.randomuser.me/?results=50')
       .then(response => response.json())
-      .then(json => this.setState({users: json.results}));
+      .then(json => setTimeout(() => this.setState({users: json.results})));
+  }
+
+  handleChange = (users) => {
+    this.setState({users});
   }
 
   render() {
-    return <JsonVision value={this.state.users}/>;
+    return <JsonVision value={this.state.users} onChange={this.handleChange}/>;
   }
 }

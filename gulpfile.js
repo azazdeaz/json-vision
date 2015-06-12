@@ -60,7 +60,7 @@ gulp.task('build-demo', function(callback) {
 gulp.task('webpack-dev-server', function() {
 	// modify some webpack config options
 	var myConfig = Object.create(demoWebpackConfig);
-	myConfig.devtool = '#eval-source-map';
+	// myConfig.devtool = '#eval-source-map';
 	myConfig.debug = true;
 
 	// Start a webpack-dev-server

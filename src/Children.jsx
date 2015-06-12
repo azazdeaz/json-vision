@@ -69,7 +69,7 @@ var Children  = React.createClass({
             key,
             path: childPath,
             settings: this.context.getSettings(childPath),
-            name: key,
+            label: key,
             idx: idx,
             value,
             parentObject: children,
