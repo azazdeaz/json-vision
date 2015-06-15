@@ -1,5 +1,4 @@
 var React = require('react');
-var isObject = require('lodash/lang/isObject');
 var has = require('lodash/object/has');
 var Children = require('./Children');
 var Row = require('./Row');
@@ -28,20 +27,8 @@ export default class Item extends React.Component {
     };
   }
 
-  getChildren() {
-
-    if (has(this.props.settings, 'children')) {
-
-      return this.props.settings.children;
-    }
-    else if (isObject(this.props.value)) {
-
-      return this.props.value;
-    }
-  }
-
-  tooltipContent() {
-    return this.props.settings.tooltip || 'This is a tooltip';
+  shouldComponentUpdate(nextProps) {
+    return this.__lastSettings !== nextProps.settings;
   }
 
   onClickOpenToggle = () => {
@@ -82,39 +69,38 @@ export default class Item extends React.Component {
     }
   }
 
+  renderChildren() {
+    var {settings, childLeafs} = this.leaf;
+
+    if (this.state.opened && childLeafs.length === 0) {
+      return null;
+    }
+
+    var margin = has(settings, 'indent') ? settings.indent : 6;
+    return <div style={{margin}}>
+      {childLeafs.map(childLeaf => childLeaf.getComponent())}
+    </div>;
+  }
+
   render () {
     var {settings, hideHead, indent} = this.props;
     var {opened} = this.state;
 
-    if (settings.Component) {
-      return <settings.Component {...this.props}/>;
+    this.__lastSettings = settings;
+
+    if (settings.ItemComponent) {
+      return <settings.ItemComponent {...this.props}/>;
     }
 
-    var children = this.getChildren();
-
     var row = hideHead ? null : <Row
-      {...this.props}
-      update = {this.update}
-      hasChildren = {!!children}
-      canDrop = {this.canDrop}
-      acceptDrop = {this.acceptDrop}
-      onClickOpenToggle = {this.onClickOpenToggle}
-      opened = {opened}/>;
-
-    var childItems = opened ? <Children
-        settings = {settings}
-        value = {this.props.value}
-        path = {this.props.path}
-        children = {children}
-        indent = {hideHead ? indent - 1 : indent}
-        createAction = {this.context.createAction}/> : null;
+      leaf = {this.props.leaf}
+      onClickOpenToggle = {this.handleClickOpenToggle}/>;
 
     return <div
       hidden = {settings.hidden}
       style = {{position: 'relative'}}>
-
       {row}
-      {childItems}
+      {this.renderChildren()}
     </div>;
   }
 }

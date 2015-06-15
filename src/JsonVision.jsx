@@ -1,9 +1,9 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
-var getSettings = require('./getSettings');
-var Item = require('./Item');
 var {getStyles} = require('react-matterkit').utils;
-var FuncUtils = require('./FuncUtils');
+var getSettings = require('./getSettings');
+var Leaf = require('./Leaf');
+var Utils = require('./Utils');
 
 export default class JsonVision extends React.Component {
 
@@ -22,12 +22,6 @@ export default class JsonVision extends React.Component {
     // }
   }
 
-  static childContextTypes = {
-    getSettings: React.PropTypes.func.isRequired,
-    createAction: React.PropTypes.func.isRequired,
-    createUtils: React.PropTypes.func.isRequired,
-  }
-
   static defaultProps = {
     title: 'json vision',
     value: {},
@@ -37,26 +31,18 @@ export default class JsonVision extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      getSettings: getSettings.bind(this),
-      createAction: createAction.bind(this),
-      createUtils: path => {
-        return new FuncUtils(path, this.state.createAction);
-      }
-    };
+    this.rootLeaf = new Leaf(['', props.value], this);
   }
 
-  getChildContext() {
-    return {
-      createAction: this.state.createAction,
-      getSettings: this.state.getSettings,
-      createUtils: this.state.createUtils,
-    };
+  getSettings = getSettings.bind(this)
+
+  createAction = createAction.bind(this)
+
+  createUtils = path => {
+    return new Utils(path, this.createAction);
   }
 
   render() {
-    var path = ['', this.props.value];
-
     var styleConfig = getStyles(this).get('config');
     var style = assign(this.props.style, {
       background: styleConfig.palette.grey4,
@@ -66,49 +52,13 @@ export default class JsonVision extends React.Component {
     });
 
     return <div style={style}>
-      <Item
-        hideHead = {this.props.hideHead}
-        key = 'root'
-        value = {this.props.value}
-        name = {this.props.name || this.props.title}
-        path = {path}
-        settings = {this.state.getSettings(path)}/>
+      {this.rootLeaf.getComponent()}
     </div>;
   }
 }
 
 
-
-
-
-
-
-
-function createAction(change) {
-
-  if (this.props.onAction && this.props.onAction(change) === false) {
-
-    return;
-  }
-
-  if (change) {
-
-    switch (change.type) {
-
-      case 'delete':
-        delete change.object[change.key];
-        break;
-
-      case 'set':
-        change.object[change.key] = change.value;
-        break;
-
-      case 'splice':
-        // change.object[change.key].splice(change.index, change.removedCound, ...change.items);
-        break;
-    }
-  }
-
+function createAction() {
   if (this.props.onChange) {
     this.props.onChange(this.props.value);
   }

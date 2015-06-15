@@ -7,9 +7,13 @@ var minimatch = require('minimatch');
 
 export default function getSettings(path) {
 // var __t = window.performance.now()
-  var settings = {};
   var {createUtils} = this.state;
   var utils = createUtils(path);
+  var settings = {
+    input: {
+      value: utils.value
+    }
+  };
 
   checkSettingsList(this.props.settings, []);
   // window.GET_SETTINGSTIME = window.GET_SETTINGSTIME || 0;
@@ -65,12 +69,7 @@ export default function getSettings(path) {
     }
     else if (selectorType === 'value') {
 
-      if (isArray(selector)) {
-        match = includes(selector, utils.value);
-      }
-      else {
-        match = utils.value === selector;
-      }
+      match = utils.value === selector;
     }
     else if (selectorType === 'path') {
     }
