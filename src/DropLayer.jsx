@@ -7,10 +7,6 @@ var DropLayer = React.createClass({
 
   mixins: [DragDropMixin],
 
-  contextTypes: {
-    createUtils: React.PropTypes.func.isRequired,
-  },
-
   getInitialState() {
     return {
       dropPosition: undefined,

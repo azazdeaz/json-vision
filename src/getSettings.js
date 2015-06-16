@@ -4,15 +4,16 @@ var forEach = require('lodash/collection/forEach');
 var isArray = require('lodash/lang/isArray');
 var clone = require('lodash/lang/clone');
 var minimatch = require('minimatch');
+var Contact = require('./Contact')
 
 export default function getSettings(path) {
 // var __t = window.performance.now()
-  var {createUtils} = this.state;
-  var utils = createUtils(path);
+  var utils = new Contact(path);
   var settings = {
     input: {
       value: utils.value
-    }
+    },
+    label: utils.key
   };
 
   checkSettingsList(this.props.settings, []);
@@ -21,12 +22,10 @@ export default function getSettings(path) {
   return settings;
 
   function checkSettingsNode(settingsNode, path, preselectors) {
-
     var match, selector, selectorType;
-    var utils = createUtils(path);
+    var utils = new Contact(path);
 
     if (!settingsNode.selector) {
-
       return true;
     }
 

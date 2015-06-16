@@ -1,31 +1,36 @@
 import has from 'lodash/object/has';
 import keysIn from 'lodash/object/keysIn';
 import isObject from 'lodash/lang/isObject';
+import isPlainObject from 'lodash/lang/isPlainObject';
 import includes from 'lodash/collection/includes';
-import getSettings from './getSettings';
-import settingsMatch from './settingsMatch';
+import matchSettings from './matchSettings';
+import React from 'react';
+import Item from './Item';
 
 export default class Leaf {
-  constructor(path, root) {
+  constructor(path, root, idx) {
     this.childLeafs = [];
     this.root = root;
+    this.idx = idx;
 
     this.setup(path);
-    this.component = <Item leaf={this}/>;
+    this.component = <Item key={idx} leaf={this}/>;
   }
 
   setup(nextPath) {
     this.path = nextPath;
-    var nextSettings = getSettings(this.path);
+    this.utils = this.root.createUtils(nextPath);
+    var nextSettings = this.root.getSettings(nextPath);
 
-
-    if (settingsMatch(nextSettings, this.settings)) {
+    if (!matchSettings(nextSettings, this.settings)) {
       this.settings = nextSettings;
 
       if (this.onSettingsChange) {
         this.onSettingsChange();
       }
     }
+
+    this.setupChildren();
   }
 
   setupChildren() {
@@ -43,27 +48,34 @@ export default class Leaf {
       children = [];
     }
 
-    children = applyOrder(children, settings);
-    children = applyWhiteAndBlacklist(children, settings);
+    var keys = getKeysInOrder(children, settings);
+    keys = applyWhiteAndBlacklist(keys, settings);
 
-    if (children.length > childLeafs.length) {
-      let extraLeafs = childLeafs.splice(children.length);
+    if (childLeafs.length > keys.length) {
+      let extraLeafs = childLeafs.splice(keys.length);
       extraLeafs.forEach(childLeaf => childLeaf.dispose());
     }
 
-    var idx = 0;
-    children.forEach((_value, _key) => {
-      var childPath = path.concat([_key, _value]);
+    keys.forEach((key, idx) => {
+      var childPath = path.concat([key, children[key]]);
 
       if (childLeafs[idx]) {
         childLeafs[idx].setup(childPath);
       }
       else {
-        childLeafs[idx] = new Leaf(childPath, this.root);
+        childLeafs[idx] = new Leaf(childPath, this.root, idx);
       }
-
-      ++idx;
     });
+  }
+
+  update(value, utils) {
+    utils.value = value;
+
+    var {settings} = this;
+    var onChange = settings.input && settings.input.onChange;
+    if (typeof onChange === 'function') {
+      onChange(value, utils);
+    }
   }
 
   getComponent() {
@@ -71,30 +83,36 @@ export default class Leaf {
   }
 }
 
-function applyOrder(children, settings) {
+function getKeysInOrder(children, settings) {
   var {order, includeInheriteds} = settings;
 
   var keys = settings.includeInheriteds ?
     keysIn(children) : Object.keys(children);
 
-  if (order) {
-    let l = keys.length - 1;
-    keys = keys.sort((a, b) => {
-      var aIdx = order.indexOf(a);
-      var bIdx = order.indexOf(b);
-
-      if (aIdx !== -1) aIdx = l - aIdx;
-      if (bIdx !== -1) bIdx = l - bIdx;
-
-      return bIdx - aIdx;
-    });
+  if (!order || !isPlainObject(children)) {
+    return keys;
   }
+
+  let l = keys.length - 1;
+  return keys.sort((a, b) => {
+    var aIdx = order.indexOf(a);
+    var bIdx = order.indexOf(b);
+
+    if (aIdx !== -1) aIdx = l - aIdx;
+    if (bIdx !== -1) bIdx = l - bIdx;
+
+    return bIdx - aIdx;
+  });
 }
 
-function applyWhiteAndBlacklist(children, settings) {
+function applyWhiteAndBlacklist(keys, settings) {
   var {whitelist, blacklist} = settings;
 
-  return children.filter((child, key) => {
+  if (!whitelist && !blacklist) {
+    return keys;
+  }
+
+  return keys.filter((key) => {
     if (whitelist && !includes(whitelist, key)) return false;
     if (blacklist && includes(blacklist, key)) return false;
     return true;

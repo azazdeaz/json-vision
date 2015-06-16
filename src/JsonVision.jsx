@@ -3,7 +3,7 @@ var assign = require('lodash/object/assign');
 var {getStyles} = require('react-matterkit').utils;
 var getSettings = require('./getSettings');
 var Leaf = require('./Leaf');
-var Utils = require('./Utils');
+var Contact = require('./Contact');
 
 export default class JsonVision extends React.Component {
 
@@ -31,15 +31,27 @@ export default class JsonVision extends React.Component {
   constructor(props) {
     super(props);
 
-    this.rootLeaf = new Leaf(['', props.value], this);
+    this.rootLeaf = new Leaf(this.getRootPath(this.props), this);
+  }
+
+  getRootPath(props) {
+    return ['', props.value];
   }
 
   getSettings = getSettings.bind(this)
 
-  createAction = createAction.bind(this)
+  createAction() {
+    if (this.props.onChange) {
+      this.props.onChange(this.props.value);
+    }
+  }
 
-  createUtils = path => {
-    return new Utils(path, this.createAction);
+  createUtils(path) {
+    return new Contact(path, this.createAction.bind(this));
+  }
+
+  componentWillUpdate(nextProps) {
+    this.rootLeaf.setup(this.getRootPath(nextProps));
   }
 
   render() {
@@ -54,12 +66,5 @@ export default class JsonVision extends React.Component {
     return <div style={style}>
       {this.rootLeaf.getComponent()}
     </div>;
-  }
-}
-
-
-function createAction() {
-  if (this.props.onChange) {
-    this.props.onChange(this.props.value);
   }
 }

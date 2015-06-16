@@ -34,6 +34,17 @@ export default class App extends React.Component {
   }
 
   render() {
-    return <JsonVision value={this.state.users} onChange={this.handleChange}/>;
+    return <JsonVision
+      value = {this.state.users}
+      onChange = {this.handleChange}
+      settings = {[
+        {
+          selector: {key: 'gender'},
+          input: {options: ['male', 'female', 'other']}
+        }, {
+          selector: {key: 'zip'},
+          input: {type: 'number'}
+        }
+      ]}/>;
   }
 }

@@ -1,6 +1,4 @@
-import shallowEqual from 'react-pure-render/shallowEqual';
 import React from 'react';
-import has from 'lodash/object/has';
 import assign from 'lodash/object/assign';
 import Input from './Input';
 import Buttons from './Buttons';
@@ -10,11 +8,6 @@ var {Icon} = Matter;
 var getStyles = Matter.utils.getStyles;
 
 export default class Row extends React.Component {// eslint-disable-line no-shadow
-  static contextTypes = {
-    createAction: React.PropTypes.func.isRequired,
-    createUtils: React.PropTypes.func.isRequired,
-  }
-
   constructor(props) {
     super(props);
 
@@ -23,59 +16,9 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.value !== nextProps.value
-    // var {props, state} = this;
-    //
-    // return !shallowEqual(props, nextProps) ||
-    //   !shallowEqual(state, nextState) ||
-    //   !shallowEqual(props.settings, nextProps.settigns);
-  }
-
-  update(value, utils) {
-
-    utils.value = value;
-
-    if (has(this.props.settings.input, 'onChange')) {
-
-      let {onChange} = this.props.settings.input;
-
-      if (typeof onChange === 'function') {
-        onChange(value, utils);
-      }
-    }
-  }
-
-  tooltipContent() {
-    return this.props.settings.tooltip || 'This is a tooltip';
-  }
-
-  canDrop(utils, item, idx) {
-
-    var {canDrop} = this.props.settings;
-
-    if (canDrop && canDrop(utils, item, idx)) {
-      return true;
-    }
-  }
-
-  acceptDrop(utils, item, idx) {
-
-    var {acceptDrop} = this.props.settings;
-
-    if (acceptDrop) {
-      acceptDrop(utils, item, idx);
-    }
-    else {
-      //TODO accept drop
-    }
-  }
-
   render () {
-
-    var {settings, path, label, value, update, hasChildren,
-      canDrop, acceptDrop, canDropAround, acceptDropAround,
-      onClickOpenToggle} = this.props;
+    var {leaf, opened, hasChildren, onClickOpenToggle} = this.props;
+    var {settings} = leaf;
     var {hover} = this.state;
 
     if (settings.Component) {
@@ -107,15 +50,14 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     }, settings.labelStyle);
 
     items.label = <span style={styleLabel}>
-      {settings.label || label}
+      {settings.label}
     </span>;
 
     //input
     items.input = <Input
-      {...assign({}, settings, settings.input)}
-      value={value}
-      path={path}
-      onChange={update}/>;
+      {...settings.input}
+      leaf = {leaf}
+      onChange = {(value, utils) => leaf.update(value, utils)}/>;
 
     //extraInputs
     if (settings.extraInputs) {
@@ -124,9 +66,9 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
 
         {settings.extraInputs.map((inputProps, idx) => {
           return <Input
-            key={idx}
+            key = {idx}
             {...inputProps}
-            path={this.props.path}/>;
+            leaf = {leaf}/>;
         })}
       </span>;
     }
@@ -135,14 +77,13 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     if (settings.buttons) {
       items.buttons = <Buttons
         hover = {hover}
-        path = {path}
+        leaf = {leaf}
         buttons = {settings.buttons}/>;
     }
 
     //show/hide toggle btn
-
     items.toggle = <Icon
-      icon={hasChildren ? (this.state.opened ? 'chevron-down' : 'chevron-right') : ' '}
+      icon={hasChildren ? (opened ? 'chevron-down' : 'chevron-right') : ' '}
       onClick={hasChildren ? onClickOpenToggle : null}
       style={{margin: '0 4px'}}/>;
 
@@ -153,18 +94,11 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       onMouseLeave={() => this.setState({hover: false})}
       onClick={()=>{
         if (settings.onClick) {
-          var utils = this.context.createUtils(this.props.path);
-          settings.onClick(utils);
+          settings.onClick(leaf.utils);
         }
       }}
-      idx = {this.props.idx}
-      path = {this.props.path}
-      draggable = {settings.draggable}
-      canDrop = {canDrop}
-      acceptDrop = {acceptDrop}
-      canDropAround = {canDropAround}
-      acceptDropAround = {acceptDropAround}>
-
+      leaf = {leaf}
+      draggable = {settings.draggable}>
         {items.toggle}
         {items.label}
         {items.input}
