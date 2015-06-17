@@ -14,7 +14,6 @@ export default class Leaf {
     this.idx = idx;
 
     this.setup(path);
-    this.component = <Item key={idx} leaf={this}/>;
   }
 
   setup(nextPath) {
@@ -79,7 +78,10 @@ export default class Leaf {
   }
 
   getComponent() {
-    return this.component;
+    if (!this._component) {//hack until React@0.14
+      this._component = <Item key={this.idx} leaf={this}/>;
+    }
+    return this._component;
   }
 }
 

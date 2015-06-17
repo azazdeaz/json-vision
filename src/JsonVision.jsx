@@ -6,7 +6,6 @@ var Leaf = require('./Leaf');
 var Contact = require('./Contact');
 
 export default class JsonVision extends React.Component {
-
   static create() {//TODO
     // var parent = props.parent || document.createElement('div');
     //

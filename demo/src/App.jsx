@@ -2,14 +2,18 @@ require('whatwg-fetch');
 
 import React from 'react/addons';
 import JsonVision from 'SRC/JsonVision';
+import HTML5Backend from 'react-dnd/modules/backends/HTML5';
+import {DragDropContext} from 'react-dnd';
+import fakeData from './fakeData.json';
 
+@DragDropContext(HTML5Backend)
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      users: [],
+      users: fakeData,
     };
 
     window.testPerf = () => {
@@ -24,9 +28,9 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://api.randomuser.me/?results=50')
-      .then(response => response.json())
-      .then(json => setTimeout(() => this.setState({users: json.results})));
+    // fetch('http://api.randomuser.me/?results=50')
+    //   .then(response => response.json())
+    //   .then(json => setTimeout(() => this.setState({users: json.results})));
   }
 
   handleChange = (users) => {
@@ -39,6 +43,8 @@ export default class App extends React.Component {
       onChange = {this.handleChange}
       settings = {[
         {
+          draggable: true,
+        }, {
           selector: {key: 'gender'},
           input: {options: ['male', 'female', 'other']}
         }, {
