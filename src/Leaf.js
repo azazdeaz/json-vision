@@ -51,11 +51,21 @@ export default class Leaf {
       children = [];
     }
 
-    var keys = getKeysInOrder(children, settings);
-    keys = applyWhiteAndBlacklist(keys, settings);
+    var keys;
+    if (isArray(children)) {
+      keys = Object.keys(children);
+    }
+    else if (isObject(children)) {
+      keys = getKeysInOrder(children, settings);
+      keys = applyWhiteAndBlacklist(keys, settings);
+    }
+    else {
+      keys = [];
+    }
 
     if (childLeafs.length > keys.length) {
-      let extraLeafs = childLeafs.splice(keys.length);
+      // let extraLeafs =
+      childLeafs.splice(keys.length);
       // extraLeafs.forEach(childLeaf => childLeaf.dispose());
       childCountChanged = true;
     }
@@ -139,11 +149,11 @@ export default class Leaf {
 
 function getKeysInOrder(children, settings) {
   var {order, includeInheriteds} = settings;
-
+  
   var keys = settings.includeInheriteds ?
     keysIn(children) : Object.keys(children);
 
-  if (!order || !isPlainObject(children)) {
+  if (!order) {
     return keys;
   }
 

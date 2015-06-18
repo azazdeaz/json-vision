@@ -1,11 +1,13 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
-var includes = require('lodash/collection/includes');
 var {getStyles} = require('react-matterkit').utils;
 var getSettings = require('./getSettings');
 var Leaf = require('./Leaf');
 var Connect = require('./Connect');
-
+// import HTML5Backend from 'react-dnd/modules/backends/HTML5';
+// import {DragDropContext} from 'react-dnd';
+//
+// @DragDropContext(HTML5Backend)
 export default class JsonVision extends React.Component {
   static create() {//TODO
     // var parent = props.parent || document.createElement('div');

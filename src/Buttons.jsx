@@ -14,7 +14,7 @@ export default class Buttons extends React.Component {
 
     return <ItemGroup>
       {buttons.map((btn, idx) => {
-        var style = clone(btn.style);
+        var style = btn.style ? clone(btn.style) : {};
 
         if (btn.hideWhenLeaved && !this.props.hover) {
           style.visibility = 'hidden';
