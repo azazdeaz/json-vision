@@ -2,7 +2,7 @@ import React from 'react';
 import assign from 'lodash/object/assign';
 import Input from './Input';
 import Buttons from './Buttons';
-import DropLayer from './DropLayer';
+import DndWrap from './DndWrap';
 import Matter from 'react-matterkit';
 var {Icon} = Matter;
 var getStyles = Matter.utils.getStyles;
@@ -88,7 +88,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       style={{margin: '0 4px'}}/>;
 
 
-    return <DropLayer
+    return <DndWrap
       style={styleBlock}
       onMouseEnter={() => this.setState({hover: true})}
       onMouseLeave={() => this.setState({hover: false})}
@@ -104,6 +104,6 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
         {items.input}
         {items.extraInputs}
         {items.buttons}
-    </DropLayer>;
+    </DndWrap>;
   }
 }

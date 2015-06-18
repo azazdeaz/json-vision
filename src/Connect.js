@@ -1,4 +1,4 @@
-export default class Contact {
+export default class Connect {
 
   constructor(path, reportChange) {
 
@@ -11,7 +11,6 @@ export default class Contact {
   }
   set value(v) {
     this._setAt(1, v);
-    this.reportChange();
   }
 
   get key() {
@@ -31,6 +30,7 @@ export default class Contact {
   delete() {
     var parent = this.parent;
     delete parent[this.key];
+    this.reportChange();
   }
 
 
@@ -43,5 +43,6 @@ export default class Contact {
     var {path} = this;
     var key = path[path.length - (pos+1)];
     path[path.length - (pos+2)][key] = value;
+    this.reportChange();
   }
 }

@@ -13,8 +13,16 @@ export default class Item extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps) {
-    return this.__lastRenderedSettings !== nextProps.leaf.settings;
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.opened !== this.state.opened;
+  }
+
+  componentDidMount() {
+    this.props.leaf.onUpdate = () => this.forceUpdate();
+  }
+
+  componentWillUnmount() {
+    this.props.leaf.onUpdate = null;
   }
 
   handleClickOpenToggle = () => {
@@ -28,8 +36,8 @@ export default class Item extends React.Component {
       return null;
     }
 
-    var margin = has(settings, 'indent') ? settings.indent : 6;
-    return <div style={{margin}}>
+    var marginLeft = has(settings, 'indent') ? settings.indent : 6;
+    return <div style={{marginLeft}}>
       {childLeafs.map(childLeaf => childLeaf.getComponent())}
     </div>;
   }
@@ -37,8 +45,6 @@ export default class Item extends React.Component {
   render () {
     var {settings, childLeafs} = this.props.leaf;
     var {opened} = this.state;
-
-    this.__lastRenderedSettings = settings;
 
     if (settings.ItemComponent) {
       return <settings.ItemComponent {...this.props}/>;

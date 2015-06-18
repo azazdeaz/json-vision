@@ -1,9 +1,10 @@
 var React = require('react');
 var assign = require('lodash/object/assign');
+var includes = require('lodash/collection/includes');
 var {getStyles} = require('react-matterkit').utils;
 var getSettings = require('./getSettings');
 var Leaf = require('./Leaf');
-var Contact = require('./Contact');
+var Connect = require('./Connect');
 
 export default class JsonVision extends React.Component {
   static create() {//TODO
@@ -46,7 +47,7 @@ export default class JsonVision extends React.Component {
   }
 
   createUtils(path) {
-    return new Contact(path, this.createAction.bind(this));
+    return new Connect(path, this.createAction.bind(this));
   }
 
   componentWillUpdate(nextProps) {

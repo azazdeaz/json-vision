@@ -1,14 +1,15 @@
 var mapValues = require('lodash/object/mapValues');
+var merge = require('lodash/object/merge');
 var includes = require('lodash/collection/includes');
 var forEach = require('lodash/collection/forEach');
 var isArray = require('lodash/lang/isArray');
 var clone = require('lodash/lang/clone');
 var minimatch = require('minimatch');
-var Contact = require('./Contact')
+var Connect = require('./Connect')
 
 export default function getSettings(path) {
 // var __t = window.performance.now()
-  var utils = new Contact(path);
+  var utils = new Connect(path);
   var settings = {
     input: {
       value: utils.value
@@ -23,7 +24,7 @@ export default function getSettings(path) {
 
   function checkSettingsNode(settingsNode, path, preselectors) {
     var match, selector, selectorType;
-    var utils = new Contact(path);
+    var utils = new Connect(path);
 
     if (!settingsNode.selector) {
       return true;
@@ -135,7 +136,7 @@ export default function getSettings(path) {
             }
           }
           else if (key === 'input') {
-            settings[key] = computeObjectValues(value);
+            settings[key] = merge(settings[key], computeObjectValues(value));
           }
           else if (value !== undefined) {
             settings[key] = value;

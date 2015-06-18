@@ -4,7 +4,9 @@ import React from 'react/addons';
 import JsonVision from 'SRC/JsonVision';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import {DragDropContext} from 'react-dnd';
+import sample from 'lodash/collection/sample';
 import fakeData from './fakeData.json';
+fakeData.results = sample(fakeData.results, 5);
 
 @DragDropContext(HTML5Backend)
 export default class App extends React.Component {
@@ -48,7 +50,7 @@ export default class App extends React.Component {
           selector: {key: 'gender'},
           input: {options: ['male', 'female', 'other']}
         }, {
-          selector: {key: 'zip'},
+          selector: {key: ['zip', 'version']},
           input: {type: 'number'}
         }
       ]}/>;
