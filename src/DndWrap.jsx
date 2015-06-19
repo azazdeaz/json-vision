@@ -25,7 +25,9 @@ const dragSource = {
     return props.leaf.settings.draggable;
   },
   endDrag(props, monitor) {
-    if (monitor.getDropResult().taken) {
+    var {taken, userHandled} = monitor.getDropResult();
+
+    if (!userHandled && taken) {
       props.leaf.utils.delete();
     }
   }
@@ -34,17 +36,18 @@ const dragSource = {
 const dropTarget = {
   drop(props, monitor, component) {
     var dropPosition = getDropPosition(monitor, component);
-    var dropTargetLeaf= props.leaf;
-    var dragSourceConnect = monitor.getItem().utils;
+    var dropTargetLeaf = props.leaf;
+    var item = monitor.getItem();
+    var dragSourceConnect = item.utils;
 
     if (dropTargetLeaf.utils.value === dragSourceConnect.value) {
       //prevent to drop a value in itself
-      return false;
+      return {taken: false};
     }
+    //TODO take other dragSources
+    var dropResult = dropTargetLeaf.acceptDrop(dragSourceConnect, dropPosition);
 
-    var taken = dropTargetLeaf.acceptDrop(dragSourceConnect, dropPosition);
-
-    return {taken};
+    return dropResult;
   },
 
   hover(props, monitor, component) {

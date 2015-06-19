@@ -2,7 +2,8 @@ export default function (a, b) {
   var different = (
     !equals(a, b) ||
     !equals(a.input, b.input) ||
-    a.input.value !== b.input.value
+    a.input.value !== b.input.value ||
+    a.children !== b.children
   );
     /* ||
     !(!a.inputs ||

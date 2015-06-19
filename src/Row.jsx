@@ -26,6 +26,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     }
 
     var styleConfig = getStyles(this).get('config');
+    var textColor = settings.highlighted ? styleConfig.palette.grey4 : styleConfig.fontColor.normal;
 
     var styleBlock = {
       position: 'relative',
@@ -45,6 +46,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     //label
     var styleLabel = assign({
       flex: 1,
+      color: textColor,
       // color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
     }, settings.labelStyle);
@@ -78,6 +80,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       items.buttons = <Buttons
         hover = {hover}
         leaf = {leaf}
+        buttonStyle = {{color: textColor}}
         buttons = {settings.buttons}/>;
     }
 
@@ -85,7 +88,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     items.toggle = <Icon
       icon={hasChildren ? (opened ? 'chevron-down' : 'chevron-right') : ' '}
       onClick={hasChildren ? onClickOpenToggle : null}
-      style={{margin: '0 4px'}}/>;
+      style={{margin: '0 4px', color: textColor}}/>;
 
 
     return <DndWrap

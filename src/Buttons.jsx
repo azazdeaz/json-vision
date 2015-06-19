@@ -1,5 +1,6 @@
 var React = require('react');
 var clone = require('lodash/lang/clone');
+var assign = require('lodash/object/assign');
 var Matterkit = require('react-matterkit');
 var {ItemGroup, Button} = Matterkit;
 
@@ -10,11 +11,12 @@ export default class Buttons extends React.Component {
   }
 
   render() {
-    var {buttons} = this.props;
+    var {buttons, buttonStyle} = this.props;
 
     return <ItemGroup>
       {buttons.map((btn, idx) => {
         var style = btn.style ? clone(btn.style) : {};
+        assign(style, buttonStyle);
 
         if (btn.hideWhenLeaved && !this.props.hover) {
           style.visibility = 'hidden';

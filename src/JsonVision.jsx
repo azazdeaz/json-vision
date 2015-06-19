@@ -52,8 +52,8 @@ export default class JsonVision extends React.Component {
     return new Connect(path, this.createAction.bind(this));
   }
 
-  componentWillUpdate(nextProps) {
-    this.rootLeaf.setup(this.getRootPath(nextProps));
+  componentDidUpdate() {
+    this.rootLeaf.setup(this.getRootPath(this.props));
   }
 
   render() {

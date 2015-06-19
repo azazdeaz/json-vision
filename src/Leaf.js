@@ -3,7 +3,6 @@ import keysIn from 'lodash/object/keysIn';
 import isObject from 'lodash/lang/isObject';
 import isArray from 'lodash/lang/isArray';
 import _isFinite from 'lodash/lang/isFinite';
-import isPlainObject from 'lodash/lang/isPlainObject';
 import includes from 'lodash/collection/includes';
 import matchSettings from './matchSettings';
 import React from 'react';
@@ -23,16 +22,19 @@ export default class Leaf {
     this.path = nextPath;
     this.utils = this.root.createUtils(nextPath);
     var nextSettings = this.root.getSettings(nextPath);
+    var settingsChanged = !matchSettings(nextSettings, this.settings)
 
-    if (!matchSettings(nextSettings, this.settings)) {
+    if (settingsChanged) {
       this.settings = nextSettings;
+    }
 
+    var childCountChanged = this.setupChildren();
+
+    if (childCountChanged || settingsChanged) {
       if (this.onUpdate) {
         this.onUpdate();
       }
     }
-
-    this.setupChildren();
   }
 
   setupChildren() {
@@ -82,9 +84,7 @@ export default class Leaf {
       }
     });
 
-    if (childCountChanged && this.onUpdate) {
-      this.onUpdate();
-    }
+    return childCountChanged;
   }
 
   update(value, utils) {
@@ -99,40 +99,45 @@ export default class Leaf {
 
   acceptDrop(dragSourceConnect, dropPosition) {
     var {root, utils, idx, settings, parentLeaf} = this;
+    var taken = false;
+    var userHandled = false;
 
     if (dropPosition === 'before' || dropPosition === 'after') {
       if (settings.acceptDropAround) {
-        return settings.acceptDropAround(
+        taken = settings.acceptDropAround(
           dragSourceConnect, utils, parentLeaf.utils, dropPosition);
+        userHandled = true;
       }
-
-      if (parentLeaf) {
+      else if (parentLeaf) {
         let parentDropPosition = idx;
         if (dropPosition === 'after') {
           ++parentDropPosition;
         }
+        //return the dropResult of the parentLeaf
         return parentLeaf.acceptDrop(dragSourceConnect, parentDropPosition);
       }
     }
     else if (dropPosition === 'in' || _isFinite(dropPosition)) {
       if (settings.acceptDrop) {
         //acceptDrop should returns true if it takes the dragSource
-        return settings.acceptDrop(dragSourceConnect, utils, dropPosition);
+        taken = settings.acceptDrop(dragSourceConnect, utils, dropPosition);
+        userHandled = true;
       }
-
-      if (isArray(utils.value)) {
+      else if (isArray(utils.value)) {
         this.utils.value.splice(dropPosition, 0, dragSourceConnect.value);
-        return true;
+        taken = true;
       }
-
-      if (typeof utils.value === 'object') {
+      else if (typeof utils.value === 'object') {
         utils.value[dragSourceConnect.key] = dragSourceConnect.value;
-        return true;
+        taken = true;
       }
-
-      utils.value = dragSourceConnect.value;
-      return true;
+      else {
+        utils.value = dragSourceConnect.value;
+        taken = true;
+      }
     }
+
+    return {taken, userHandled};
   }
 
   getComponent() {
@@ -149,7 +154,7 @@ export default class Leaf {
 
 function getKeysInOrder(children, settings) {
   var {order, includeInheriteds} = settings;
-  
+
   var keys = settings.includeInheriteds ?
     keysIn(children) : Object.keys(children);
 
