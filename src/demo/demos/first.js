@@ -18,7 +18,7 @@ module.exports = {
       //     }
       // })
       doSomething: function () {
-          console.log('bummmm!!!');
+          console.log('bummmm!!!')
       },
       slider: 6,
   },
@@ -43,7 +43,7 @@ module.exports = {
               dropdownMenu: {items: [
                 {text: 'item1', value: 'text1'},
                 {text: 'item2', value: 'text2'},
-                {text: 'item3', value: 'text3', onClick: function(){console.log('ggg');}},
+                {text: 'item3', value: 'text3', onClick: function(){console.log('ggg')}},
               ]
             }
           }],
@@ -72,4 +72,4 @@ module.exports = {
           tooltip: 'slider tooltip',
       }
   ]
-};
+}

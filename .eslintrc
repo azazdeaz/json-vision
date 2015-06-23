@@ -15,6 +15,7 @@
     "comma-dangle": [0],
     "strict": [0],
     "curly": [0],
-    "no-use-before-define": "nofunc"
+    "no-use-before-define": "nofunc",
+    "semi": [2, "never"]
   }
 }

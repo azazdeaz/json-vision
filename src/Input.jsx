@@ -1,78 +1,78 @@
-var React = require('react');
-var isObject = require('lodash/lang/isObject');
-var isArray = require('lodash/lang/isArray');
-var Matter = require('react-matterkit');
+var React = require('react')
+var isObject = require('lodash/lang/isObject')
+var isArray = require('lodash/lang/isArray')
+var Matter = require('react-matterkit')
 var {Button, Slider, Dropdown, Checkbox, MultiTypeInput,
-  Input: MatterInput} = Matter;
+  Input: MatterInput} = Matter
 
 export default class Input extends React.Component {
   render() {
-    var {leaf, key, ...inputProps} = this.props;
-    var {value, type, onChange} = inputProps;
-    var input = null;
+    var {leaf, key, ...inputProps} = this.props
+    var {value, type, onChange} = inputProps
+    var input = null
 
     var handleChange = val => {
       if (typeof onChange === 'function') {
-        onChange(val, leaf.utils);
+        onChange(val, leaf.utils)
       }
-    };
+    }
 
     var createInput = inputType => input = <MatterInput
       {...inputProps}
       type = {inputType}
-      onChange = {handleChange}/>;
+      onChange = {handleChange}/>
 
     var createCheckbox = () => input = <Checkbox
       {...inputProps}
-      onChange={handleChange}/>;
+      onChange={handleChange}/>
 
     var createDropdown = () => input = <Dropdown
       {...inputProps}
       onChange={handleChange}
       options={inputProps.options.map(option => {
         if (typeof option === 'string') {
-          return {label: option, value: option};
+          return {label: option, value: option}
         }
         else {
-          return option;
+          return option
         }
-      })}/>;
+      })}/>
 
     if (type) {
       switch(type) {
       case 'multi':
         input = <MultiTypeInput
           {...inputProps}
-          onChange = {handleChange}/>;
-        break;
+          onChange = {handleChange}/>
+        break
       case 'dropdown':
-        createDropdown();
-        break;
+        createDropdown()
+        break
       case 'checkbox':
-        createCheckbox();
-        break;
+        createCheckbox()
+        break
       case 'slider':
         input = <Slider
           {...inputProps}
-          onChange={handleChange}/>;
-        break;
+          onChange={handleChange}/>
+        break
       case 'number':
-        createInput('number');
-        break;
+        createInput('number')
+        break
       case 'string':
-        createInput('text');
-        break;
+        createInput('text')
+        break
       case 'color':
-        createInput('text');
-        break;
+        createInput('text')
+        break
       default:
-        console.warn(`Unknown type: "${type}"`);
+        console.warn(`Unknown type: "${type}"`)
       }
     }
     else {
       if (!isObject(value)) {
         if (isArray(inputProps.options)) {
-          createDropdown();
+          createDropdown()
         }
         else {
           switch (typeof value) {
@@ -80,17 +80,17 @@ export default class Input extends React.Component {
               input = <Button
                 icon={icon}
                 label={inputProps.label || value.name || 'Button'}
-                onClick={value}/>;
-              break;
+                onClick={value}/>
+              break
             case 'number':
-              createInput('number');
-              break;
+              createInput('number')
+              break
             case 'string':
-              createInput('text');
-              break;
+              createInput('text')
+              break
             case 'boolean':
-              createCheckbox();
-              break;
+              createCheckbox()
+              break
 
           }
         }
@@ -99,6 +99,6 @@ export default class Input extends React.Component {
 
     return input ?
       <span style={{flex: 1}} key={key}>{input}</span> :
-      <span hidden={true} key={key}/>;
+      <span hidden={true} key={key}/>
   }
 }

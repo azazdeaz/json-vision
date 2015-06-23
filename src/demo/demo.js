@@ -1,10 +1,10 @@
-var React = require('react');
-var Page = React.createFactory(require('./Page.jsx'));
+var React = require('react')
+var Page = React.createFactory(require('./Page.jsx'))
 var demos = [
     require('./demos/first'),
-];
-var AceEditor = require('react-ace');
-// var windooman = require('../windooman');
+]
+var AceEditor = require('react-ace')
+// var windooman = require('../windooman')
 
 module.exports = function (JsonVision) {
 
@@ -12,33 +12,33 @@ module.exports = function (JsonVision) {
     JsonVision,
     data: demos[0],
     refreshValue(value) {
-      DEMO.data.value = value;
-      page.setProps({value});
+      DEMO.data.value = value
+      page.setProps({value})
     },
-  };
+  }
 
   var page = React.render(Page({
     value: DEMO.data.value,
     settings: DEMO.data.settings,
-  }), document.body);
+  }), document.body)
 
-  // workspace = new Windooman();
-  // document.body.appendChild(am.workspace.domElem);
-  // workspace.loadWorkspace('base', skeleton);
-  // workspace.load('base');
+  // workspace = new Windooman()
+  // document.body.appendChild(am.workspace.domElem)
+  // workspace.loadWorkspace('base', skeleton)
+  // workspace.load('base')
 
-  // var source = 'var answer = 42;';
+  // var source = 'var answer = 42'
   //
   // var editor = React.render(React.createElement(AceEditor, {
   //   value: source,
   //   onChange: createAction,
-  // }), document.body);
+  // }), document.body)
   //
   // function createAction(_source) {
-  //   source = _source;
-  //   if (editor) editor.setProps({value: source});
+  //   source = _source
+  //   if (editor) editor.setProps({value: source})
   // }
-};
+}
 
 
 // var skeleton = {
@@ -67,4 +67,4 @@ module.exports = function (JsonVision) {
 //       "tabs": [{"name": "demo"}]
 //     }]
 //   }]
-// };
+// }

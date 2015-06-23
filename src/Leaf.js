@@ -1,150 +1,150 @@
-import has from 'lodash/object/has';
-import keysIn from 'lodash/object/keysIn';
-import isObject from 'lodash/lang/isObject';
-import isArray from 'lodash/lang/isArray';
-import _isFinite from 'lodash/lang/isFinite';
-import includes from 'lodash/collection/includes';
-import matchSettings from './matchSettings';
-import React from 'react';
-import Item from './Item';
+import has from 'lodash/object/has'
+import keysIn from 'lodash/object/keysIn'
+import isObject from 'lodash/lang/isObject'
+import isArray from 'lodash/lang/isArray'
+import _isFinite from 'lodash/lang/isFinite'
+import includes from 'lodash/collection/includes'
+import matchSettings from './matchSettings'
+import React from 'react'
+import Item from './Item'
 
 export default class Leaf {
   constructor(path, root, idx, parentLeaf) {
-    this.childLeafs = [];
-    this.root = root;
-    this.idx = idx;
-    this.parentLeaf = parentLeaf;
+    this.childLeafs = []
+    this.root = root
+    this.idx = idx
+    this.parentLeaf = parentLeaf
 
-    this.setup(path);
+    this.setup(path)
   }
 
   setup(nextPath) {
-    this.path = nextPath;
-    this.utils = this.root.createUtils(nextPath);
-    var nextSettings = this.root.getSettings(nextPath);
+    this.path = nextPath
+    this.utils = this.root.createUtils(nextPath)
+    var nextSettings = this.root.getSettings(nextPath)
     var settingsChanged = !matchSettings(nextSettings, this.settings)
 
     if (settingsChanged) {
-      this.settings = nextSettings;
+      this.settings = nextSettings
     }
 
-    var childCountChanged = this.setupChildren();
+    var childCountChanged = this.setupChildren()
 
     if (childCountChanged || settingsChanged) {
       if (this.onUpdate) {
-        this.onUpdate();
+        this.onUpdate()
       }
     }
   }
 
   setupChildren() {
-    var {settings, childLeafs, path} = this;
-    var value = this.path[this.path.length - 1];
-    var children;
-    var childCountChanged = false;
+    var {settings, childLeafs, path} = this
+    var value = this.path[this.path.length - 1]
+    var children
+    var childCountChanged = false
 
     if (has(settings, 'children')) {
-      children = settings.children;
+      children = settings.children
     }
     else if (isObject(value)) {
-      children = value;
+      children = value
     }
     else {
-      children = [];
+      children = []
     }
 
-    var keys;
+    var keys
     if (isArray(children)) {
-      keys = Object.keys(children);
+      keys = Object.keys(children)
     }
     else if (isObject(children)) {
-      keys = getKeysInOrder(children, settings);
-      keys = applyWhiteAndBlacklist(keys, settings);
+      keys = getKeysInOrder(children, settings)
+      keys = applyWhiteAndBlacklist(keys, settings)
     }
     else {
-      keys = [];
+      keys = []
     }
 
     if (childLeafs.length > keys.length) {
       // let extraLeafs =
-      childLeafs.splice(keys.length);
-      // extraLeafs.forEach(childLeaf => childLeaf.dispose());
-      childCountChanged = true;
+      childLeafs.splice(keys.length)
+      // extraLeafs.forEach(childLeaf => childLeaf.dispose())
+      childCountChanged = true
     }
 
     keys.forEach((key, idx) => {
-      var childPath = path.concat([key, children[key]]);
+      var childPath = path.concat([key, children[key]])
 
       if (childLeafs[idx]) {
-        childLeafs[idx].setup(childPath);
+        childLeafs[idx].setup(childPath)
       }
       else {
-        childLeafs[idx] = new Leaf(childPath, this.root, idx, this);
-        childCountChanged = true;
+        childLeafs[idx] = new Leaf(childPath, this.root, idx, this)
+        childCountChanged = true
       }
-    });
+    })
 
-    return childCountChanged;
+    return childCountChanged
   }
 
   update(value, utils) {
-    utils.value = value;
+    utils.value = value
 
-    var {settings} = this;
-    var onChange = settings.input && settings.input.onChange;
+    var {settings} = this
+    var onChange = settings.input && settings.input.onChange
     if (typeof onChange === 'function') {
-      onChange(value, utils);
+      onChange(value, utils)
     }
   }
 
   acceptDrop(dragSourceConnect, dropPosition) {
-    var {root, utils, idx, settings, parentLeaf} = this;
-    var taken = false;
-    var userHandled = false;
+    var {root, utils, idx, settings, parentLeaf} = this
+    var taken = false
+    var userHandled = false
 
     if (dropPosition === 'before' || dropPosition === 'after') {
       if (settings.acceptDropAround) {
         taken = settings.acceptDropAround(
-          dragSourceConnect, utils, parentLeaf.utils, dropPosition);
-        userHandled = true;
+          dragSourceConnect, utils, parentLeaf.utils, dropPosition)
+        userHandled = true
       }
       else if (parentLeaf) {
-        let parentDropPosition = idx;
+        let parentDropPosition = idx
         if (dropPosition === 'after') {
-          ++parentDropPosition;
+          ++parentDropPosition
         }
         //return the dropResult of the parentLeaf
-        return parentLeaf.acceptDrop(dragSourceConnect, parentDropPosition);
+        return parentLeaf.acceptDrop(dragSourceConnect, parentDropPosition)
       }
     }
     else if (dropPosition === 'in' || _isFinite(dropPosition)) {
       if (settings.acceptDrop) {
         //acceptDrop should returns true if it takes the dragSource
-        taken = settings.acceptDrop(dragSourceConnect, utils, dropPosition);
-        userHandled = true;
+        taken = settings.acceptDrop(dragSourceConnect, utils, dropPosition)
+        userHandled = true
       }
       else if (isArray(utils.value)) {
-        this.utils.value.splice(dropPosition, 0, dragSourceConnect.value);
-        taken = true;
+        this.utils.value.splice(dropPosition, 0, dragSourceConnect.value)
+        taken = true
       }
       else if (typeof utils.value === 'object') {
-        utils.value[dragSourceConnect.key] = dragSourceConnect.value;
-        taken = true;
+        utils.value[dragSourceConnect.key] = dragSourceConnect.value
+        taken = true
       }
       else {
-        utils.value = dragSourceConnect.value;
-        taken = true;
+        utils.value = dragSourceConnect.value
+        taken = true
       }
     }
 
-    return {taken, userHandled};
+    return {taken, userHandled}
   }
 
   getComponent() {
     if (!this._component) {//hack until React@0.14
-      this._component = <Item key={this.idx} leaf={this}/>;
+      this._component = <Item key={this.idx} leaf={this}/>
     }
-    return this._component;
+    return this._component
   }
 
   // dispose() {
@@ -153,37 +153,37 @@ export default class Leaf {
 }
 
 function getKeysInOrder(children, settings) {
-  var {order, includeInheriteds} = settings;
+  var {order, includeInheriteds} = settings
 
   var keys = settings.includeInheriteds ?
-    keysIn(children) : Object.keys(children);
+    keysIn(children) : Object.keys(children)
 
   if (!order) {
-    return keys;
+    return keys
   }
 
-  let l = keys.length - 1;
+  let l = keys.length - 1
   return keys.sort((a, b) => {
-    var aIdx = order.indexOf(a);
-    var bIdx = order.indexOf(b);
+    var aIdx = order.indexOf(a)
+    var bIdx = order.indexOf(b)
 
-    if (aIdx !== -1) aIdx = l - aIdx;
-    if (bIdx !== -1) bIdx = l - bIdx;
+    if (aIdx !== -1) aIdx = l - aIdx
+    if (bIdx !== -1) bIdx = l - bIdx
 
-    return bIdx - aIdx;
-  });
+    return bIdx - aIdx
+  })
 }
 
 function applyWhiteAndBlacklist(keys, settings) {
-  var {whitelist, blacklist} = settings;
+  var {whitelist, blacklist} = settings
 
   if (!whitelist && !blacklist) {
-    return keys;
+    return keys
   }
 
   return keys.filter((key) => {
-    if (whitelist && !includes(whitelist, key)) return false;
-    if (blacklist && includes(blacklist, key)) return false;
-    return true;
-  });
+    if (whitelist && !includes(whitelist, key)) return false
+    if (blacklist && includes(blacklist, key)) return false
+    return true
+  })
 }

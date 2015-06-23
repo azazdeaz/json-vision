@@ -1,75 +1,75 @@
-var mapValues = require('lodash/object/mapValues');
-var merge = require('lodash/object/merge');
-var includes = require('lodash/collection/includes');
-var forEach = require('lodash/collection/forEach');
-var isArray = require('lodash/lang/isArray');
-var clone = require('lodash/lang/clone');
-var minimatch = require('minimatch');
+var mapValues = require('lodash/object/mapValues')
+var merge = require('lodash/object/merge')
+var includes = require('lodash/collection/includes')
+var forEach = require('lodash/collection/forEach')
+var isArray = require('lodash/lang/isArray')
+var clone = require('lodash/lang/clone')
+var minimatch = require('minimatch')
 var Connect = require('./Connect')
 
 export default function getSettings(path) {
 // var __t = window.performance.now()
-  var utils = new Connect(path);
+  var utils = new Connect(path)
   var settings = {
     input: {
       value: utils.value
     },
     label: utils.key
-  };
+  }
 
-  checkSettingsList(this.props.settings, []);
-  // window.GET_SETTINGSTIME = window.GET_SETTINGSTIME || 0;
-  // window.GET_SETTINGSTIME += window.performance.now() - __t;
-  return settings;
+  checkSettingsList(this.props.settings, [])
+  // window.GET_SETTINGSTIME = window.GET_SETTINGSTIME || 0
+  // window.GET_SETTINGSTIME += window.performance.now() - __t
+  return settings
 
   function checkSettingsNode(settingsNode, path, preselectors) {
-    var match, selector, selectorType;
-    var utils = new Connect(path);
+    var match, selector, selectorType
+    var utils = new Connect(path)
 
     if (!settingsNode.selector) {
-      return true;
+      return true
     }
 
     if (typeof(settingsNode.selector) === 'function') {
 
-      selectorType = 'function';
-      selector = settingsNode.selector;
+      selectorType = 'function'
+      selector = settingsNode.selector
     }
     else if (typeof(settingsNode.selector) === 'object') {
 
-      selectorType = Object.keys(settingsNode.selector)[0];
-      selector = settingsNode.selector[selectorType];
+      selectorType = Object.keys(settingsNode.selector)[0]
+      selector = settingsNode.selector[selectorType]
     }
     else {
-      throw Error();
+      throw Error()
     }
 
 
     if (selectorType === 'function') {
 
-      match = selector(utils);
+      match = selector(utils)
     }
     else if (selectorType === 'instanceOf') {
 
       if (isArray(selector)) {
-        match = selector.some(s => utils.value instanceof s);
+        match = selector.some(s => utils.value instanceof s)
       }
       else {
-        match = utils.value instanceof selector;
+        match = utils.value instanceof selector
       }
     }
     else if (selectorType === 'key') {
 
       if (isArray(selector)) {
-        match = includes(selector, utils.key);
+        match = includes(selector, utils.key)
       }
       else {
-        match = utils.key === selector;
+        match = utils.key === selector
       }
     }
     else if (selectorType === 'value') {
 
-      match = utils.value === selector;
+      match = utils.value === selector
     }
     else if (selectorType === 'path') {
     }
@@ -77,25 +77,25 @@ export default function getSettings(path) {
     }
     else if (selectorType === 'glob') {
 
-      match = minimatch(utils.fullPath, selector);
+      match = minimatch(utils.fullPath, selector)
     }
     else {
-      throw Error();
+      throw Error()
     }
 
     if (match) {
 
       if (preselectors.length === 0) {
-        return true;
+        return true
       }
       else {
 
-        let newSettingsNode = preselectors[0];
-        let newPath = path.slice(0, path.length - 2);
-        let newPreselectors = preselectors.slice(1);
+        let newSettingsNode = preselectors[0]
+        let newPath = path.slice(0, path.length - 2)
+        let newPreselectors = preselectors.slice(1)
 
         return checkSettingsNode(
-          newSettingsNode, newPath, newPreselectors);
+          newSettingsNode, newPath, newPreselectors)
       }
     }
   }
@@ -105,72 +105,72 @@ export default function getSettings(path) {
     settingsList.forEach(settingsNode => {
 
       if (typeof settingsNode === 'function') {
-        settingsNode = settingsNode(utils);
+        settingsNode = settingsNode(utils)
       }
 
       if (typeof settingsNode !== 'object') {
-        return;
+        return
       }
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
 
         forEach(settingsNode, (value, key) => {
 
-          value = compute(value, key);
+          value = compute(value, key)
 
           if (key === 'extraInputs' || key === 'buttons') {
 
             let copy = value.map((val, idx) => {
 
-              var itemValue = compute(val, idx);
+              var itemValue = compute(val, idx)
 
-              return computeObjectValues(itemValue);
-            });
+              return computeObjectValues(itemValue)
+            })
 
-            let curr = settings[key];
+            let curr = settings[key]
             if (curr) {
-              curr.push(...copy);
+              curr.push(...copy)
             }
             else {
-              settings[key] = copy;
+              settings[key] = copy
             }
           }
           else if (key === 'input') {
-            settings[key] = merge(settings[key], computeObjectValues(value));
+            settings[key] = merge(settings[key], computeObjectValues(value))
           }
           else if (value !== undefined) {
-            settings[key] = value;
+            settings[key] = value
           }
-        });
+        })
       }
 
       if (settingsNode.settings) {
 
-        let newPreselectors = [settingsNode].concat(preselectors);
-        checkSettingsList(settingsNode.settings, newPreselectors);
+        let newPreselectors = [settingsNode].concat(preselectors)
+        checkSettingsList(settingsNode.settings, newPreselectors)
       }
-    });
+    })
   }
 
   function computeObjectValues(obj) {
-    return mapValues(obj, (val, key) => compute(val, key));
+    return mapValues(obj, (val, key) => compute(val, key))
   }
 
   function compute(value, key) {
 
-    var type = typeof(value);
+    var type = typeof(value)
 
     if (type === 'function' &&
       ['onClick', 'onChange', 'chooseType', 'Component',
         'canDrop', 'acceptDrop', 'getDragPreview'].indexOf(key) === -1)
     {
-      return value(utils);
+      return value(utils)
     }
     else if (type === 'object') {
-      return clone(value);
+      return clone(value)
     }
     else {
-      return value;
+      return value
     }
   }
 }
@@ -207,7 +207,7 @@ export default function getSettings(path) {
       types: [
         {--//--}
       ],
-      chooseType: utils => return 0;
+      chooseType: utils => return 0
     }
   ],
   buttons: [

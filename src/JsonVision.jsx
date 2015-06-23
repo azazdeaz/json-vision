@@ -1,26 +1,26 @@
-var React = require('react');
-var assign = require('lodash/object/assign');
-var {getStyles} = require('react-matterkit').utils;
-var getSettings = require('./getSettings');
-var Leaf = require('./Leaf');
-var Connect = require('./Connect');
-// import HTML5Backend from 'react-dnd/modules/backends/HTML5';
-// import {DragDropContext} from 'react-dnd';
+var React = require('react')
+var assign = require('lodash/object/assign')
+var {getStyles} = require('react-matterkit').utils
+var getSettings = require('./getSettings')
+var Leaf = require('./Leaf')
+var Connect = require('./Connect')
+// import HTML5Backend from 'react-dnd/modules/backends/HTML5'
+// import {DragDropContext} from 'react-dnd'
 //
 // @DragDropContext(HTML5Backend)
 export default class JsonVision extends React.Component {
   static create() {//TODO
-    // var parent = props.parent || document.createElement('div');
+    // var parent = props.parent || document.createElement('div')
     //
     // React.render(<JsonVision
     //   title = {this.title}
-    //   report = {change => this._report(change)}/>, parent);
+    //   report = {change => this._report(change)}/>, parent)
     //
     // if (!props.parent && (!has(props, 'autoPlace') || props.autoPlace !== false)) {
-    //   this.domElem.style.position = 'fixed';
-    //   this.domElem.style.top = '0px';
-    //   this.domElem.style.right = '15px';
-    //   document.body.appendChild(this.domElem);
+    //   this.domElem.style.position = 'fixed'
+    //   this.domElem.style.top = '0px'
+    //   this.domElem.style.right = '15px'
+    //   document.body.appendChild(this.domElem)
     // }
   }
 
@@ -31,42 +31,42 @@ export default class JsonVision extends React.Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.rootLeaf = new Leaf(this.getRootPath(this.props), this);
+    this.rootLeaf = new Leaf(this.getRootPath(this.props), this)
   }
 
   getRootPath(props) {
-    return ['', props.value];
+    return ['', props.value]
   }
 
   getSettings = getSettings.bind(this)
 
   createAction() {
     if (this.props.onChange) {
-      this.props.onChange(this.props.value);
+      this.props.onChange(this.props.value)
     }
   }
 
   createUtils(path) {
-    return new Connect(path, this.createAction.bind(this));
+    return new Connect(path, this.createAction.bind(this))
   }
 
   componentDidUpdate() {
-    this.rootLeaf.setup(this.getRootPath(this.props));
+    this.rootLeaf.setup(this.getRootPath(this.props))
   }
 
   render() {
-    var styleConfig = getStyles(this).get('config');
+    var styleConfig = getStyles(this).get('config')
     var style = assign(this.props.style, {
       background: styleConfig.palette.grey4,
       color: styleConfig.fontColor.normal,
       fontFamily: styleConfig.fontFamily,
       fontWeight: styleConfig.fontWeight,
-    });
+    })
 
     return <div style={style}>
       {this.rootLeaf.getComponent()}
-    </div>;
+    </div>
   }
 }

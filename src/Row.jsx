@@ -1,32 +1,32 @@
-import React from 'react';
-import assign from 'lodash/object/assign';
-import Input from './Input';
-import Buttons from './Buttons';
-import DndWrap from './DndWrap';
-import Matter from 'react-matterkit';
-var {Icon} = Matter;
-var getStyles = Matter.utils.getStyles;
+import React from 'react'
+import assign from 'lodash/object/assign'
+import Input from './Input'
+import Buttons from './Buttons'
+import DndWrap from './DndWrap'
+import Matter from 'react-matterkit'
+var {Icon} = Matter
+var getStyles = Matter.utils.getStyles
 
 export default class Row extends React.Component {// eslint-disable-line no-shadow
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       hover: false,
-    };
+    }
   }
 
   render () {
-    var {leaf, opened, hasChildren, onClickOpenToggle} = this.props;
-    var {settings} = leaf;
-    var {hover} = this.state;
+    var {leaf, opened, hasChildren, onClickOpenToggle} = this.props
+    var {settings} = leaf
+    var {hover} = this.state
 
     if (settings.Component) {
-      return <settings.Component {...this.props}/>;
+      return <settings.Component {...this.props}/>
     }
 
-    var styleConfig = getStyles(this).get('config');
-    var textColor = settings.highlighted ? styleConfig.palette.grey4 : styleConfig.fontColor.normal;
+    var styleConfig = getStyles(this).get('config')
+    var textColor = settings.highlighted ? styleConfig.palette.grey4 : styleConfig.fontColor.normal
 
     var styleBlock = {
       position: 'relative',
@@ -38,9 +38,9 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       backgroundColor: settings.highlighted ? styleConfig.palette.blue : styleConfig.palette.bg,
       borderBottom: 'solid 1px #1a1d21',
       boxSizing: 'border-box',
-    };
+    }
 
-    var items = {};
+    var items = {}
 
 
     //label
@@ -49,17 +49,17 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       color: textColor,
       // color: dropState.isDragging ? style.palette.purple : 'inherit',
       // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
-    }, settings.labelStyle);
+    }, settings.labelStyle)
 
     items.label = <span style={styleLabel}>
       {settings.label}
-    </span>;
+    </span>
 
     //input
     items.input = <Input
       {...settings.input}
       leaf = {leaf}
-      onChange = {(value, utils) => leaf.update(value, utils)}/>;
+      onChange = {(value, utils) => leaf.update(value, utils)}/>
 
     //extraInputs
     if (settings.extraInputs) {
@@ -70,9 +70,9 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
           return <Input
             key = {idx}
             {...inputProps}
-            leaf = {leaf}/>;
+            leaf = {leaf}/>
         })}
-      </span>;
+      </span>
     }
 
     //buttons
@@ -81,14 +81,14 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
         hover = {hover}
         leaf = {leaf}
         buttonStyle = {{color: textColor}}
-        buttons = {settings.buttons}/>;
+        buttons = {settings.buttons}/>
     }
 
     //show/hide toggle btn
     items.toggle = <Icon
       icon={hasChildren ? (opened ? 'chevron-down' : 'chevron-right') : ' '}
       onClick={hasChildren ? onClickOpenToggle : null}
-      style={{margin: '0 4px', color: textColor}}/>;
+      style={{margin: '0 4px', color: textColor}}/>
 
 
     return <DndWrap
@@ -97,7 +97,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       onMouseLeave={() => this.setState({hover: false})}
       onClick={()=>{
         if (settings.onClick) {
-          settings.onClick(leaf.utils);
+          settings.onClick(leaf.utils)
         }
       }}
       leaf = {leaf}
@@ -107,6 +107,6 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
         {items.input}
         {items.extraInputs}
         {items.buttons}
-    </DndWrap>;
+    </DndWrap>
   }
 }

@@ -4,32 +4,32 @@ export default function (a, b) {
     !equals(a.input, b.input) ||
     a.input.value !== b.input.value ||
     a.children !== b.children
-  );
+  )
     /* ||
     !(!a.inputs ||
       (a.inputs.length !== b.inputs.length)
       shallowEqual(a.input, b.input) ||*/
-  return !different;
+  return !different
 }
 
 function equals(objA, objB) {
   if (objA === objB) {
-    return true;
+    return true
   }
 
   if (typeof objA !== 'object' || typeof objB !== 'object') {
-    return false;
+    return false
   }
 
-  var keysA = Object.keys(objA);
-  var keysB = Object.keys(objB);
+  var keysA = Object.keys(objA)
+  var keysB = Object.keys(objB)
 
   if (keysA.length !== keysB.length) {
-    return false;
+    return false
   }
 
   // Test for A's keys different from B.
-  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB)
   for (var i = 0; i < keysA.length; i++) {
     if (
       !bHasOwnProperty(keysA[i]) ||
@@ -40,9 +40,9 @@ function equals(objA, objB) {
         )
       )
     ) {
-      return false;
+      return false
     }
   }
 
-  return true;
+  return true
 }

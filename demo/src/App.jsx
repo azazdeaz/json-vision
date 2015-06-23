@@ -1,42 +1,42 @@
-require('whatwg-fetch');
+require('whatwg-fetch')
 
-import React from 'react/addons';
-import JsonVision from 'SRC/JsonVision';
-import HTML5Backend from 'react-dnd/modules/backends/HTML5';
-import {DragDropContext} from 'react-dnd';
-import sample from 'lodash/collection/sample';
-import fakeData from './fakeData.json';
-fakeData.results = sample(fakeData.results, 5);
+import React from 'react/addons'
+import JsonVision from 'SRC/JsonVision'
+import HTML5Backend from 'react-dnd/modules/backends/HTML5'
+import {DragDropContext} from 'react-dnd'
+import sample from 'lodash/collection/sample'
+import fakeData from './fakeData.json'
+fakeData.results = sample(fakeData.results, 5)
 
 @DragDropContext(HTML5Backend)
 export default class App extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       users: fakeData,
-    };
+    }
 
     window.testPerf = () => {
-      var {Perf} = React.addons;
-      Perf.start();
-      this.forceUpdate();
-      Perf.stop();
-      Perf.printInclusive();
-      Perf.printExclusive();
-      Perf.printWasted();
-    };
+      var {Perf} = React.addons
+      Perf.start()
+      this.forceUpdate()
+      Perf.stop()
+      Perf.printInclusive()
+      Perf.printExclusive()
+      Perf.printWasted()
+    }
   }
 
   componentDidMount() {
     // fetch('http://api.randomuser.me/?results=50')
     //   .then(response => response.json())
-    //   .then(json => setTimeout(() => this.setState({users: json.results})));
+    //   .then(json => setTimeout(() => this.setState({users: json.results})))
   }
 
   handleChange = (users) => {
-    this.setState({users});
+    this.setState({users})
   }
 
   render() {
@@ -53,6 +53,6 @@ export default class App extends React.Component {
           selector: {key: ['zip', 'version']},
           input: {type: 'number'}
         }
-      ]}/>;
+      ]}/>
   }
 }
