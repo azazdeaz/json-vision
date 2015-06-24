@@ -5,9 +5,8 @@ var Matterkit = require('react-matterkit')
 var {ItemGroup, Button} = Matterkit
 
 export default class Buttons extends React.Component {
-
-  handleBtnClick (btn) {
-    btn.onClick(this.prosp.leaf.utils)
+  handleBtnClick = (btn) => {
+    btn.onClick(this.props.leaf.utils)
   }
 
   render() {
@@ -26,7 +25,7 @@ export default class Buttons extends React.Component {
           key={idx}
           {...btn}
           style={style}
-          onClick={() => this.onBtnClick(btn)}/>
+          onClick={() => this.handleBtnClick(btn)}/>
       })}
     </ItemGroup>
   }
