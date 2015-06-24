@@ -1,6 +1,7 @@
 var {getStyles} = require('react-matterkit').utils
 import React from 'react'
 import {DragSource, DropTarget} from 'react-dnd'
+import Connect from './Connect'
 import Config from './Config'
 
 function getDropPosition(monitor, component) {
@@ -37,15 +38,19 @@ const dropTarget = {
   drop(props, monitor, component) {
     var dropPosition = getDropPosition(monitor, component)
     var dropTargetLeaf = props.leaf
-    var item = monitor.getItem()
-    var dragSourceConnect = item.utils
+    var payload = monitor.getItem()
 
-    if (dropTargetLeaf.utils.value === dragSourceConnect.value) {
-      //prevent to drop a value in itself
-      return {taken: false}
+    if (payload.utils instanceof Connect) {
+      payload = payload.utils
+
+      if (dropTargetLeaf.utils.value === payload.value) {
+        //prevent to drop a value in itself
+        return {taken: false}
+      }
     }
+
     //TODO take other dragSources
-    var dropResult = dropTargetLeaf.acceptDrop(dragSourceConnect, dropPosition)
+    var dropResult = dropTargetLeaf.acceptDrop(payload, dropPosition)
 
     return dropResult
   },
@@ -60,10 +65,16 @@ const dropTarget = {
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
-@DropTarget(Config.DND_TYPE, dropTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver()
-}))
+@DropTarget(
+  props => {
+    return props.leaf.settings.dropTargetTypes || Config.DND_TYPE
+  },
+  dropTarget,
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  })
+)
 export default class DropLayer extends React.Component {
   constructor(props) {
     super(props)

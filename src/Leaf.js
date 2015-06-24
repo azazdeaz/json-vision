@@ -4,6 +4,7 @@ import isObject from 'lodash/lang/isObject'
 import isArray from 'lodash/lang/isArray'
 import _isFinite from 'lodash/lang/isFinite'
 import includes from 'lodash/collection/includes'
+import Connect from './Connect'
 import matchSettings from './matchSettings'
 import React from 'react'
 import Item from './Item'
@@ -97,15 +98,21 @@ export default class Leaf {
     }
   }
 
-  acceptDrop(dragSourceConnect, dropPosition) {
+  acceptDrop(payload, dropPosition) {
     var {root, utils, idx, settings, parentLeaf} = this
     var taken = false
     var userHandled = false
+    var dragSourceConnect
+
+    if (payload instanceof Connect) {
+      dragSourceConnect = payload
+    }
 
     if (dropPosition === 'before' || dropPosition === 'after') {
       if (settings.acceptDropAround) {
         taken = settings.acceptDropAround(
-          dragSourceConnect, utils, parentLeaf.utils, dropPosition)
+          payload, utils, parentLeaf.utils, dropPosition)
+
         userHandled = true
       }
       else if (parentLeaf) {
@@ -114,26 +121,28 @@ export default class Leaf {
           ++parentDropPosition
         }
         //return the dropResult of the parentLeaf
-        return parentLeaf.acceptDrop(dragSourceConnect, parentDropPosition)
+        return parentLeaf.acceptDrop(payload, parentDropPosition)
       }
     }
     else if (dropPosition === 'in' || _isFinite(dropPosition)) {
       if (settings.acceptDrop) {
         //acceptDrop should returns true if it takes the dragSource
-        taken = settings.acceptDrop(dragSourceConnect, utils, dropPosition)
+        taken = settings.acceptDrop(payload, utils, dropPosition)
         userHandled = true
       }
-      else if (isArray(utils.value)) {
-        this.utils.value.splice(dropPosition, 0, dragSourceConnect.value)
-        taken = true
-      }
-      else if (typeof utils.value === 'object') {
-        utils.value[dragSourceConnect.key] = dragSourceConnect.value
-        taken = true
-      }
-      else {
-        utils.value = dragSourceConnect.value
-        taken = true
+      else if (dragSourceConnect) {
+        if (isArray(utils.value)) {
+          this.utils.value.splice(dropPosition, 0, dragSourceConnect.value)
+          taken = true
+        }
+        else if (typeof utils.value === 'object') {
+          utils.value[dragSourceConnect.key] = dragSourceConnect.value
+          taken = true
+        }
+        else {
+          utils.value = dragSourceConnect.value
+          taken = true
+        }
       }
     }
 

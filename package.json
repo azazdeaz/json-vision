@@ -2,7 +2,7 @@
   "name": "json-vision",
   "version": "0.0.23",
   "description": "",
-  "main": "lib/JsonVision.js",
+  "main": "lib/index.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
