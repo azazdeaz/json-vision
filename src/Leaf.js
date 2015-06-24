@@ -99,7 +99,7 @@ export default class Leaf {
   }
 
   acceptDrop(payload, dropPosition) {
-    var {root, utils, idx, settings, parentLeaf} = this
+    var {utils, idx, settings, parentLeaf} = this
     var taken = false
     var userHandled = false
     var dragSourceConnect
@@ -147,6 +147,32 @@ export default class Leaf {
     }
 
     return {taken, userHandled}
+  }
+
+  canDrop(payload, dropPosition) {
+    var {utils, idx, settings, parentLeaf} = this
+    var canDrop = true
+
+    if (dropPosition === 'before' || dropPosition === 'after') {
+      if (settings.canDropAround) {
+        canDrop = settings.canDropAround(
+          payload, utils, parentLeaf.utils, dropPosition)
+      }
+      else if (parentLeaf) {
+        let parentDropPosition = idx
+        if (dropPosition === 'after') {
+          ++parentDropPosition
+        }
+        canDrop = parentLeaf.canDrop(payload, parentDropPosition)
+      }
+    }
+    else if (dropPosition === 'in' || _isFinite(dropPosition)) {
+      if (settings.canDrop) {
+        canDrop = settings.canDrop(payload, utils, dropPosition)
+      }
+    }
+
+    return canDrop
   }
 
   getComponent() {

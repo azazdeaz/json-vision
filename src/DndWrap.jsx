@@ -34,30 +34,52 @@ const dragSource = {
   }
 }
 
+function getDropValues(props, monitor, component) {
+  var dropPosition = getDropPosition(monitor, component)
+  var dropTargetLeaf = props.leaf
+  var payload = monitor.getItem()
+  var abort = false
+
+  if (payload.utils instanceof Connect) {
+    payload = payload.utils
+
+    if (dropTargetLeaf.utils.value === payload.value) {
+      //prevent to drop a value in itself
+      abort = true
+    }
+  }
+
+  return {dropPosition, dropTargetLeaf, payload, abort}
+}
+
 const dropTarget = {
   drop(props, monitor, component) {
-    var dropPosition = getDropPosition(monitor, component)
-    var dropTargetLeaf = props.leaf
-    var payload = monitor.getItem()
+    var {dropPosition, dropTargetLeaf, payload, abort} =
+      getDropValues(props, monitor, component)
+    var dropResult
 
-    if (payload.utils instanceof Connect) {
-      payload = payload.utils
-
-      if (dropTargetLeaf.utils.value === payload.value) {
-        //prevent to drop a value in itself
-        return {taken: false}
-      }
+    if (abort) {
+      dropResult = {taken: false}
     }
-
-    //TODO take other dragSources
-    var dropResult = dropTargetLeaf.acceptDrop(payload, dropPosition)
+    else {
+      dropResult = dropTargetLeaf.acceptDrop(payload, dropPosition)
+    }
 
     return dropResult
   },
 
   hover(props, monitor, component) {
-    var dropPosition = getDropPosition(monitor, component)
-    component.setState({dropPosition})
+    var {dropPosition, dropTargetLeaf, payload, abort} =
+      getDropValues(props, monitor, component)
+    var canDrop
+
+    if (abort) {
+      canDrop = false
+    }
+    else {
+      canDrop = dropTargetLeaf.canDrop(payload, dropPosition)
+    }
+    component.setState({dropPosition, canDrop})
   },
 }
 
@@ -86,9 +108,9 @@ export default class DropLayer extends React.Component {
 
   render() {
     var {isDragging, isOver, connectDragSource, connectDropTarget} = this.props
-    var {dropPosition} = this.state
+    var {dropPosition, canDrop} = this.state
 
-    if (!isOver) {
+    if (!isOver || !canDrop) {
       dropPosition = null
     }
 
