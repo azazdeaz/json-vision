@@ -3,13 +3,33 @@ export default function (a, b) {
     !equals(a, b) ||
     !equals(a.input, b.input) ||
     a.input.value !== b.input.value ||
-    a.children !== b.children
+    a.children !== b.children ||
+    !equalArraysOfObjects(a.extraInputs, b.extraInputs) ||
+    !equalArraysOfObjects(a.buttons, b.buttons)
   )
-    /* ||
-    !(!a.inputs ||
-      (a.inputs.length !== b.inputs.length)
-      shallowEqual(a.input, b.input) ||*/
   return !different
+}
+
+function equalArraysOfObjects(arrA, arrB) {
+  if (typeof arrA !== typeof arrB) {
+    return false
+  }
+
+  if (arrA === 'object') {
+    if (arrA.length !== arrB.length) {
+      return false
+    }
+
+    for (var i = 0; i < arrA.length; i++) {
+      if (!equals(arrA[i], arrB[i])) {
+        return false;
+      }
+
+      if (arrA.options) {
+        //TODO
+      }
+    }
+  }
 }
 
 function equals(objA, objB) {

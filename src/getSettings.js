@@ -30,12 +30,12 @@ export default function getSettings(path) {
       return true
     }
 
-    if (typeof(settingsNode.selector) === 'function') {
+    if (typeof settingsNode.selector === 'function') {
 
       selectorType = 'function'
       selector = settingsNode.selector
     }
-    else if (typeof(settingsNode.selector) === 'object') {
+    else if (typeof settingsNode.selector === 'object') {
 
       selectorType = Object.keys(settingsNode.selector)[0]
       selector = settingsNode.selector[selectorType]
@@ -94,8 +94,7 @@ export default function getSettings(path) {
         let newPath = path.slice(0, path.length - 2)
         let newPreselectors = preselectors.slice(1)
 
-        return checkSettingsNode(
-          newSettingsNode, newPath, newPreselectors)
+        return checkSettingsNode(newSettingsNode, newPath, newPreselectors)
       }
     }
   }
@@ -158,7 +157,7 @@ export default function getSettings(path) {
 
   function compute(value, key) {
 
-    var type = typeof(value)
+    var type = typeof value
 
     if (type === 'function' &&
       ['onClick', 'onChange', 'chooseType', 'Component',
