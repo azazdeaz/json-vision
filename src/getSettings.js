@@ -161,7 +161,8 @@ export default function getSettings(path) {
 
     if (type === 'function' &&
       ['onClick', 'onChange', 'chooseType', 'Component',
-        'canDrop', 'acceptDrop', 'getDragPreview'].indexOf(key) === -1)
+        'canDrop', 'acceptDrop', 'getDragPreview',
+        'prepareExportValue', 'formatValue'].indexOf(key) === -1)
     {
       return value(utils)
     }
