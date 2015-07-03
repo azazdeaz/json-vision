@@ -5,7 +5,6 @@ import isArray from 'lodash/lang/isArray'
 import _isFinite from 'lodash/lang/isFinite'
 import includes from 'lodash/collection/includes'
 import Connect from './Connect'
-import matchSettings from './matchSettings'
 import React from 'react'
 import Item from './Item'
 
@@ -23,7 +22,7 @@ export default class Leaf {
     this.path = nextPath
     this.utils = this.root.createUtils(nextPath)
     var nextSettings = this.root.getSettings(nextPath)
-    var settingsChanged = !matchSettings(nextSettings, this.settings)
+    var settingsChanged = !this.root.matchSettings(nextSettings, this.settings)
 
     if (settingsChanged) {
       this.settings = nextSettings

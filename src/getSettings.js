@@ -1,13 +1,9 @@
-var mapValues = require('lodash/object/mapValues')
-var merge = require('lodash/object/merge')
 var includes = require('lodash/collection/includes')
-var forEach = require('lodash/collection/forEach')
 var isArray = require('lodash/lang/isArray')
-var clone = require('lodash/lang/clone')
 var minimatch = require('minimatch')
 var Connect = require('./Connect')
 
-export default function getSettings(path) {
+export default function getSettings(path, model) {
 // var __t = window.performance.now()
   var utils = new Connect(path)
   var settings = {
@@ -111,36 +107,38 @@ export default function getSettings(path) {
         return
       }
 
+
       if (checkSettingsNode(settingsNode, path, preselectors)) {
+        model.merge(settings, settingsNode, utils)
 
-        forEach(settingsNode, (value, key) => {
-
-          value = compute(value, key)
-
-          if (key === 'extraInputs' || key === 'buttons') {
-
-            let copy = value.map((val, idx) => {
-
-              var itemValue = compute(val, idx)
-
-              return computeObjectValues(itemValue)
-            })
-
-            let curr = settings[key]
-            if (curr) {
-              curr.push(...copy)
-            }
-            else {
-              settings[key] = copy
-            }
-          }
-          else if (key === 'input') {
-            settings[key] = merge(settings[key], computeObjectValues(value))
-          }
-          else if (value !== undefined) {
-            settings[key] = value
-          }
-        })
+        // forEach(settingsNode, (value, key) => {
+        //
+        //   value = compute(value, key)
+        //
+        //   if (key === 'extraInputs' || key === 'buttons') {
+        //
+        //     let copy = value.map((val, idx) => {
+        //
+        //       var itemValue = compute(val, idx)
+        //
+        //       return computeObjectValues(itemValue)
+        //     })
+        //
+        //     let curr = settings[key]
+        //     if (curr) {
+        //       curr.push(...copy)
+        //     }
+        //     else {
+        //       settings[key] = copy
+        //     }
+        //   }
+        //   else if (key === 'input') {
+        //     settings[key] = merge(settings[key], computeObjectValues(value))
+        //   }
+        //   else if (value !== undefined) {
+        //     settings[key] = value
+        //   }
+        // })
       }
 
       if (settingsNode.settings) {
@@ -151,28 +149,27 @@ export default function getSettings(path) {
     })
   }
 
-  function computeObjectValues(obj) {
-    return mapValues(obj, (val, key) => compute(val, key))
-  }
-
-  function compute(value, key) {
-
-    var type = typeof value
-
-    if (type === 'function' &&
-      ['onClick', 'onChange', 'chooseType', 'Component',
-        'canDrop', 'acceptDrop', 'getDragPreview',
-        'prepareExportValue', 'formatValue'].indexOf(key) === -1)
-    {
-      return value(utils)
-    }
-    else if (type === 'object') {
-      return clone(value)
-    }
-    else {
-      return value
-    }
-  }
+  // function computeObjectValues(obj) {
+  //   return mapValues(obj, (val, key) => compute(val, key))
+  // }
+  //
+  // function compute(value, key) {
+  //   var type = typeof value
+  //
+  //   if (type === 'function' &&
+  //     ['onClick', 'onChange', 'chooseType', 'Component',
+  //       'canDrop', 'acceptDrop', 'getDragPreview',
+  //       'prepareExportValue', 'formatValue'].indexOf(key) === -1)
+  //   {
+  //     return value(utils)
+  //   }
+  //   else if (type === 'object') {
+  //     return clone(value)
+  //   }
+  //   else {
+  //     return value
+  //   }
+  // }
 }
 
 
@@ -222,3 +219,8 @@ export default function getSettings(path) {
 }
 
 */
+var input =
+
+OS({
+  [OS.REST]: OS.string
+})
