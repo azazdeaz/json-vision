@@ -1,10 +1,19 @@
-import {primitive, object, array, func} from './SettingsModel'
+import {memorize, primitive, object, array, func} from './SettingsModel'
 
 var input = object({
-  value: primitive()
+  value: primitive(),
+  disabled: primitive(),
+  draggable: primitive(),
+  precision: primitive(),
+  dragSpeed: primitive(),
+  type: primitive(),
+  min: primitive(),
+  max: primitive(),
+  hints: primitive(),
+  maxVisibleHints: primitive(),
 })
 
-export default object({
+export default memorize(object({
   children: array(primitive()),
   highlighted: primitive(),
   label: primitive(),
@@ -28,7 +37,7 @@ export default object({
     onClick: func(),
     hideWhenLeaved: primitive(),
   }))
-})
+}))
 
 /**Settings Node
 {

@@ -1,5 +1,12 @@
+export function memorize(model) {
+  return {
+    match: model.getMatcher(),
+    merge: model.getMerger(),
+  }
+}
 
-export function string() {
+
+export function primitive() {
   return {
     getMatcher() {
       return (a, b) => a === b
@@ -15,12 +22,53 @@ export function string() {
   }
 }
 
-export function object(model) {
-  var keys = Object.keys(model)
+export function array(model) {
+  return {
+    getMatcher() {
+      var matcher = model.getMatcher()
+      var merger = model.getMerger()
+
+      return (a, b) => {
+        if (a.length !== undefined || b.length !== undefined) {
+          return a === b
+        }
+
+        if (a.length !== b.length) {
+          return false
+        }
+
+        for (let i = 0, l = a.length; i < l, ++i) {
+          if (!matcher(a[i], b[i])) {
+            return false
+          }
+        }
+
+        return true
+      }
+    },
+
+    getMerger() {
+      return (a, b, connect) => {
+        if (!a) {
+          a = []
+        }
+
+        if (b) {
+          for (let i = 0, l = b.length; i < l; ++i) {
+            a.push(b[i])
+          }
+        }
+      }
+    }
+  }
+}
+
+export function object(props) {
+  var keys = Object.keys(props)
 
   return {
     getMatcher() {
-      var matchers = keys.map(key => model[key].getMatcher())
+      var matchers = keys.map(key => props[key].getMatcher())
 
       return (a, b) => {
         return keys.every((key, idx) => {
@@ -30,7 +78,7 @@ export function object(model) {
     },
 
     getMerger() {
-      var mergers = keys.map(key => model[key].getMerger())
+      var mergers = keys.map(key => props[key].getMerger())
 
       return (a, b, connect) => {
         return keys.every((key, idx) => {
