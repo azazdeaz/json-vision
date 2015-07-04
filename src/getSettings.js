@@ -219,8 +219,3 @@ export default function getSettings(path, model) {
 }
 
 */
-var input =
-
-OS({
-  [OS.REST]: OS.string
-})

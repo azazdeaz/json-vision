@@ -22,14 +22,25 @@ export function primitive() {
   }
 }
 
-export function array(model) {
+export function func() {
+  return {
+    getMatcher() {
+      return (a, b) => (typeof a === 'function') === (typeof b === 'function')
+    },
+
+    getMerger() {
+      return (a, b) => b || a
+    }
+  }
+}
+
+export function arrayOf(model) {
   return {
     getMatcher() {
       var matcher = model.getMatcher()
-      var merger = model.getMerger()
 
       return (a, b) => {
-        if (a.length !== undefined || b.length !== undefined) {
+        if (a.length === undefined || b.length === undefined) {
           return a === b
         }
 
@@ -37,7 +48,7 @@ export function array(model) {
           return false
         }
 
-        for (let i = 0, l = a.length; i < l, ++i) {
+        for (let i = 0, l = a.length; i < l; ++i) {
           if (!matcher(a[i], b[i])) {
             return false
           }
@@ -48,6 +59,8 @@ export function array(model) {
     },
 
     getMerger() {
+      var merger = model.getMerger()
+
       return (a, b, connect) => {
         if (!a) {
           a = []
@@ -55,7 +68,7 @@ export function array(model) {
 
         if (b) {
           for (let i = 0, l = b.length; i < l; ++i) {
-            a.push(b[i])
+            a.push(merger(null, b[i], connect))
           }
         }
       }

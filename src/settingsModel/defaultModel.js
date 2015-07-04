@@ -1,6 +1,6 @@
-import {memorize, primitive, object, array, func} from './SettingsModel'
+import {memorize, primitive, object, arrayOf, func} from './SettingsModel'
 
-var input = object({
+var simpleInput = object({
   value: primitive(),
   disabled: primitive(),
   draggable: primitive(),
@@ -13,15 +13,29 @@ var input = object({
   maxVisibleHints: primitive(),
 })
 
+var input = object({
+  value: primitive(),
+  disabled: primitive(),
+  draggable: primitive(),
+  precision: primitive(),
+  dragSpeed: primitive(),
+  type: primitive(),
+  min: primitive(),
+  max: primitive(),
+  hints: primitive(),
+  maxVisibleHints: primitive(),
+  types: arrayOf(simpleInput)
+})
+
 export default memorize(object({
-  children: array(primitive()),
+  children: arrayOf(primitive()),
   highlighted: primitive(),
   label: primitive(),
   labelStyle: primitive(),//object
   draggable: true,
-  whitelist: array(primitive()),
-  blacklist: array(primitive()),
-  order: array(primitive()),
+  whitelist: arrayOf(primitive()),
+  blacklist: arrayOf(primitive()),
+  order: arrayOf(primitive()),
   onClick: func(),
   hidden: primitive(),
   canDrop: func(),//(targetUtils, itemUtils, idx) => {},
@@ -29,8 +43,8 @@ export default memorize(object({
   getDragPreview: func(),//utils => utils.value.getClonedDOMNode(),
   Component: func(),//ReactComponent //use custom component
   input: input,
-  extraInputs: array(input),
-  buttons: array(object({
+  extraInputs: arrayOf(input),
+  buttons: arrayOf(object({
     mod: object(),
     label: primitive(),
     icon: primitive(),
