@@ -1,4 +1,5 @@
-import {memorize, primitive, object, arrayOf, func} from './SettingsModel'
+import {memorize, primitive, object, objectOf, arrayOf, func}
+  from './SettingsModel'
 
 var simpleInput = object({
   value: primitive(),
@@ -30,12 +31,12 @@ var input = object({
 export default memorize(object({
   children: arrayOf(primitive()),
   highlighted: primitive(),
-  label: primitive(),
+  label: objectOf(primitive()),
   labelStyle: primitive(),//object
-  draggable: true,
-  whitelist: arrayOf(primitive()),
-  blacklist: arrayOf(primitive()),
-  order: arrayOf(primitive()),
+  draggable: primitive(),//boolean
+  whitelist: arrayOf(primitive(), {match: 'items', merge: 'union'}),
+  blacklist: arrayOf(primitive(), {match: 'items', merge: 'union'}),
+  order: arrayOf(primitive('replace')),
   onClick: func(),
   hidden: primitive(),
   canDrop: func(),//(targetUtils, itemUtils, idx) => {},
