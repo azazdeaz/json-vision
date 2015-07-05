@@ -31,12 +31,12 @@ var input = object({
 export default memorize(object({
   children: arrayOf(primitive()),
   highlighted: primitive(),
-  label: objectOf(primitive()),
-  labelStyle: primitive(),//object
+  label: primitive(),
+  labelStyle: object(primitive()),//object
   draggable: primitive(),//boolean
-  whitelist: arrayOf(primitive(), {match: 'items', merge: 'union'}),
-  blacklist: arrayOf(primitive(), {match: 'items', merge: 'union'}),
-  order: arrayOf(primitive('replace')),
+  whitelist: arrayOf(primitive()),
+  blacklist: arrayOf(primitive()),
+  order: arrayOf(primitive()),
   onClick: func(),
   hidden: primitive(),
   canDrop: func(),//(targetUtils, itemUtils, idx) => {},

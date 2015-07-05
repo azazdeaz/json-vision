@@ -1,0 +1,6 @@
+export {default as primitive} from './primitive'
+export {default as func} from './func'
+export {default as object} from './object'
+export {default as objectOf} from './objectOf'
+export {default as arrayOf} from './arrayOf'
+export {default as memorize} from './memorize'

@@ -5,6 +5,10 @@
   "main": "lib/index.js",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "test": "mocha --compilers js:babel/register",
+    "coverage": "babel-node node_modules/.bin/isparta cover --report text --report lcov node_modules/.bin/_mocha -- --reporter dot"
+  },
   "dependencies": {
     "lodash": "^3.7.0",
     "minimatch": "^2.0.4",
@@ -24,7 +28,9 @@
     "babelify": "^6.0.2",
     "browser-sync": "^2.6.5",
     "browserify": "^9.0.8",
+    "chai": "^3.0.0",
     "eslint": "^0.21.1",
+    "eslint-plugin-mocha": "^0.4.0",
     "eslint-plugin-react": "^2.3.0",
     "file-loader": "^0.8.4",
     "gulp": "^3.8.11",
@@ -37,8 +43,10 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.4",
+    "isparta": "^3.0.3",
     "json-loader": "^0.5.2",
     "lodash": "^3.7.0",
+    "mocha": "^2.2.5",
     "node-libs-browser": "^0.5.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
