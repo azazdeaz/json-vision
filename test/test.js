@@ -131,6 +131,7 @@ describe('object', () => {
 
     assert.deepEqual(merger({foo: 0}, {foo: 1}), {foo: 1})
     assert.deepEqual(merger({foo: 4}, {}), {foo: 4})
+    assert.deepEqual(merger({foo: 4}, {foo: undefined}), {foo: 4})
     assert.deepEqual(merger(undefined, {foo: 1}), {foo: 1})
   })
   it('isn\'t add unused properties', () => {

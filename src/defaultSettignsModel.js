@@ -29,7 +29,7 @@ var input = object({
 })
 
 export default memorize(object({
-  children: dontCheck(),
+  children: primitive(),
   includeInheriteds: primitive(),//boolean
   highlighted: primitive(),
   label: primitive(),
