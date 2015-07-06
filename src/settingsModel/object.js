@@ -7,6 +7,17 @@ export default function object(props) {
       const matchers = keys.map(key => props[key].getMatcher())
 
       return (a, b) => {
+        var aType = typeof a
+        var bType = typeof b
+
+        if (aType !== bType) {
+          return false
+        }
+
+        if (aType !== 'object') {
+          return a === b
+        }
+        
         for (let i = 0; i < keysLength; i++) {
           let key = keys[i]
           if (!matchers[i](a[key], b[key])) {
@@ -25,9 +36,18 @@ export default function object(props) {
           b = b(connect)
         }
 
+        if (!a || typeof a !== 'object') {
+          return b
+        }
+
         for (let i = 0; i < keysLength; i++) {
           let key = keys[i]
-          a[key] = mergers[i](a[key], b[key], connect)
+          let aValue = a[key]
+          let bValue = b[key]
+
+          if (bValue !== undefined) {
+            a[key] = mergers[i](aValue, bValue, connect)
+          }
         }
         return a
       }

@@ -3,7 +3,7 @@ var isArray = require('lodash/lang/isArray')
 var minimatch = require('minimatch')
 var Connect = require('./Connect')
 
-export default function getSettings(path, model) {
+export default function getSettings(settingsModel, path) {
 // var __t = window.performance.now()
   var utils = new Connect(path)
   var settings = {
@@ -109,7 +109,7 @@ export default function getSettings(path, model) {
 
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
-        model.merge(settings, settingsNode, utils)
+        settingsModel.merge(settings, settingsNode, utils)
 
         // forEach(settingsNode, (value, key) => {
         //

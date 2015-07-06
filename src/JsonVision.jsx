@@ -4,7 +4,7 @@ var {getStyles} = require('react-matterkit').utils
 var getSettings = require('./getSettings')
 var Leaf = require('./Leaf')
 var Connect = require('./Connect')
-var defautModel = require('./settingsModel/defaultModel')
+var defaultSettignsModel = require('./defaultSettignsModel')
 // import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 // import {DragDropContext} from 'react-dnd'
 //
@@ -29,7 +29,7 @@ export default class JsonVision extends React.Component {
     title: 'json vision',
     value: {},
     settings: [],
-    settingsModel: defaultModel
+    settingsModel: defaultSettignsModel
   }
 
   constructor(props) {
@@ -42,10 +42,12 @@ export default class JsonVision extends React.Component {
     return ['', props.value]
   }
 
-  getSettings = getSettings.bind(this)
+  getSettings(path) {
+    return getSettings.call(this, this.props.settingsModel, path)
+  }
 
-  matchSettings(a, b) {
-    return this.props.settingsModel.match(a, b)
+  matchSettings(currentSettings, nextSettings) {
+    return this.props.settingsModel.match(currentSettings, nextSettings)
   }
 
   createAction() {

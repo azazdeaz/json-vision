@@ -4,7 +4,10 @@ export default function arrayOf(model) {
       var matcher = model.getMatcher()
 
       return (a, b) => {
-        if (a.length === undefined || b.length === undefined) {
+        if (
+          typeof a !== 'object' || a.length === undefined ||
+          typeof b !== 'object' || b.length === undefined
+        ) {
           return a === b
         }
 
@@ -30,11 +33,17 @@ export default function arrayOf(model) {
           a = []
         }
 
+        if (typeof b === 'function') {
+          b = b(connect)
+        }
+
         if (b) {
           for (let i = 0, l = b.length; i < l; ++i) {
             a.push(merger(null, b[i], connect))
           }
         }
+
+        return a
       }
     }
   }
