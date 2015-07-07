@@ -32,7 +32,6 @@ export default class Leaf {
       //that and this leaf only care about the count of the them
       //so the next children have to be taken no matter what
       this.settings.children = nextSettings.children
-      console.log(this.settings.label, this.settings.children, nextSettings.children)
     }
 
     var childCountChanged = this.setupChildren()
