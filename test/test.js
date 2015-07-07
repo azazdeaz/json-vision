@@ -61,6 +61,7 @@ describe('primitive', () => {
     assert.isTrue(matcher('a', 'a'))
     assert.isFalse(matcher('a', 'b'))
     assert.isTrue(matcher(false, false))
+    assert.isTrue(matcher({}, {}))
     assert.isFalse(matcher(false, true))
     assert.isFalse(matcher(1, true))
   })

@@ -10,7 +10,7 @@ var simpleInput = object({
   type: primitive(),
   min: primitive(),
   max: primitive(),
-  hints: primitive(),
+  hints: arrayOf(primitive()),
   maxVisibleHints: primitive(),
 })
 

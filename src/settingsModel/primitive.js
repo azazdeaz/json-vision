@@ -1,7 +1,12 @@
 export default function primitive() {
   return {
     getMatcher() {
-      return (a, b) => a === b
+      return (a, b) => {
+        if (typeof a === 'object' || typeof b === 'object') {
+          return true
+        }
+        return a === b
+      }
     },
 
     getMerger() {

@@ -27,6 +27,13 @@ export default class Leaf {
     if (settingsChanged) {
       this.settings = nextSettings
     }
+    else {
+      //children aren't really tested for matching because child leafs will do
+      //that and this leaf only care about the count of the them
+      //so the next children have to be taken no matter what
+      this.settings.children = nextSettings.children
+      console.log(this.settings.label, this.settings.children, nextSettings.children)
+    }
 
     var childCountChanged = this.setupChildren()
 
@@ -43,7 +50,7 @@ export default class Leaf {
     var children
     var childCountChanged = false
 
-    if (has(settings, 'children')) {
+    if (settings.children !== undefined) {
       children = settings.children
     }
     else if (isObject(value)) {
