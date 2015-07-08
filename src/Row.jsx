@@ -25,7 +25,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       return <settings.Component {...this.props}/>
     }
 
-    var styleConfig = getStyles(this).get('config')
+    var styleConfig = getStyles(this).getStyle('config')
     var textColor = settings.highlighted ? styleConfig.palette.grey4 : styleConfig.fontColor.normal
 
     var styleBlock = {

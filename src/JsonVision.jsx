@@ -65,7 +65,7 @@ export default class JsonVision extends React.Component {
   }
 
   render() {
-    var styleConfig = getStyles(this).get('config')
+    var styleConfig = getStyles(this).getStyle('config')
     var style = assign(this.props.style, {
       background: styleConfig.palette.grey4,
       color: styleConfig.fontColor.normal,

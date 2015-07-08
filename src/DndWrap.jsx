@@ -134,7 +134,7 @@ class DropHighlight extends React.Component {
     var {pos, currPos} = this.props
     var isHovering = pos === currPos
 
-    // var styleConfig = getStyles(this).get('config')
+    // var styleConfig = getStyles(this).getStyle('config')
 
     var s = {
       pointerEvents: 'none',
