@@ -12,6 +12,8 @@ var simpleInput = object({
   max: primitive(),
   hints: arrayOf(primitive()),
   maxVisibleHints: primitive(),
+  prepareExportValue: func(),
+  formatValue: func(),
 })
 
 var input = object({
@@ -25,7 +27,10 @@ var input = object({
   max: primitive(),
   hints: primitive(),
   maxVisibleHints: primitive(),
-  types: arrayOf(simpleInput)
+  types: arrayOf(simpleInput),
+  prepareExportValue: func(),
+  formatValue: func(),
+  chooseType: func(),
 })
 
 export default memorize(object({
