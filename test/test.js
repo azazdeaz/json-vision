@@ -151,6 +151,8 @@ describe('object', () => {
     }).getMerger()
     var fn = () => ({foo: 1})
     assert.deepEqual(merger({foo: 0}, fn), {foo: 1})
+    assert.deepEqual(merger({foo: 0}, {foo: () => 1}), {foo: 1})
+    assert.deepEqual(merger(undefined, {foo: () => 1}), {foo: 1})
   })
   it('passes connect to the computed value', () => {
     var merger = object({}).getMerger()
@@ -188,6 +190,8 @@ describe('objectOf', () => {
     var merger = objectOf(primitive()).getMerger()
     var fn = () => ({foo: 1})
     assert.deepEqual(merger({foo: 0}, fn), {foo: 1})
+    assert.deepEqual(merger({foo: 0}, {foo: () => 1}), {foo: 1})
+    assert.deepEqual(merger(undefined, {foo: () => 1}), {foo: 1})
   })
   it('passes connect to the computed value', () => {
     var merger = objectOf(primitive()).getMerger()

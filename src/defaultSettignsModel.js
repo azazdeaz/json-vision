@@ -15,6 +15,7 @@ var simpleInput = object({
   maxVisibleHints: primitive(),
   prepareExportValue: func(),
   formatValue: func(),
+
   acceptType: func(),
 })
 

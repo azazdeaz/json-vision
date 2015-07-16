@@ -54,7 +54,7 @@ export default function objectOf(model) {
         }
         //so b is an object and not null
         if (aType !== 'object' || a === null) {
-          return b
+          a = {}
         }
         //so a and b both are real objects
         var bKeys = Object.keys(b)

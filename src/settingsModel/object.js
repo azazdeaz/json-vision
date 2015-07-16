@@ -17,7 +17,7 @@ export default function object(props) {
         if (aType !== 'object') {
           return a === b
         }
-        
+
         for (let i = 0; i < keysLength; i++) {
           let key = keys[i]
           if (!matchers[i](a[key], b[key])) {
@@ -37,7 +37,7 @@ export default function object(props) {
         }
 
         if (!a || typeof a !== 'object') {
-          return b
+          a = {}
         }
 
         for (let i = 0; i < keysLength; i++) {
