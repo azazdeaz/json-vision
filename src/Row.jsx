@@ -44,16 +44,18 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
 
 
     //label
-    var styleLabel = assign({
-      flex: 1,
-      color: textColor,
-      // color: dropState.isDragging ? style.palette.purple : 'inherit',
-      // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
-    }, settings.labelStyle)
+    if (settings.label) {
+      let styleLabel = assign({
+        flex: 1,
+        color: textColor,
+        // color: dropState.isDragging ? style.palette.purple : 'inherit',
+        // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
+      }, settings.labelStyle)
 
-    items.label = <span style={styleLabel}>
-      {settings.label}
-    </span>
+      items.label = <span style={styleLabel}>
+        {settings.label}
+      </span>
+    }
 
     //input
     items.input = <Input
