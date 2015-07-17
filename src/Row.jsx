@@ -59,7 +59,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     items.input = <Input
       {...settings.input}
       leaf = {leaf}
-      onChange = {(value, utils) => leaf.update(value, utils)}/>
+      onChange = {value => leaf.update(value)}/>
 
     //extraInputs
     if (settings.extraInputs) {

@@ -1,11 +1,9 @@
-import has from 'lodash/object/has'
 import keysIn from 'lodash/object/keysIn'
 import isObject from 'lodash/lang/isObject'
 import isArray from 'lodash/lang/isArray'
 import _isFinite from 'lodash/lang/isFinite'
 import includes from 'lodash/collection/includes'
 import Connect from './Connect'
-import React from 'react'
 import Item from './Item'
 
 export default class Leaf {
@@ -20,7 +18,12 @@ export default class Leaf {
 
   setup(nextPath) {
     this.path = nextPath
-    this.utils = this.root.createUtils(nextPath)
+    this.utils = new Connect(
+      nextPath,
+      this.update,
+      this.delete,
+      () => root.reportChange()
+    )
     var nextSettings = this.root.getSettings(nextPath)
     var settingsChanged = !this.root.matchSettings(nextSettings, this.settings)
 
@@ -93,10 +96,39 @@ export default class Leaf {
     return childCountChanged
   }
 
-  update(value, utils) {
-    utils.value = value
+  update = (value) => {
+    var {utils, parentLeaf, settings, root} = this
 
-    var {settings} = this
+    if (parentLeaf && parentLeaf.settings.children) {
+      //if the children of the parentLeaf set by the settings modify there
+      parentLeaf.settings.children[utils.key] = value
+    }
+    else {
+      utils.parent[utils.key] = value
+    }
+
+    root.reportChange()
+    this._callOnChangeHandler()
+  }
+
+  delete = () => {
+    var {utils, parentLeaf, settings, root} = this
+
+    if (parentLeaf && parentLeaf.settings.children) {
+      //if the children of the parentLeaf set by the settings modify there
+      delete parentLeaf.settings.children[utils.key]
+    }
+    else {
+      delete utils.parent[utils.key]
+    }
+
+    root.reportChange()
+    this._callOnChangeHandler()
+  }
+
+  _callOnChangeHandler(value) {
+    var {settings, utils} = this
+
     var onChange = settings.input && settings.input.onChange
     if (typeof onChange === 'function') {
       onChange(value, utils)
@@ -186,10 +218,6 @@ export default class Leaf {
     }
     return this._component
   }
-
-  // dispose() {
-  //
-  // }
 }
 
 function getKeysInOrder(children, settings) {

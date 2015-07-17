@@ -1,4 +1,4 @@
-import {memorize, primitive, object, objectOf, arrayOf, func, dontCheck}
+import {memorize, primitive, object, objectOf, arrayOf, func}
   from './settingsModel'
 
 var simpleInput = object({

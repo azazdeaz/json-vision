@@ -50,14 +50,10 @@ export default class JsonVision extends React.Component {
     return this.props.settingsModel.match(currentSettings, nextSettings)
   }
 
-  createAction() {
+  reportChange() {
     if (this.props.onChange) {
       this.props.onChange(this.props.value)
     }
-  }
-
-  createUtils(path) {
-    return new Connect(path, this.createAction.bind(this))
   }
 
   componentDidUpdate() {

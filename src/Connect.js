@@ -1,8 +1,8 @@
 export default class Connect {
-
-  constructor(path, reportChange) {
-
+  constructor(path, update, del, reportChange) {
     this.path = path
+    this.update = update
+    this.delete = del
     this.reportChange = reportChange
   }
 
@@ -10,7 +10,7 @@ export default class Connect {
     return this._getAt(1)
   }
   set value(v) {
-    this._setAt(1, v)
+    this.updateValue(v)
   }
 
   get key() {
@@ -21,6 +21,14 @@ export default class Connect {
     return this._getAt(3)
   }
 
+  nthKey(n) {
+    return this._getAt(n * 2)
+  }
+
+  nthParent(n) {
+    return this._getAt(1 + n * 2)
+  }
+
   get fullPath() {
     return this.path.reduce((path, val, idx) => {
       return path + (idx % 2 === 0 ? `/${val}` : '')
@@ -28,9 +36,7 @@ export default class Connect {
   }
 
   delete() {
-    var parent = this.parent
-    delete parent[this.key]
-    this.reportChange()
+    this.delete()
   }
 
 
@@ -39,10 +45,10 @@ export default class Connect {
     return path[path.length - pos]
   }
 
-  _setAt(pos, value) {
-    var {path} = this
-    var key = path[path.length - (pos+1)]
-    path[path.length - (pos+2)][key] = value
-    this.reportChange()
-  }
+  // _setAt(pos, value) {
+  //   var {path} = this
+  //   var key = path[path.length - (pos+1)]
+  //   path[path.length - (pos+2)][key] = value
+  //   this.reportChange()
+  // }
 }
