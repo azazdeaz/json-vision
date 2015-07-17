@@ -10,7 +10,7 @@ export default class Connect {
     return this._getAt(1)
   }
   set value(v) {
-    this.updateValue(v)
+    this.update(v)
   }
 
   get key() {

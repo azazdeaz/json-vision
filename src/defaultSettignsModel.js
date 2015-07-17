@@ -13,6 +13,7 @@ var simpleInput = object({
   hints: arrayOf(primitive()),
   options: arrayOf(primitive()),
   maxVisibleHints: primitive(),
+  onChange: func(),
   prepareExportValue: func(),
   formatValue: func(),
 
@@ -32,6 +33,7 @@ var input = object({
   options: arrayOf(primitive()),
   maxVisibleHints: primitive(),
   types: arrayOf(simpleInput),
+  onChange: func(),
   prepareExportValue: func(),
   formatValue: func(),
 })

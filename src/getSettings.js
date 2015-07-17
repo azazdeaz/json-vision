@@ -25,13 +25,13 @@ export default function getSettings(settingsModel, path) {
 
       let selectorType = 'function'
       let selector = settingsNode.selector
-      match = isMatches(selectorType, selector)
+      setMatch(selectorType, selector)
     }
     else if (typeof settingsNode.selector === 'object') {
 
       let selectorType = Object.keys(settingsNode.selector)[0]
       let selector = settingsNode.selector[selectorType]
-      match = isMatches(selectorType, selector)
+      setMatch(selectorType, selector)
     }
     else {
       match = true
@@ -43,7 +43,6 @@ export default function getSettings(settingsModel, path) {
         return true
       }
       else {
-
         let newSettingsNode = preselectors[0]
         let newPath = path.slice(0, path.length - 2)
         let newPreselectors = preselectors.slice(1)
@@ -52,11 +51,10 @@ export default function getSettings(settingsModel, path) {
       }
     }
 
-    function isMatches(selectorType, selector) {
+    function setMatch(selectorType, selector) {
       var utils = new Connect(path)
 
       if (selectorType === 'function') {
-
         match = selector(utils)
       }
       else if (selectorType === 'instanceOf') {

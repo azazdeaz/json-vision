@@ -66,7 +66,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     //extraInputs
     if (settings.extraInputs) {
 
-      items.extraInputs = <span style={{flex: 1}}>
+      items.extraInputs = <span style={{display: 'flex', flex: 1}}>
 
         {settings.extraInputs.map((inputProps, idx) => {
           return <Input
