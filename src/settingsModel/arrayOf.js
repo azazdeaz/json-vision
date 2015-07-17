@@ -37,6 +37,10 @@ export default function arrayOf(model) {
           b = b(connect)
         }
 
+        if (b === null) {
+          return b
+        }
+
         if (b) {
           for (let i = 0, l = b.length; i < l; ++i) {
             a.push(merger(null, b[i], connect))

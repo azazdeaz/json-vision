@@ -40,6 +40,10 @@ export default function object(props) {
           a = {}
         }
 
+        if (b === null) {
+          return b
+        }
+
         for (let i = 0; i < keysLength; i++) {
           let key = keys[i]
           let aValue = a[key]

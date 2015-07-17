@@ -49,6 +49,7 @@ export default function objectOf(model) {
         if (bType !== 'object') {
           return a
         }
+
         if (b === null) {
           return b
         }

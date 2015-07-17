@@ -134,6 +134,7 @@ describe('object', () => {
     assert.deepEqual(merger({foo: 4}, {}), {foo: 4})
     assert.deepEqual(merger({foo: 4}, {foo: undefined}), {foo: 4})
     assert.deepEqual(merger(undefined, {foo: 1}), {foo: 1})
+    assert.deepEqual(merger({foo: 4}, null), null)
   })
   it('isn\'t add unused properties', () => {
     var merger = object({
@@ -185,6 +186,7 @@ describe('objectOf', () => {
     assert.deepEqual(merger({foo: 0, bar: 2}, {foo: 1}), {foo: 1, bar: 2})
     assert.deepEqual(merger({foo: 0}, {foo: 1, bar: 2}), {foo: 1, bar: 2})
     assert.deepEqual(merger(undefined, {foo: 1, bar: 2}), {foo: 1, bar: 2})
+    assert.deepEqual(merger({foo: 0}, null), null)
   })
   it('resolves computed values', () => {
     var merger = objectOf(primitive()).getMerger()
@@ -221,6 +223,7 @@ describe('arrayOf', () => {
 
     assert.deepEqual(merger([1, 2, 3], [1, 2, 3]), [1, 2, 3, 1, 2, 3])
     assert.deepEqual(merger(undefined, [1, 2]), [1, 2])
+    assert.deepEqual(merger([1, 2, 3], null), null)
   })
   it('resolves computed values', () => {
     var merger = arrayOf(primitive()).getMerger()
