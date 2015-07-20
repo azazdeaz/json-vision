@@ -11,7 +11,7 @@ export default function objectOf(model) {
           return false
         }
 
-        if (aType !== 'object') {
+        if (aType !== 'object' || a === null || b === null) {
           return a === b
         }
 

@@ -14,7 +14,7 @@ export default function object(props) {
           return false
         }
 
-        if (aType !== 'object') {
+        if (aType !== 'object' || a === null || b === null) {
           return a === b
         }
 

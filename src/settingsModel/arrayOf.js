@@ -5,8 +5,8 @@ export default function arrayOf(model) {
 
       return (a, b) => {
         if (
-          typeof a !== 'object' || a.length === undefined ||
-          typeof b !== 'object' || b.length === undefined
+          typeof a !== 'object' || a === null || a.length === undefined ||
+          typeof b !== 'object' || b === null || b.length === undefined
         ) {
           return a === b
         }

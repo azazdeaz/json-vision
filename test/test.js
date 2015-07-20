@@ -124,6 +124,9 @@ describe('object', () => {
     assert.isFalse(matcher(undefined, {foo: 1}))
     assert.isFalse(matcher({foo: 0}, undefined))
     assert.isTrue(matcher({foo: 0, bar: 2}, {foo: 0, bar: 3}))
+    assert.isFalse(matcher(null, {foo: 0, bar: 3}))
+    assert.isFalse(matcher({foo: 0, bar: 2}, null))
+    assert.isTrue(matcher(null, null))
   })
   it('merges properly', () => {
     var merger = object({
@@ -179,6 +182,9 @@ describe('objectOf', () => {
     assert.isTrue(matcher({foo: 0, bar: 2}, {foo: 0, bar: 2}))
     assert.isFalse(matcher({foo: 0, bar: 2}, {foo: 0, bar: 3}))
     assert.isFalse(matcher({foo: 0, bar: 2}, {foo: 0, qux: 2}))
+    assert.isFalse(matcher(null, {foo: 0, bar: 3}))
+    assert.isFalse(matcher({foo: 0, bar: 2}, null))
+    assert.isTrue(matcher(null, null))
   })
   it('merges properly', () => {
     var merger = objectOf(primitive()).getMerger()
@@ -217,6 +223,9 @@ describe('arrayOf', () => {
     assert.isTrue(matcher([1, 2, 3], [1, 2, 3]))
     assert.isFalse(matcher([2, 3], [1, 2, 3]))
     assert.isFalse(matcher([8, 2, 3], [1, 2, 3]))
+    assert.isFalse(matcher(null, [1, 2, 3]))
+    assert.isFalse(matcher([1, 2, 3], null))
+    assert.isTrue(matcher(null, null))
   })
   it('merges properly', () => {
     var merger = arrayOf(primitive()).getMerger()
