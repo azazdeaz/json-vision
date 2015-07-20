@@ -1,7 +1,7 @@
 import {memorize, primitive, object, objectOf, arrayOf, func}
   from './settingsModel'
 
-var simpleInput = object({
+var inputShape = {
   value: primitive(),
   disabled: primitive(),
   draggable: primitive(),
@@ -13,30 +13,21 @@ var simpleInput = object({
   hints: arrayOf(primitive()),
   options: arrayOf(primitive()),
   maxVisibleHints: primitive(),
+  kind: objectOf(primitive()),
   onChange: func(),
   prepareExportValue: func(),
   formatValue: func(),
+
+  addonIcon: primitive(),
+  addonLabel: primitive(),
+  addonBackground: primitive(),
+  addonOnClick: func(),
 
   acceptType: func(),
-})
+}
 
-var input = object({
-  value: primitive(),
-  disabled: primitive(),
-  draggable: primitive(),
-  precision: primitive(),
-  dragSpeed: primitive(),
-  type: primitive(),
-  min: primitive(),
-  max: primitive(),
-  hints: arrayOf(primitive()),
-  options: arrayOf(primitive()),
-  maxVisibleHints: primitive(),
-  types: arrayOf(simpleInput),
-  onChange: func(),
-  prepareExportValue: func(),
-  formatValue: func(),
-})
+var simpleInput = object({...inputShape})
+var input = object({...inputShape, types: arrayOf(simpleInput)})
 
 export default memorize(object({
   children: primitive(),

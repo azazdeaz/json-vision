@@ -22,7 +22,7 @@ export default class Leaf {
       nextPath,
       this.update,
       this.delete,
-      () => root.reportChange()
+      () => this.root.reportChange()
     )
     var nextSettings = this.root.getSettings(nextPath)
     var settingsChanged = !this.root.matchSettings(nextSettings, this.settings)
