@@ -5,6 +5,7 @@ import _isFinite from 'lodash/lang/isFinite'
 import includes from 'lodash/collection/includes'
 import Connect from './Connect'
 import Item from './Item'
+import React from 'react'
 
 export default class Leaf {
   constructor(path, root, idx, parentLeaf) {
@@ -222,9 +223,7 @@ export default class Leaf {
 
 function getKeysInOrder(children, settings) {
   var {order, includeInheriteds} = settings
-
-  var keys = settings.includeInheriteds ?
-    keysIn(children) : Object.keys(children)
+  var keys = includeInheriteds ? keysIn(children) : Object.keys(children)
 
   if (!order) {
     return keys

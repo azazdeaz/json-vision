@@ -6,14 +6,13 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "test": "mocha --compilers js:babel/register",
-    "coverage": "babel-node node_modules/.bin/isparta cover --report text --report lcov node_modules/.bin/_mocha -- --reporter dot"
+    "coverage": "babel-node node_modules/.bin/isparta cover --report text --report lcov node_modules/.bin/_mocha -- --reporter dot",
+    "test": "mocha --compilers js:babel/register"
   },
   "dependencies": {
     "lodash": "^3.7.0",
     "minimatch": "^2.0.4",
-    "react": "^0.13.3",
-    "react-dnd": "^1.1.3",
+    "react-dnd": "^1.1.4",
     "react-matterkit": "*",
     "react-pure-render": "^1.0.2"
   },

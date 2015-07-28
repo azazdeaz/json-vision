@@ -83,19 +83,23 @@ const dropTarget = {
   },
 }
 
-@DragSource(Config.DND_TYPE, dragSource, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
-}))
+@DragSource(Config.DND_TYPE, dragSource, function (connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  }
+})
 @DropTarget(
   props => {
     return props.leaf.settings.dropTargetTypes || Config.DND_TYPE
   },
   dropTarget,
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
-  })
+  function (connect, monitor) {
+    return {
+      connectDropTarget: connect.dropTarget(),
+      isOver: monitor.isOver()
+    }
+  }
 )
 export default class DropLayer extends React.Component {
   constructor(props) {
