@@ -17,7 +17,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
   }
 
   render () {
-    var {leaf, opened, hasChildren, onClickOpenToggle} = this.props
+    var {leaf, open, hasChildren, onClickOpenToggle} = this.props
     var {settings} = leaf
     var {hover} = this.state
 
@@ -88,7 +88,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
 
     //show/hide toggle btn
     items.toggle = <Icon
-      icon={hasChildren ? (opened ? 'chevron-down' : 'chevron-right') : ' '}
+      icon={hasChildren ? (open ? 'chevron-down' : 'chevron-right') : ' '}
       onClick={hasChildren ? onClickOpenToggle : null}
       style={{margin: '0 4px', color: textColor}}/>
 

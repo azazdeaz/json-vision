@@ -8,13 +8,20 @@ export default class Item extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      opened: true,
+    this.state = {open: true}
+
+    var settings = props.leaf.settings
+
+    if (has(settings, 'open')) {
+      this.state.open = settings.open
+    }
+    else if (has(settings, 'defaultOpen')) {
+      this.state.open = settings.defaultOpen
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.opened !== this.state.opened
+    return nextState.open !== this.state.open
   }
 
   componentDidMount() {
@@ -26,13 +33,19 @@ export default class Item extends React.Component {
   }
 
   handleClickOpenToggle = () => {
-    this.setState({opened: !this.state.opened})
+    var {leaf} = this.props
+
+    if (leaf.settings.onToggleOpen) {
+      leaf.settings.onToggleOpen(leaf.utils)
+    }
+
+    this.setState({open: !this.state.open})
   }
 
   renderChildren() {
     var {settings, childLeafs} = this.props.leaf
 
-    if (!this.state.opened || childLeafs.length === 0) {
+    if (!this.state.open || childLeafs.length === 0) {
       return null
     }
 
@@ -43,8 +56,8 @@ export default class Item extends React.Component {
   }
 
   render () {
-    var {settings, childLeafs} = this.props.leaf
-    var {opened} = this.state
+    const {settings, childLeafs} = this.props.leaf
+    const {open} = has(settings, 'open') ? settings : this.state
 
     if (settings.ItemComponent) {
       return <settings.ItemComponent {...this.props}/>
@@ -52,7 +65,7 @@ export default class Item extends React.Component {
 
     var row = settings.hideHead ? null : <Row
       leaf = {this.props.leaf}
-      opened = {opened}
+      open = {open}
       hasChildren = {childLeafs.length !== 0}
       onClickOpenToggle = {this.handleClickOpenToggle}/>
 
