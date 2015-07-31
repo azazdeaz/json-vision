@@ -63,7 +63,7 @@ export default class Item extends React.Component {
       return <settings.ItemComponent {...this.props}/>
     }
 
-    var row = settings.hideHead ? null : <Row
+    var row = settings.hiddenHead ? null : <Row
       leaf = {this.props.leaf}
       open = {open}
       hasChildren = {childLeafs.length !== 0}

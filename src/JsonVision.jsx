@@ -43,7 +43,7 @@ export default class JsonVision extends React.Component {
   }
 
   getSettings(path) {
-    return getSettings.call(this, this.props.settingsModel, path)
+    return getSettings(this.props.settings, this.props.settingsModel, path)
   }
 
   matchSettings(currentSettings, nextSettings) {

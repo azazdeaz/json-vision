@@ -31,6 +31,8 @@ var simpleInput = object({...inputShape})
 var input = object({...inputShape, types: arrayOf(simpleInput)})
 
 export default memorize(object({
+  hidden: primitive(),
+  hiddenHead: primitive(),
   children: primitive(),
   includeInheriteds: primitive(),//boolean
   highlighted: primitive(),
@@ -41,7 +43,6 @@ export default memorize(object({
   blacklist: arrayOf(primitive()),
   order: arrayOf(primitive()),
   onClick: func(),
-  hidden: primitive(),
   canDrop: func(),//(targetUtils, itemUtils, idx) => {},
   acceptDrop: func(),//(targetUtils, itemUtils, idx) => {},
   getDragPreview: func(),//utils => utils.value.getClonedDOMNode(),

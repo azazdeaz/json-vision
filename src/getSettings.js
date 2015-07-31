@@ -3,7 +3,7 @@ var isArray = require('lodash/lang/isArray')
 var minimatch = require('minimatch')
 var Connect = require('./Connect')
 
-export default function getSettings(settingsModel, path) {
+export default function getSettings(settingsList, settingsModel, path) {
 // var __t = window.performance.now()
   var utils = new Connect(path)
   var settings = {
@@ -13,7 +13,7 @@ export default function getSettings(settingsModel, path) {
     label: utils.key
   }
 
-  checkSettingsList(this.props.settings, [])
+  checkSettingsList(settingsList, [])
   // window.GET_SETTINGSTIME = window.GET_SETTINGSTIME || 0
   // window.GET_SETTINGSTIME += window.performance.now() - __t
   return settings
@@ -22,20 +22,23 @@ export default function getSettings(settingsModel, path) {
     var match = false
 
     if (typeof settingsNode.selector === 'function') {
-
       let selectorType = 'function'
       let selector = settingsNode.selector
       setMatch(selectorType, selector)
     }
+    else if (typeof settingsNode.selector === 'string') {
+      let selectorType = 'select'
+      let selector = settingsNode.selector
+      setMatch(selectorType, selector)
+    }
     else if (typeof settingsNode.selector === 'object') {
-
       let selectorType = Object.keys(settingsNode.selector)[0]
       let selector = settingsNode.selector[selectorType]
       setMatch(selectorType, selector)
     }
-    else {
-      match = true
-    }
+    // else {
+    //   match = true
+    // }
 
     if (match) {
 
@@ -56,6 +59,14 @@ export default function getSettings(settingsModel, path) {
 
       if (selectorType === 'function') {
         match = selector(utils)
+      }
+      else if (selectorType === 'select') {
+        if (selector === 'all') {
+          match = true
+        }
+        else if (selector === 'root') {
+          match = path.length === 2
+        }
       }
       else if (selectorType === 'instanceOf') {
 
