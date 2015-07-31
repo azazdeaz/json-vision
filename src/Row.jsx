@@ -99,7 +99,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       onMouseLeave={() => this.setState({hover: false})}
       onClick={()=>{
         if (settings.onClick) {
-          settings.onClick(leaf.utils)
+          settings.onClick(leaf.connect)
         }
       }}
       leaf = {leaf}

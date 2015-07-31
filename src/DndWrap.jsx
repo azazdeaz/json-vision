@@ -20,7 +20,7 @@ function getDropPosition(monitor, component) {
 
 const dragSource = {
   beginDrag(props) {
-    return {utils: props.leaf.utils}
+    return {connect: props.leaf.connect}
   },
   canDrag(props) {
     return props.leaf.settings.draggable
@@ -29,7 +29,7 @@ const dragSource = {
     var {taken, userHandled} = monitor.getDropResult()
 
     if (!userHandled && taken) {
-      props.leaf.utils.delete()
+      props.leaf.connect.delete()
     }
   }
 }
@@ -40,10 +40,10 @@ function getDropValues(props, monitor, component) {
   var payload = monitor.getItem()
   var abort = false
 
-  if (payload.utils instanceof Connect) {
-    payload = payload.utils
+  if (payload.connect instanceof Connect) {
+    payload = payload.connect
 
-    if (dropTargetLeaf.utils.value === payload.value) {
+    if (dropTargetLeaf.connect.value === payload.value) {
       //prevent to drop a value in itself
       abort = true
     }

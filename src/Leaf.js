@@ -19,7 +19,7 @@ export default class Leaf {
 
   setup(nextPath) {
     this.path = nextPath
-    this.utils = new Connect(
+    this.connect = new Connect(
       nextPath,
       this.update,
       this.delete,
@@ -98,14 +98,14 @@ export default class Leaf {
   }
 
   update = (value) => {
-    var {utils, parentLeaf, settings, root} = this
+    var {connect, parentLeaf, settings, root} = this
 
     if (parentLeaf && parentLeaf.settings.children) {
       //if the children of the parentLeaf set by the settings modify there
-      parentLeaf.settings.children[utils.key] = value
+      parentLeaf.settings.children[connect.key] = value
     }
     else {
-      utils.parent[utils.key] = value
+      connect.parent[connect.key] = value
     }
 
     root.reportChange()
@@ -113,14 +113,14 @@ export default class Leaf {
   }
 
   delete = () => {
-    var {utils, parentLeaf, settings, root} = this
+    var {connect, parentLeaf, settings, root} = this
 
     if (parentLeaf && parentLeaf.settings.children) {
       //if the children of the parentLeaf set by the settings modify there
-      delete parentLeaf.settings.children[utils.key]
+      delete parentLeaf.settings.children[connect.key]
     }
     else {
-      delete utils.parent[utils.key]
+      delete connect.parent[connect.key]
     }
 
     root.reportChange()
@@ -128,16 +128,16 @@ export default class Leaf {
   }
 
   _callOnChangeHandler(value) {
-    var {settings, utils} = this
+    var {settings, connect} = this
 
     var onChange = settings.input && settings.input.onChange
     if (typeof onChange === 'function') {
-      onChange(value, utils)
+      onChange(value, connect)
     }
   }
 
   acceptDrop(payload, dropPosition) {
-    var {utils, idx, settings, parentLeaf} = this
+    var {connect, idx, settings, parentLeaf} = this
     var taken = false
     var userHandled = false
     var dragSourceConnect
@@ -149,7 +149,7 @@ export default class Leaf {
     if (dropPosition === 'before' || dropPosition === 'after') {
       if (settings.acceptDropAround) {
         taken = settings.acceptDropAround(
-          payload, utils, parentLeaf.utils, dropPosition)
+          payload, connect, parentLeaf.connect, dropPosition)
 
         userHandled = true
       }
@@ -165,20 +165,20 @@ export default class Leaf {
     else if (dropPosition === 'in' || _isFinite(dropPosition)) {
       if (settings.acceptDrop) {
         //acceptDrop should returns true if it takes the dragSource
-        taken = settings.acceptDrop(payload, utils, dropPosition)
+        taken = settings.acceptDrop(payload, connect, dropPosition)
         userHandled = true
       }
       else if (dragSourceConnect) {
-        if (isArray(utils.value)) {
-          this.utils.value.splice(dropPosition, 0, dragSourceConnect.value)
+        if (isArray(connect.value)) {
+          this.connect.value.splice(dropPosition, 0, dragSourceConnect.value)
           taken = true
         }
-        else if (typeof utils.value === 'object') {
-          utils.value[dragSourceConnect.key] = dragSourceConnect.value
+        else if (typeof connect.value === 'object') {
+          connect.value[dragSourceConnect.key] = dragSourceConnect.value
           taken = true
         }
         else {
-          utils.value = dragSourceConnect.value
+          connect.value = dragSourceConnect.value
           taken = true
         }
       }
@@ -188,13 +188,13 @@ export default class Leaf {
   }
 
   canDrop(payload, dropPosition) {
-    var {utils, idx, settings, parentLeaf} = this
+    var {connect, idx, settings, parentLeaf} = this
     var canDrop = true
 
     if (dropPosition === 'before' || dropPosition === 'after') {
       if (settings.canDropAround) {
         canDrop = settings.canDropAround(
-          payload, utils, parentLeaf.utils, dropPosition)
+          payload, connect, parentLeaf.connect, dropPosition)
       }
       else if (parentLeaf) {
         let parentDropPosition = idx
@@ -206,7 +206,7 @@ export default class Leaf {
     }
     else if (dropPosition === 'in' || _isFinite(dropPosition)) {
       if (settings.canDrop) {
-        canDrop = settings.canDrop(payload, utils, dropPosition)
+        canDrop = settings.canDrop(payload, connect, dropPosition)
       }
     }
 

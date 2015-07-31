@@ -36,7 +36,7 @@ export default class Item extends React.Component {
     var {leaf} = this.props
 
     if (leaf.settings.onToggleOpen) {
-      leaf.settings.onToggleOpen(leaf.utils)
+      leaf.settings.onToggleOpen(leaf.connect)
     }
 
     this.setState({open: !this.state.open})

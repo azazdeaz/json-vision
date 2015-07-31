@@ -6,7 +6,7 @@ var {ItemGroup, Button} = Matterkit
 
 export default class Buttons extends React.Component {
   handleBtnClick = (btn) => {
-    btn.onClick(this.props.leaf.utils)
+    btn.onClick(this.props.leaf.connect)
   }
 
   render() {

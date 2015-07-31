@@ -13,7 +13,7 @@ export default class Input extends React.Component {
 
     var handleChange = val => {
       if (typeof onChange === 'function') {
-        onChange(val, leaf.utils)
+        onChange(val, leaf.connect)
       }
     }
 

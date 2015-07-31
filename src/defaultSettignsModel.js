@@ -45,7 +45,7 @@ export default memorize(object({
   onClick: func(),
   canDrop: func(),//(targetUtils, itemUtils, idx) => {},
   acceptDrop: func(),//(targetUtils, itemUtils, idx) => {},
-  getDragPreview: func(),//utils => utils.value.getClonedDOMNode(),
+  getDragPreview: func(),//connect => connect.value.getClonedDOMNode(),
   Component: func(),//ReactComponent //use custom component
   input: input,
   extraInputs: arrayOf(input),
@@ -69,11 +69,11 @@ export default memorize(object({
   whitelist: ['foo', 'bar'],
   blacklist: ['qux', 'baz'],
   order: ['tux', 'baz'],
-  onClick: utils => {}
+  onClick: connect => {}
   hidden: true,
   canDrop: (targetUtils, itemUtils, idx) => {},
   acceptDrop: (targetUtils, itemUtils, idx) => {},
-  getDragPreview: utils => utils.value.getClonedDOMNode(),
+  getDragPreview: connect => connect.value.getClonedDOMNode(),
   Component: ReactComponent //use custom component
   input: {
     type: 'number',
@@ -89,7 +89,7 @@ export default memorize(object({
       types: [
         {--//--}
       ],
-      chooseType: utils => return 0
+      chooseType: connect => return 0
     }
   ],
   buttons: [
@@ -97,7 +97,7 @@ export default memorize(object({
       kind: 'colored'
       label: 'Push'
       icon: 'github'
-      onClick: utils => {},
+      onClick: connect => {},
       hideWhenLeaved: true,
     }
   ]

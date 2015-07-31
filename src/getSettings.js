@@ -5,12 +5,12 @@ var Connect = require('./Connect')
 
 export default function getSettings(settingsList, settingsModel, path) {
 // var __t = window.performance.now()
-  var utils = new Connect(path)
+  var connect = new Connect(path)
   var settings = {
     input: {
-      value: utils.value
+      value: connect.value
     },
-    label: utils.key
+    label: connect.key
   }
 
   checkSettingsList(settingsList, [])
@@ -55,10 +55,10 @@ export default function getSettings(settingsList, settingsModel, path) {
     }
 
     function setMatch(selectorType, selector) {
-      var utils = new Connect(path)
+      var connect = new Connect(path)
 
       if (selectorType === 'function') {
-        match = selector(utils)
+        match = selector(connect)
       }
       else if (selectorType === 'select') {
         if (selector === 'all') {
@@ -71,24 +71,24 @@ export default function getSettings(settingsList, settingsModel, path) {
       else if (selectorType === 'instanceOf') {
 
         if (isArray(selector)) {
-          match = selector.some(s => utils.value instanceof s)
+          match = selector.some(s => connect.value instanceof s)
         }
         else {
-          match = utils.value instanceof selector
+          match = connect.value instanceof selector
         }
       }
       else if (selectorType === 'key') {
 
         if (isArray(selector)) {
-          match = includes(selector, utils.key)
+          match = includes(selector, connect.key)
         }
         else {
-          match = utils.key === selector
+          match = connect.key === selector
         }
       }
       else if (selectorType === 'value') {
 
-        match = utils.value === selector
+        match = connect.value === selector
       }
       else if (selectorType === 'path') {
       }
@@ -96,7 +96,7 @@ export default function getSettings(settingsList, settingsModel, path) {
       }
       else if (selectorType === 'glob') {
 
-        match = minimatch(utils.fullPath, selector)
+        match = minimatch(connect.fullPath, selector)
       }
       else {
         throw Error()
@@ -109,7 +109,7 @@ export default function getSettings(settingsList, settingsModel, path) {
     settingsList.forEach(settingsNode => {
 
       if (typeof settingsNode === 'function') {
-        settingsNode = settingsNode(utils)
+        settingsNode = settingsNode(connect)
       }
 
       if (typeof settingsNode !== 'object') {
@@ -118,7 +118,7 @@ export default function getSettings(settingsList, settingsModel, path) {
 
 
       if (checkSettingsNode(settingsNode, path, preselectors)) {
-        settingsModel.merge(settings, settingsNode, utils)
+        settingsModel.merge(settings, settingsNode, connect)
       }
 
       if (settingsNode.settings) {

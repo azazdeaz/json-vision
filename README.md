@@ -46,15 +46,15 @@ var settings = [{
 }]
 ```
 To make the setting dynamic you can replace any parameter with a function.
-The function called with one argument (```utils```) which lets you easily access to current value. Example:
+The function called with one argument (```connect```) which lets you easily access to current value. Example:
 ```javasctipt
-utils.value, utils.key, utils.fullPath, utils.delete()
+connect.value, connect.key, connect.fullPath, connect.delete()
 
 {
   //hide when qux = 'baz'
   selector: {inscaneOf: SomeClass},
-  hidden: utils => utils.parent.qux === 'baz',
-  label: utils => capitalise(utils.key)
+  hidden: connect => connect.parent.qux === 'baz',
+  label: connect => capitalise(connect.key)
 }
 ```
 There is a lot of more settings option like:
@@ -68,11 +68,11 @@ There is a lot of more settings option like:
   draggable: true,
   canDrop: (targetUtils, itemUtils, idx) => {},
   acceptDrop: (targetUtils, itemUtils, idx) => {},
-  getDragPreview: utils => utils.value.getClonedDOMNode(),
+  getDragPreview: connect => connect.value.getClonedDOMNode(),
   whitelist: ['foo', 'bar'],
   blacklist: ['qux', 'baz'],
   order: ['tux', 'baz'],
-  onClick: utils => {}
+  onClick: connect => {}
   hidden: true,
   Component: ReactComponent //use custom component
   input: {
@@ -89,7 +89,7 @@ There is a lot of more settings option like:
       types: [
         {--//--}
       ],
-      chooseType: utils => return 0;
+      chooseType: connect => return 0;
       //... input settings
     }
   ],
@@ -98,7 +98,7 @@ There is a lot of more settings option like:
       kind: 'colored'
       label: 'Push'
       icon: 'github'
-      onClick: utils => {},
+      onClick: connect => {},
       hideWhenLeaved: true,
     }
   ]
