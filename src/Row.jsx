@@ -3,9 +3,7 @@ import assign from 'lodash/object/assign'
 import Input from './Input'
 import Buttons from './Buttons'
 import DndWrap from './DndWrap'
-import Matter from 'react-matterkit'
-var {Icon} = Matter
-var getStyles = Matter.utils.getStyles
+import {Icon, getTheme} from 'react-matterkit'
 
 export default class Row extends React.Component {// eslint-disable-line no-shadow
   constructor(props) {
@@ -25,7 +23,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       return <settings.Component {...this.props}/>
     }
 
-    var styleConfig = getStyles(this).getStyle('config')
+    var styleConfig = getTheme(this).getStyle('config')
     var textColor = settings.highlighted ? styleConfig.palette.grey4 : styleConfig.fontColor.normal
 
     var styleBlock = {

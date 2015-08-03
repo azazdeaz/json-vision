@@ -1,4 +1,4 @@
-var {getStyles} = require('react-matterkit').utils
+var {getTheme} = require('react-matterkit')
 import React from 'react'
 import {DragSource, DropTarget} from 'react-dnd'
 import Connect from './Connect'
@@ -138,7 +138,7 @@ class DropHighlight extends React.Component {
     var {pos, currPos} = this.props
     var isHovering = pos === currPos
 
-    // var styleConfig = getStyles(this).getStyle('config')
+    // var styleConfig = getTheme(this).getStyle('config')
 
     var s = {
       pointerEvents: 'none',

@@ -1,6 +1,6 @@
 var React = require('react')
 var assign = require('lodash/object/assign')
-var {getStyles} = require('react-matterkit').utils
+var {getTheme} = require('react-matterkit')
 var getSettings = require('./getSettings')
 var Leaf = require('./Leaf')
 var Connect = require('./Connect')
@@ -61,7 +61,7 @@ export default class JsonVision extends React.Component {
   }
 
   render() {
-    var styleConfig = getStyles(this).getStyle('config')
+    var styleConfig = getTheme(this).getStyle('config')
     var style = assign(this.props.style, {
       background: styleConfig.palette.grey4,
       color: styleConfig.fontColor.normal,
