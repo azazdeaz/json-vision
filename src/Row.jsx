@@ -3,7 +3,7 @@ import assign from 'lodash/object/assign'
 import Input from './Input'
 import Buttons from './Buttons'
 import DndWrap from './DndWrap'
-import {Icon, getTheme} from 'react-matterkit'
+import {Icon, Label, getTheme} from 'react-matterkit'
 
 export default class Row extends React.Component {// eslint-disable-line no-shadow
   constructor(props) {
@@ -12,6 +12,10 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     this.state = {
       hover: false,
     }
+  }
+
+  static contextTypes = {
+    matterkitTheme: React.PropTypes.object
   }
 
   render () {
@@ -28,8 +32,8 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
 
     var styleBlock = {
       position: 'relative',
-      height: styleConfig.lineHeight + 3,
-      lineHeight: `${styleConfig.lineHeight + 3}px`,
+      height: styleConfig.lineHeight,
+      lineHeight: `${styleConfig.lineHeight}px`,
       display: 'flex',
       color: settings.highlighted ? styleConfig.palette.blue : styleConfig.palette.grey2,
       fontSize: '13px',
@@ -50,9 +54,9 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
         // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
       }, settings.labelStyle)
 
-      items.label = <span style={styleLabel}>
+      items.label = <Label style={styleLabel}>
         {settings.label}
-      </span>
+      </Label>
     }
 
     //input
