@@ -1,5 +1,6 @@
 var includes = require('lodash/collection/includes')
 var isArray = require('lodash/lang/isArray')
+var isObject = require('lodash/lang/isObject')
 var minimatch = require('minimatch')
 var Connect = require('./Connect')
 
@@ -112,7 +113,7 @@ export default function getSettings(settingsList, settingsModel, path) {
         settingsNode = settingsNode(connect)
       }
 
-      if (typeof settingsNode !== 'object') {
+      if (!isObject(settingsNode)) {
         return
       }
 
