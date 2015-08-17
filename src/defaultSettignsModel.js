@@ -18,7 +18,9 @@ var inputShape = {
   onChange: func(),
   prepareExportValue: func(),
   formatValue: func(),
+  prettifyValue: func(),
   getElement: func(),
+  style: objectOf(primitive()),
 
   addonIcon: primitive(),
   addonLabel: primitive(),
@@ -57,6 +59,7 @@ export default memorize(object({
     onClick: func(),
     hideWhenLeaved: primitive(),
     getElement: func(),
+    style: objectOf(primitive()),
   }))
 }))
 
