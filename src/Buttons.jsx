@@ -1,6 +1,4 @@
 var React = require('react')
-var clone = require('lodash/lang/clone')
-var assign = require('lodash/object/assign')
 var Matterkit = require('react-matterkit')
 var {ItemGroup, Button} = Matterkit
 
@@ -27,7 +25,9 @@ export default class Buttons extends React.Component {
         else {
           button = <Button
             {...btn}
-            onClick={() => this.handleButtonClick(btn)}/>
+            mod = {{kind: 'stamp', ...btn.mod}}
+            onClick = {() => this.handleButtonClick(btn)}
+          />
         }
 
         return <div key={idx} style={{...buttonStyle, visibility}}>
