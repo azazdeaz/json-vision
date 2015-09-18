@@ -68,6 +68,9 @@ export default function getSettings(settingsList, settingsModel, path) {
         else if (selector === 'root') {
           match = path.length === 2
         }
+        else {
+          throw Error(`[json-vision] unknown select command: ${selector}`)
+        }
       }
       else if (selectorType === 'instanceOf') {
 
