@@ -100,31 +100,35 @@ export default class Leaf {
   update = (value) => {
     var {connect, parentLeaf, settings, root} = this
 
-    if (parentLeaf && parentLeaf.settings.children) {
-      //if the children of the parentLeaf set by the settings modify there
-      parentLeaf.settings.children[connect.key] = value
-    }
-    else {
-      connect.parent[connect.key] = value
+    if (settings.mutateValue) {
+      if (parentLeaf && parentLeaf.settings.children) {
+        //if the children of the parentLeaf set by the settings modify there
+        parentLeaf.settings.children[connect.key] = value
+      }
+      else {
+        connect.parent[connect.key] = value
+      }
+
+      root.reportChange()
     }
 
-    root.reportChange()
-    this._callOnChangeHandler()
+    this._callOnChangeHandler(value)
   }
 
   delete = () => {
     var {connect, parentLeaf, settings, root} = this
 
-    if (parentLeaf && parentLeaf.settings.children) {
-      //if the children of the parentLeaf set by the settings modify there
-      delete parentLeaf.settings.children[connect.key]
-    }
-    else {
-      delete connect.parent[connect.key]
-    }
+    if (settings.mutateValue) {
+      if (parentLeaf && parentLeaf.settings.children) {
+        //if the children of the parentLeaf set by the settings modify there
+        delete parentLeaf.settings.children[connect.key]
+      }
+      else {
+        delete connect.parent[connect.key]
+      }
 
-    root.reportChange()
-    this._callOnChangeHandler()
+      root.reportChange()
+    }
   }
 
   _callOnChangeHandler(value) {

@@ -37,6 +37,7 @@ export default memorize(object({
   hidden: primitive(),
   hiddenHead: primitive(),
   children: primitive(),
+  mutateValue: primitive(),//boolean
   includeInheriteds: primitive(),//boolean
   highlighted: primitive(),
   label: primitive(),
