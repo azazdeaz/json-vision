@@ -22,11 +22,11 @@ export default class Connect {
   }
 
   nthKey(n) {
-    return this._getAt(n * 2)
+    return this._getAt(2 + n * 2)
   }
 
   nthParent(n) {
-    return this._getAt(1 + n * 2)
+    return this._getAt(3 + n * 2)
   }
 
   get fullPath() {
