@@ -101,7 +101,7 @@ const dropTarget = {
     }
   }
 )
-export default class DropLayer extends React.Component {
+export default class DndWrap extends React.Component {
   constructor(props) {
     super(props)
 
