@@ -3,6 +3,7 @@ import assign from 'lodash/object/assign'
 import Input from './Input'
 import Buttons from './Buttons'
 import DndWrap from './DndWrap'
+import ContextMenuWrap from './ContextMenuWrap'
 import {Icon, Label, getTheme} from 'react-matterkit'
 
 export default class Row extends React.Component {// eslint-disable-line no-shadow
@@ -95,22 +96,24 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       style={{margin: '0 4px', color: textColor}}/>
 
 
-    return <DndWrap
-      style={styleBlock}
-      onMouseEnter={() => this.setState({hover: true})}
-      onMouseLeave={() => this.setState({hover: false})}
-      onClick={()=>{
-        if (settings.onClick) {
-          settings.onClick(leaf.connect)
-        }
-      }}
-      leaf = {leaf}
-      draggable = {settings.draggable}>
+    return <ContextMenuWrap options={settings.contextMenu} leaf={leaf}>
+      <DndWrap
+        style={styleBlock}
+        onMouseEnter={() => this.setState({hover: true})}
+        onMouseLeave={() => this.setState({hover: false})}
+        onClick={()=>{
+          if (settings.onClick) {
+            settings.onClick(leaf.connect)
+          }
+        }}
+        leaf = {leaf}
+        draggable = {settings.draggable}>
         {items.toggle}
         {items.label}
         {items.input}
         {items.extraInputs}
         {items.buttons}
-    </DndWrap>
+      </DndWrap>
+    </ContextMenuWrap>
   }
 }
