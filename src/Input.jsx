@@ -31,11 +31,17 @@ export default class Input extends React.Component {
       onChange={handleChange}
       options={inputProps.options.map(option => {
         if (typeof option === 'string') {
-          return {label: option, value: option}
+          option = {label: option, value: option}
         }
-        else {
-          return option
+        if (option.onClick) {
+        debugger
+          const originalClickHandler = option.onClick
+          option = {
+            ...option,
+            onClick: val => originalClickHandler(val, leaf.connect)
+          }
         }
+        return option
       })}/>
 
     if (type) {
@@ -60,10 +66,10 @@ export default class Input extends React.Component {
         createInput('number')
         break
       case 'string':
-        createInput('text')
+        createInput('string')
         break
       case 'color':
-        createInput('text')
+        createInput('string')
         break
       default:
         console.warn(`Unknown type: "${type}"`)
@@ -86,7 +92,7 @@ export default class Input extends React.Component {
               createInput('number')
               break
             case 'string':
-              createInput('text')
+              createInput('string')
               break
             case 'boolean':
               createCheckbox()
