@@ -17,10 +17,17 @@ export default class Input extends React.Component {
       }
     }
 
-    var createInput = inputType => input = <MatterInput
-      {...inputProps}
-      type = {inputType}
-      onChange = {handleChange}/>
+    var createInput = inputType => {
+      const addonOnClick = inputProps.addonOnClick
+        ? (...args) => inputProps.addonOnClick(leaf.connect, ...args)
+        : null
+
+      input = <MatterInput
+        {...inputProps}
+        addonOnClick = {addonOnClick}
+        type = {inputType}
+        onChange = {handleChange}/>
+    }
 
     var createCheckbox = () => input = <Checkbox
       {...inputProps}
@@ -34,7 +41,6 @@ export default class Input extends React.Component {
           option = {label: option, value: option}
         }
         if (option.onClick) {
-        debugger
           const originalClickHandler = option.onClick
           option = {
             ...option,
