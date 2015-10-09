@@ -21,7 +21,7 @@ export default class ContextMenuWrap extends React.Component {
     })
 
     return <ContextMenu
-      items = {items}
+      items = {items || []}
       renderComponent = {options.renderComponent}>
       {children}
     </ContextMenu>

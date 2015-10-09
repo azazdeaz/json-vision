@@ -13,7 +13,7 @@
     "lodash": "^3.7.0",
     "minimatch": "^2.0.4",
     "react-dnd": "^1.1.4",
-    "react-matterkit": "*",
+    "react-matterkit": "0.0.39",
     "react-pure-render": "^1.0.2"
   },
   "devDependencies": {
