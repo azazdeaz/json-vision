@@ -49,7 +49,11 @@ export default class Item extends React.Component {
       return null
     }
 
-    var marginLeft = has(settings, 'indent') ? settings.indent : 6
+    var marginLeft = settings.hiddenHead
+      ? 0
+      : has(settings, 'indent')
+      ? settings.indent
+      : 6
     return <div style={{marginLeft}}>
       {childLeafs.map(childLeaf => childLeaf.getComponent())}
     </div>
