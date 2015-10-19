@@ -34,6 +34,7 @@ var simpleInput = object({...inputShape})
 var input = object({...inputShape, types: arrayOf(simpleInput)})
 
 export default memorize(object({
+  shouldUpdate: func(),
   hidden: primitive(),
   hiddenHead: primitive(),
   children: primitive(),

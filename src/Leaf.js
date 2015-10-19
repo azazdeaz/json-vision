@@ -18,13 +18,23 @@ export default class Leaf {
   }
 
   setup(nextPath) {
-    this.path = nextPath
-    this.connect = new Connect(
+    const nextConnect = new Connect(
       nextPath,
       this.update,
       this.delete,
       () => this.root.reportChange()
     )
+
+    if (
+      this.settings &&
+      this.settings.shouldUpdate &&
+      this.settings.shouldUpdate(this.connect, nextConnect) === false
+    ) {
+      return
+    }
+
+    this.path = nextPath
+    this.connect = nextConnect
     var nextSettings = this.root.getSettings(nextPath)
     var settingsChanged = !this.root.matchSettings(nextSettings, this.settings)
 
