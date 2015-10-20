@@ -20,17 +20,18 @@ export default class Buttons extends React.Component {
         }
 
         if (btn.getElement) {
-          button = btn.getElement()
+          button = btn.getElement({style: buttonStyle})
         }
         else {
           button = <Button
             {...btn}
+            style = {{...btn.style, ...buttonStyle}}
             mod = {{kind: 'stamp', ...btn.mod}}
             onClick = {() => this.handleButtonClick(btn)}
           />
         }
 
-        return <div key={idx} style={{...buttonStyle, visibility}}>
+        return <div key={idx} style={{visibility}}>
           {button}
         </div>
       })}
