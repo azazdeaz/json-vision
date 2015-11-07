@@ -27,7 +27,7 @@ var inputShape = {
   addonBackground: primitive(),
   addonOnClick: func(),
 
-  acceptType: func(),
+  acceptValue: func(),
 }
 
 var simpleInput = object({...inputShape})
