@@ -18,6 +18,10 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     matterkitTheme: React.PropTypes.object
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.settings !== this.props.settings
+  }
+
   render () {
     var {settings, open, hasChildren, onClickOpenToggle} = this.props
     var {hover} = this.state

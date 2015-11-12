@@ -45,7 +45,9 @@ export default class Item extends React.Component {
       hidden = {settings.hidden}
       style = {{position: 'relative'}}>
       {row}
-      {children}
+      <div hidden={!open} style={{marginLeft: 4}}>
+        {children}
+      </div>
     </div>
   }
 }

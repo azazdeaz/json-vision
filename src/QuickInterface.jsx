@@ -6,10 +6,6 @@ class QuickInterface extends React.Component {
     settings: PropTypes.object.isRequired
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.settings !== this.props.settings
-  }
-
   render () {
     const {settings, children} = this.props
     return <Item settings={settings}>
