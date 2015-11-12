@@ -12,7 +12,7 @@ module.exports = {
     packageMains: ['main'],
     extensions: ['', '.js', '.jsx'],
     alias: {
-      SRC: path.join(__dirname, '/../src'),
+      'quick-interface': path.join(__dirname, '/../src/index.js'),
     }
   },
   module: {

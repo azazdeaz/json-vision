@@ -1,5 +1,4 @@
 import React from 'react'
-import assign from 'lodash/object/assign'
 import Input from './Input'
 import Buttons from './Buttons'
 import DndWrap from './DndWrap'
@@ -20,8 +19,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
   }
 
   render () {
-    var {leaf, open, hasChildren, onClickOpenToggle} = this.props
-    var {settings} = leaf
+    var {settings, open, hasChildren, onClickOpenToggle} = this.props
     var {hover} = this.state
 
     if (settings.Component) {
@@ -47,35 +45,35 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
 
 
     //label
-    if (settings.label) {
-      let styleLabel = assign({
-        flex: 1,
-        color: textColor,
-        // color: dropState.isDragging ? style.palette.purple : 'inherit',
-        // backgroundColor: dropState.isHovering ? style.palette.blue : 'inherit',
-      }, settings.labelStyle)
+    if (settings.labels) {
+      items.labels = <span style={{display: 'flex', flex: 1}}>
+        {settings.labels.map((label, id) => {
+          if (typeof label === 'string') {
+            label = {label}
+          }
+          label = {
+            ...label,
+            style: {
+              flex: 1,
+              color: textColor,
+              ...label.style
+            }
+          }
 
-      items.label = <Label style={styleLabel}>
-        {settings.label}
-      </Label>
+          return <Label {...label}/>
+        })}
+      </span>
     }
 
-    //input
-    items.input = <Input
-      {...settings.input}
-      leaf = {leaf}
-      onChange = {value => leaf.update(value)}/>
+    //inputs
+    if (settings.inputs) {
 
-    //extraInputs
-    if (settings.extraInputs) {
+      items.inputs = <span style={{display: 'flex', flex: 1}}>
 
-      items.extraInputs = <span style={{display: 'flex', flex: 1}}>
-
-        {settings.extraInputs.map((inputProps, idx) => {
+        {settings.inputs.map((inputProps, idx) => {
           return <Input
             key = {idx}
-            {...inputProps}
-            leaf = {leaf}/>
+            {...inputProps}/>
         })}
       </span>
     }
@@ -84,7 +82,6 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
     if (settings.buttons) {
       items.buttons = <Buttons
         hover = {hover}
-        leaf = {leaf}
         buttonStyle = {{color: textColor}}
         buttons = {settings.buttons}/>
     }
@@ -96,24 +93,27 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       style={{margin: '0 4px', color: textColor}}/>
 
 
-    return <ContextMenuWrap options={settings.contextMenu} leaf={leaf}>
-      <DndWrap
-        style={styleBlock}
-        onMouseEnter={() => this.setState({hover: true})}
-        onMouseLeave={() => this.setState({hover: false})}
-        onClick={()=>{
-          if (settings.onClick) {
-            settings.onClick(leaf.connect)
-          }
-        }}
-        leaf = {leaf}
-        draggable = {settings.draggable}>
+      // <DndWrap
+      //   style={styleBlock}
+      //   onMouseEnter={() => this.setState({hover: true})}
+      //   onMouseLeave={() => this.setState({hover: false})}
+      //   onClick={()=>{
+      //     if (settings.onClick) {
+      //       settings.onClick()
+      //     }
+      //   }}
+      //   draggable = {settings.draggable}>}
+      // </DndWrap>
+      console.log(settings)
+    return <ContextMenuWrap options={settings.contextMenu}>
+        <div>
+          ROW
         {items.toggle}
-        {items.label}
-        {items.input}
-        {items.extraInputs}
+        {items.labels}
+        {items.inputs}
         {items.buttons}
-      </DndWrap>
+
+        </div>
     </ContextMenuWrap>
   }
 }

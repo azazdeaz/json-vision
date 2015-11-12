@@ -1,6 +1,7 @@
 require('./index.html')
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 import App from './App'
 
-React.render(<App/>, document.querySelector('#mount-app'))
+ReactDOM.render(<App/>, document.querySelector('#mount-app'))
