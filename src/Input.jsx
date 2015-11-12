@@ -7,24 +7,20 @@ var {Button, Slider, Dropdown, Checkbox, MultiTypeInput,
 
 export default class Input extends React.Component {
   render() {
-    var {leaf, key, ...inputProps} = this.props
+    var {key, ...inputProps} = this.props
     var {value, type, onChange} = inputProps
     var input = null
 
     var handleChange = val => {
       if (typeof onChange === 'function') {
-        onChange(val, leaf.connect)
+        onChange(val)
       }
     }
 
     var createInput = inputType => {
-      const addonOnClick = inputProps.addonOnClick
-        ? (...args) => inputProps.addonOnClick(leaf.connect, ...args)
-        : null
-
       input = <MatterInput
         {...inputProps}
-        addonOnClick = {addonOnClick}
+        addonOnClick = {inputProps.addonOnClick}
         type = {inputType}
         onChange = {handleChange}/>
     }
@@ -39,13 +35,6 @@ export default class Input extends React.Component {
       options={inputProps.options.map(option => {
         if (typeof option === 'string') {
           option = {label: option, value: option}
-        }
-        if (option.onClick) {
-          const originalClickHandler = option.onClick
-          option = {
-            ...option,
-            onClick: val => originalClickHandler(val, leaf.connect)
-          }
         }
         return option
       })}/>

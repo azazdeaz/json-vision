@@ -13,7 +13,6 @@ class QuickInterface extends React.Component {
   render () {
     const {settings, children} = this.props
     return <Item settings={settings}>
-      {JSON.stringify({children})}
         {children}
       </Item>
   }

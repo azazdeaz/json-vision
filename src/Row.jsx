@@ -104,10 +104,8 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
       //   }}
       //   draggable = {settings.draggable}>}
       // </DndWrap>
-      console.log(settings)
     return <ContextMenuWrap options={settings.contextMenu}>
-        <div>
-          ROW
+        <div style={styleBlock}>
         {items.toggle}
         {items.labels}
         {items.inputs}
