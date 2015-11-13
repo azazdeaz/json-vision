@@ -1,12 +1,17 @@
 import React from 'react'
 import has from 'lodash/object/has'
 import Row from './Row'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 
 export default class Item extends React.Component {
-  constructor(props) {
-    super(props)
-    const {settings} = props
+  shouldComponentUpdate = shouldPureComponentUpdate
 
+  constructor({createSettings, ...args}) {
+    super()
+
+    const settings = createSettings(args)
+
+    this.settings = settings
     this.state = {
       open: has(settings, 'open')
         ? settings.open
@@ -14,6 +19,10 @@ export default class Item extends React.Component {
         ? settings.defaultOpen
         : true
     }
+  }
+
+  componentWillUpdate({createSettings, ...args}) {
+    this.settings = createSettings(args)
   }
 
   handleClickOpenToggle = () => {
@@ -27,7 +36,8 @@ export default class Item extends React.Component {
   }
 
   render () {
-    const {settings, children} = this.props
+    const {settings} = this
+    const {children} = this.props
     const {open} = has(settings, 'open') ? settings : this.state
     const childCount = React.Children.count(children)
 

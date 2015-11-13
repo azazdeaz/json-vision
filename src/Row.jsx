@@ -64,7 +64,7 @@ export default class Row extends React.Component {// eslint-disable-line no-shad
             }
           }
 
-          return <Label {...label}/>
+          return <Label key={id} {...label}/>
         })}
       </span>
     }

@@ -34,78 +34,58 @@ import {
   changeLastName,
 } from './store'
 
-const getHeadSettings = memorize(
-  users => users.length,
-  (count) => ({
-    labels: ['user count'],
-    inputs: [{
-      type: 'number',
-      value: count,
-      dragSpeed: 1,
-      onChange: value => store.dispatch(changeUserCount(value)),
-    }],
-  })
-)
-const getUserSettings = memorize(
-  user => user.title,
-  user => user.first,
-  user => user.last,
-  (title, first, last) => ({
-    labels: [`${capitalize(title)}. ${capitalize(first)} ${capitalize(last)}`],
-  })
-)
+const createHeadSettings = ({count}) => ({
+  labels: ['user count'],
+  inputs: [{
+    type: 'number',
+    value: count,
+    dragSpeed: 1,
+    onChange: value => store.dispatch(changeUserCount(value)),
+  }],
+})
 
-const getGenderSettings = memorize(
-  user => user.id,
-  user => user.gender,
-  (id, gender) => ({
-    labels: [`gender`],
-    inputs: [{
-      type: 'dropdown',
-      value: gender,
-      options: ['male', 'female'],
-      onChange: value => store.dispatch(changeGender(id, value)),
-    }]
-  })
-)
-const getNameSettings = memorize(
-  user => user.id,
-  user => user.title,
-  user => user.first,
-  user => user.last,
-  (id, title, first, last) => ({
-    inputs: [{
-      type: 'dropdown',
-      value: title,
-      options: ['mr', 'mrs', 'miss', 'ms', 'dr'],
-      onChange: value => store.dispatch(changeTitle(id, value)),
-    }, {
-      type: 'string',
-      value: first,
-      onChange: value => store.dispatch(changeFirstName(id, value)),
-    }, {
-      type: 'string',
-      value: last,
-      onChange: value => store.dispatch(changeLastName(id, value)),
-    }]
-  })
-)
+const createUserSettings = ({title, first, last}) => ({
+  labels: [`${capitalize(title)}. ${capitalize(first)} ${capitalize(last)}`],
+})
 
-const getSpeedSettings = memorize(
-  user => user.id,
-  user => user.speed,
-  (id, speed) => ({
-    labels: [`speed`],
-    inputs: [{
-      type: 'number',
-      value: speed,
-      min: 0,
-      max: 10,
-      dragSpeed: 0.01,
-      onChange: value => store.dispatch(changeSpeed(id, value)),
-    }]
-  })
-)
+const createGenderSettings = ({id, gender}) => ({
+  labels: [`gender`],
+  inputs: [{
+    type: 'dropdown',
+    value: gender,
+    options: ['male', 'female'],
+    onChange: value => store.dispatch(changeGender(id, value)),
+  }]
+})
+
+const createNameSettings = ({id, title, first, last}) => ({
+  inputs: [{
+    type: 'dropdown',
+    value: title,
+    options: ['mr', 'mrs', 'miss', 'ms', 'dr'],
+    onChange: value => store.dispatch(changeTitle(id, value)),
+  }, {
+    type: 'string',
+    value: first,
+    onChange: value => store.dispatch(changeFirstName(id, value)),
+  }, {
+    type: 'string',
+    value: last,
+    onChange: value => store.dispatch(changeLastName(id, value)),
+  }]
+})
+
+const createSpeedSettings = ({id, speed}) => ({
+  labels: [`speed`],
+  inputs: [{
+    type: 'number',
+    value: speed,
+    min: 0,
+    max: 10,
+    dragSpeed: 0.01,
+    onChange: value => store.dispatch(changeSpeed(id, value)),
+  }]
+})
 
 @DragDropContext(HTML5Backend)
 export default class App extends React.Component {
@@ -139,17 +119,41 @@ export default class App extends React.Component {
     this.setState({users})
   }
 
+          // <QuickInterface settings={getSpeedSettings(user)}/>
+          // <QuickInterface settings={getGenderSettings(user)}/>
   renderInterface() {
     const {users} = this.state
-    return <QuickInterface settings={getHeadSettings(users)}>
-      {users.map((user, idx) => {
-        return <QuickInterface key={idx} settings={getUserSettings(user)}>
-          <QuickInterface settings={getNameSettings(user)}/>
-          <QuickInterface settings={getSpeedSettings(user)}/>
-          <QuickInterface settings={getGenderSettings(user)}/>
-        </QuickInterface>
-      })}
-    </QuickInterface>
+    return (
+      <QuickInterface
+        count={users.length}
+        createSettings={createHeadSettings}>
+        {users.map((user, idx) => {
+          return (
+            <QuickInterface
+              key = {idx}
+              title = {user.title}
+              first = {user.first}
+              last = {user.last}
+              createSettings={createUserSettings}>
+              <QuickInterface
+                id = {user.id}
+                title = {user.title}
+                first = {user.first}
+                last = {user.last}
+                createSettings={createNameSettings}/>
+              <QuickInterface
+                id = {user.id}
+                speed = {user.speed}
+                createSettings={createSpeedSettings}/>
+              <QuickInterface
+                id = {user.id}
+                gender = {user.gender}
+                createSettings={createGenderSettings}/>
+            </QuickInterface>
+          )
+        })}
+      </QuickInterface>
+    )
   }
 
   render() {

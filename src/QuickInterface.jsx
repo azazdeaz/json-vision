@@ -1,17 +1,10 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import Item from './Item'
 
-class QuickInterface extends React.Component {
-  static propTypes = {
-    settings: PropTypes.object.isRequired
-  }
-
-  render () {
-    const {settings, children} = this.props
-    return <Item settings={settings}>
-        {children}
-      </Item>
-  }
+const QuickInterface = ({children, ...rest}) => {
+  return <Item {...rest}>
+    {children}
+  </Item>
 }
 
 export default QuickInterface
