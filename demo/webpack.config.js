@@ -13,6 +13,7 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     alias: {
       'quick-interface': path.join(__dirname, '/../src/index.js'),
+      'react': path.join(__dirname, '/../node_modules/react'),
     }
   },
   module: {
